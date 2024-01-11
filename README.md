@@ -13,7 +13,16 @@ pnpm dev
 # or
 bun dev
 ```
-
+### Настройка git-хуков
+```shell
+cd frontend && \
+npm i && \
+npm run prepare && \
+git add .husky/pre-commit && \
+git add .husky/pre-push && \
+chmod +x .husky/pre-commit && \
+chmod +x .husky/pre-push
+```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
