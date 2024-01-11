@@ -1,8 +1,8 @@
 import z from "zod";
 
 export const ApprenticeshipSchema = z.object({
+  telegram_id: z.string(),
   FIO: z.string(),
-  user_id: z.string(),
   start_date: z.date(),
   end_date: z.date(),
   referral: z.string(),

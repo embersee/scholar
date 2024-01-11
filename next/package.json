@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx --fix --ignore-path .gitignore && cd ../bot && eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx --fix --ignore-path .gitignore",
     "prepare": "cd .. && husky install next/.husky"
   },
   "dependencies": {
