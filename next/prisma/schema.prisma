@@ -40,11 +40,11 @@ model Session {
 }
 
 model User {
-  id          String  @id @default(cuid())
+  id           String  @id @default(cuid())
   telegram_id  String  @unique
-  username    String?
+  username     String?
   display_name String?
-  FIO         String?
+  FIO          String?
   phone_number String?
 
   email         String?   @unique
@@ -58,22 +58,22 @@ model User {
 }
 
 model Apprenticeship {
-  id                 String    @id @default(cuid())
+  id                  String   @id @default(cuid())
   user_id             String
   start_date          DateTime
   end_date            DateTime
-  referral        String?   @db.Text
-  report             String?   @db.Text
-  curator            String?
-  institution            String
-  specialty          String
-  academic_year               String
+  referral            String?  @db.Text
+  report              String?  @db.Text
+  curator             String?
+  institution         String
+  specialty           String
+  academic_year       String
   apprenticeship_type String
   employment_status   Boolean?
-  attendance         Boolean?  @default(false)
-  signed             Boolean?  @default(false)
-  report_signed       Boolean?  @default(false)
-  refferal_signed     Boolean?  @default(false)
+  attendance          Boolean? @default(false)
+  signed              Boolean? @default(false)
+  report_signed       Boolean? @default(false)
+  referral_signed     Boolean? @default(false)
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
@@ -86,19 +86,19 @@ enum Role {
 }
 
 model Curator {
-  id         String  @id @default(cuid())
-  telegram_id String @unique
-  FIO        String?
-  group_url       String?
+  id          String  @id @default(cuid())
+  telegram_id String  @unique
+  FIO         String?
+  group_url   String?
 }
 
 model EduName {
-  id   String  @id @default(cuid())
+  id   String @id @default(cuid())
   name String
 }
 
 model ApprenticeshipType {
-  id   String  @id @default(cuid())
+  id   String @id @default(cuid())
   name String
 }
 
