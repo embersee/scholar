@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "grammy": "^1.20.3",
+    "lint-staged": "^15.2.0",
     "lucide-react": "^0.308.0",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
@@ -49,12 +50,13 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "husky": "^8.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5",
-    "husky": "^8.0.0"
+    "typescript": "^5"
   },
   "lint-staged": {
-    "*.ts": "npm run lint"
+    "*.{ts,tsx,js,jsx}": "eslint --fix",
+    "*.{ts,tsx,js,jsx,css,md}": "prettier --write"
   }
 }
