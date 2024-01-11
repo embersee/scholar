@@ -1,5 +1,5 @@
 version: "3.9"
-name: students
+name: scholar
 services:
   web:
     container_name: next
@@ -13,30 +13,33 @@ services:
       - "3000:3000"
     env_file:
       - .env
-    environment:
-      - DATABASE_URL={DATABASE_URL}
     depends_on: # make sure db completes set up before running app
       db:
         condition: service_healthy
+
   db:
     container_name: db
-    image: postgres:12
+    image: postgres:latest
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres_user -d t3-db -h db" ]
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "scholar"]
       interval: 10s # retry after the database is ready
       timeout: 5s
       retries: 5
 
+  bot:
+    container_name: bot
+    build:
+      context: bot
 volumes:
-  pgdata: { }
+  db-data:
 
 
 
