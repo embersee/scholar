@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Necessary for Next auth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? // @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id          String  @id @default(cuid())
+  telegram_id  String  @unique
+  username    String?
+  display_name String?
+  FIO         String?
+  phone_number String?
+
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  role           Role             @default(STUDENT)
+  accounts       Account[]
+  sessions       Session[]
+  apprenticeship Apprenticeship[]
+}
+
+model Apprenticeship {
+  id                 String    @id @default(cuid())
+  user_id             String
+  start_date          DateTime
+  end_date            DateTime
+  referral        String?   @db.Text
+  report             String?   @db.Text
+  curator            String?
+  institution            String
+  specialty          String
+  academic_year               String
+  apprenticeship_type String
+  employment_status   Boolean?
+  attendance         Boolean?  @default(false)
+  signed             Boolean?  @default(false)
+  report_signed       Boolean?  @default(false)
+  refferal_signed     Boolean?  @default(false)
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  ADMINISTRATION
+  CURATOR
+  STUDENT
+}
+
+model Curator {
+  id         String  @id @default(cuid())
+  telegram_id String @unique
+  FIO        String?
+  group_url       String?
+}
+
+model EduName {
+  id   String  @id @default(cuid())
+  name String
+}
+
+model ApprenticeshipType {
+  id   String  @id @default(cuid())
+  name String
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
