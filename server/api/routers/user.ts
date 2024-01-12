@@ -3,16 +3,16 @@ import {
   updateUserParams,
   userTelegramIdSchema,
 } from "@/server/schema/user";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import {createTRPCRouter, protectedProcedure, publicProcedure} from "../trpc";
 
 import { db } from "@/server/db";
 
 export const userRouter = createTRPCRouter({
-  getCustomers: protectedProcedure.query(async () => {
+  getUsers: publicProcedure.query(async () => {
     return db.user.findMany();
   }),
 
-  getCustomerById: protectedProcedure
+  getUserById: protectedProcedure
     .input(userTelegramIdSchema)
     .query(async ({ input: { telegram_id } }) => {
       return db.user.findFirst({
@@ -22,7 +22,7 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  createCustomer: protectedProcedure
+  createUser: protectedProcedure
     .input(insertUserParams)
     .mutation(async ({ input: user }) => {
       return db.user.create({
@@ -30,7 +30,7 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  updateCustomer: protectedProcedure
+  updateUser: protectedProcedure
     .input(updateUserParams)
     .mutation(async ({ input: user }) => {
       return db.user.update({
@@ -41,7 +41,7 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-  deleteCustomer: protectedProcedure
+  deleteUser: protectedProcedure
     .input(userTelegramIdSchema)
     .mutation(async ({ input: { telegram_id } }) => {
       return db.user.delete({
