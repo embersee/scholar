@@ -10,6 +10,8 @@ COPY package*.json prisma ./
 
 RUN npm ci
 
+RUN npx prisma generate
+
 ##### DEVELOP
 FROM base AS dev
 WORKDIR /app
