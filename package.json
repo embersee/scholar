@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "prisma db push && next dev",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc",
-    "postinstall": "prisma generate && prisma db push",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx --fix --ignore-path .gitignore"
   },
   "dependencies": {
