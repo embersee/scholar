@@ -4,9 +4,9 @@ SCRIPTS_DIR="scripts"
 
 # Function to handle cleanup and execute stop-tunnel
 cleanup() {
-    printf "\nShutting down docker container..."
+    printf "\n\nShutting down docker container...\n\n"
     docker-compose down
-    printf "\nCleaning up and stopping tunnel..."
+    printf "\n\nCleaning up and stopping tunnel...\n\n"
     "${SCRIPTS_DIR}/stop-tunnel.sh"
     exit 0
 }

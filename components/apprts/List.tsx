@@ -1,5 +1,6 @@
 import { GetApprenticeships } from "@/server/schema/apprenticeship";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type Props = {
   apprts: GetApprenticeships;
@@ -12,9 +13,12 @@ export default function ApprtsList(props: Props) {
         <p className="mt-1 text-sm text-gray-500">
           Get started by creating a new apprenticeship!
         </p>
-        <div className="mt-2">
-          <Button>Create</Button>
-        </div>
+
+        <Button asChild>
+          <Link href="/dash/apprts/new" className="mt-2">
+            Create
+          </Link>
+        </Button>
       </div>
     );
   }
