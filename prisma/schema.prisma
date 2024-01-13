@@ -92,12 +92,7 @@ model Curator {
   group_url   String?
 }
 
-model EduName {
-  id   String @id @default(cuid())
-  name String
-}
-
-model ApprenticeshipType {
+model Institution {
   id   String @id @default(cuid())
   name String
 }
