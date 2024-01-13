@@ -3,12 +3,12 @@ import {
   updateUserParams,
   userTelegramIdSchema,
 } from "@/server/schema/user";
-import {createTRPCRouter, protectedProcedure, publicProcedure} from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 import { db } from "@/server/db";
 
 export const userRouter = createTRPCRouter({
-  getUsers: publicProcedure.query(async () => {
+  getUsers: protectedProcedure.query(async () => {
     return db.user.findMany();
   }),
 

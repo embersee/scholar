@@ -26,7 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script src="https://telegram.org/js/telegram-web-app.js" defer />
+          {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script src="https://telegram.org/js/telegram-web-app.js" />
       </head>
       <body className={inter.className}>
         <TRPCReactProvider headers={headers()}>

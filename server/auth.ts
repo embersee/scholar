@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         if (!user) return null;
 
         const visitor = {
-          id:user.id.toString(),
+          id: user.id.toString(),
           telegram_id: user.id.toString(),
           username: user.username ?? "hidden username",
           display_name: [user.first_name, user.last_name || ""].join(" "),
@@ -47,7 +47,9 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        if (exists) return visitor;
+        if (exists) return {
+          ...visitor, name: visitor.username
+        };
 
         await db.user.create({
           data: visitor,
@@ -64,12 +66,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    jwt: ({ user, token }) => {
-      if (user) {
-        token.uid = user.id;
-      }
-      return token;
-    },
   },
   session: {
     strategy: "jwt",
@@ -79,7 +75,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     error: "/error",
-    newUser: "/registration",
+    newUser: "/register",
     signOut: "/",
     signIn: "/",
   },

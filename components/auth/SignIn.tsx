@@ -9,7 +9,7 @@ export default function SignIn() {
       buttonSize="medium"
       botUsername="iacstudent_bot"
       onAuthCallback={(data: any) => {
-        void signIn("telegram-login", { callbackUrl: "/" }, data as any);
+        void signIn("telegram-login", { callbackUrl: "/dash" }, data as any);
       }}
     />
   );

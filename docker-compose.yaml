@@ -16,7 +16,7 @@ services:
     ports:
       - "3000:3000"
     restart: always
-    depends_on: # make sure db completes set up before running app
+    depends_on:
       db:
         condition: service_healthy
     networks:
@@ -39,21 +39,8 @@ services:
     networks:
       - net
 
-  bot:
-    container_name: bot
-    build:
-      context: bot
-
 volumes:
   db-data:
 
 networks:
   net:
-
-
-
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
-#networks:
-#  students:
-#    external: true

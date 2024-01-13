@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -9,68 +9,125 @@
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
- 
+
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
- 
+
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
- 
+
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
- 
+
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
- 
+
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
- 
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
- 
-    --radius: 0.5rem;
+
+    --radius: 1rem;
+
+    --rei: 212, 90%, 80%;
+
+    --mask-colour-one: 0, 0%, 92%;
+    --mask-colour-two: 0, 0%, 92%;
   }
- 
+
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 2.5%;
     --foreground: 0 0% 98%;
- 
+
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
- 
+
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
- 
+
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
- 
-    --secondary: 0 0% 14.9%;
+
+    --secondary: 0 0% 5.9%;
     --secondary-foreground: 0 0% 98%;
- 
+
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
- 
+
     --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
- 
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
- 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
+
+    --border: 0 0% 6.9%;
+    --input: 0 0% 5.9%;
     --ring: 0 0% 83.1%;
+
+    --rei: 211, 69%, 60%;
+
+    --mask-colour-one: 0, 0%, 8%;
+    --mask-colour-two: 0, 0%, 8%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+
+    background-color: hsl(var(--background));
+    opacity: 1;
+    background-image: radial-gradient(
+            hsl(var(--mask-colour-two)) 1px,
+            transparent 1px
+    ),
+    radial-gradient(
+            hsl(var(--mask-colour-one)) 1px,
+            hsl(var(--background)) 1px
+    );
+    background-size: 20px 20px;
+    background-position:
+            0 0,
+            10px 10px;
   }
+}
+
+.nav {
+  @apply rounded-lg border bg-background/30 backdrop-blur-[1px];
+}
+
+main {
+  @apply mx-auto flex max-w-5xl flex-col p-4;
+}
+
+ul {
+  @apply space-y-4;
+}
+
+li {
+  @apply rounded-md border bg-background/30 backdrop-blur-[1px];
+}
+
+.page {
+  @apply flex min-h-[calc(100vh-4rem)] flex-grow flex-col items-center justify-center;
+}
+
+h1 {
+  @apply text-2xl;
+}
+
+h2 {
+  @apply text-lg;
+}
+
+.card-theme {
+  @apply rounded-lg border bg-background/30 backdrop-blur-[1px];
 }

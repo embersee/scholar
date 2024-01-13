@@ -23,7 +23,7 @@ model Account {
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? // @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -62,8 +62,8 @@ model Apprenticeship {
   user_id             String
   start_date          DateTime
   end_date            DateTime
-  referral            String?  @db.Text
-  report              String?  @db.Text
+  referral            String?
+  report              String?
   curator             String?
   institution         String
   specialty           String
