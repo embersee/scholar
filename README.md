@@ -9,17 +9,19 @@
 git clone https://github.com/embersee/scholar.git
 cd scholar
 ```
-Установить ngrok и добавить автотокен (для этого нужно зарегаться)
-Установить jq
+Установить ngrok и добавить автотокен (для этого нужно зарегаться) https://ngrok.com/download
+Установить зависимости
 ```bash
 apt update && upgrade
 apt install curl
 
 apt install jq
 ```
-Создать .env файл и вставить в него код из .env.example. Заполнить то, что там указано.
-Заменить имя пользователя БД c `postgres` на своего в docker-compose.yaml в строке :35
+Создать `.env` файл и вставить в него код из `.env.example`. Заполнить то, что там указано.
+Заменить имя пользователя БД c `postgres` на своего в `docker-compose.yaml` в строке :35
+```
 test: ["CMD", "pg_isready", "-U", "postgres", "-d", "scholar"]
+```
 Запустить скрипт
 ```bash
 bash ./scripts/run-dev.sh
