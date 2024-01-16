@@ -52,6 +52,7 @@ export default async function Profile() {
           </Link>
         </div>
       </div>
+      
     </>
   );
 }
