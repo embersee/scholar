@@ -1,11 +1,15 @@
+"use client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import ProfileMenuPoint from "@/components/profile/ProfileMenuPoint";
+import Container from "../ui/container";
+import { useEffect } from "react";
 
 const profileInfo = ({ user }: { user: User }) => {
-    return <div className="flex bg-white rounded-sm p-10 border-solid border-2 border-gray-100 dark:bg-slate-950 dark:border-none">
+    useEffect(()=> console.log(user), [user])
+    return <Container className="justify-center">
         <div className="flex flex-col w-max">
             <Avatar className="w-28 h-28 my-6">
                 <AvatarImage src={user.image as string}></AvatarImage>
@@ -21,14 +25,11 @@ const profileInfo = ({ user }: { user: User }) => {
             <ProfileMenuPoint name="Email" value={user.email} />
             <ProfileMenuPoint name="Phone" value={user.phone_number} />
 
-            {/*Object.keys(user).map((key: string) =>
-                <ProfileMenuPoint name={key} value={user[key as keyof User]?.toString() as string} />
-            )*/}
             <Link href="/dash/profile/edit" className="my-6 w-max">
                 <Button variant="default" size="lg">Edit</Button>
             </Link>
         </div>
-    </div>
+    </Container>
 }
 
 export default profileInfo;
