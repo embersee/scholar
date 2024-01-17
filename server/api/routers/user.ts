@@ -25,6 +25,18 @@ export const userRouter = createTRPCRouter({
   createUser: protectedProcedure
     .input(insertUserParams)
     .mutation(async ({ input: user }) => {
+      const isCurator = await db.curator.findUnique({
+        where: {
+          telegram_id: user.telegram_id,
+        },
+      });
+
+      if (isCurator) {
+        return db.user.create({
+          data: { ...user, role: "CURATOR" },
+        });
+      }
+
       return db.user.create({
         data: user,
       });
