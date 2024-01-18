@@ -1,50 +1,71 @@
-import {createTRPCRouter, protectedProcedure, publicProcedure} from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 import { db } from "@/server/db";
-import {apprenticeshipSchema} from "@/server/schema/apprenticeship";
-import {z} from "zod";
+import {
+  apprenticeshipFormSchema,
+  apprenticeshipSchema,
+} from "@/server/schema/apprenticeship";
+import { z } from "zod";
 
 export const apprenticeshipRouter = createTRPCRouter({
-    getApprenticeships: publicProcedure.query(async () => {
-        return db.apprenticeship.findMany();
+  getApprenticeships: publicProcedure.query(async () => {
+    return db.apprenticeship.findMany();
+  }),
+
+  getApprenticeshipById: protectedProcedure
+    .input(apprenticeshipSchema.pick({ user_id: true }))
+    .query(async ({ input: { user_id } }) => {
+      return db.apprenticeship.findFirst({
+        where: {
+          user_id,
+        },
+      });
     }),
 
-    getApprenticeshipById: protectedProcedure
-        .input(apprenticeshipSchema.pick({user_id: true}))
-        .query(async ({ input: { user_id } }) => {
-            return db.apprenticeship.findFirst({
-                where: {
-                    user_id,
-                },
-            });
-        }),
+  createApprenticeship: protectedProcedure
+    .input(apprenticeshipFormSchema)
+    .mutation(
+      async ({
+        input: apprts,
+        ctx: {
+          session: { user },
+        },
+      }) => {
+        const { date, ...data } = {
+          ...apprts,
+          start_date: apprts.date.from,
+          end_date: apprts.date.to,
+        };
 
-    createApprenticeship: protectedProcedure
-        .input(apprenticeshipSchema)
-        .mutation(async ({ input: data }) => {
-            return db.apprenticeship.create({
-                data
-            });
-        }),
+        return db.apprenticeship.create({
+          data: {
+            ...data,
+            user: {
+              connect: {
+                telegram_id: user.id,
+              },
+            },
+            apprenticeship_type: {
+              connect: {
+                name: data.apprenticeship_type,
+              },
+            },
+          },
+        });
+      },
+    ),
 
-    updateApprenticeship: protectedProcedure
-        .input(apprenticeshipSchema.extend({id: z.string()}))
-        .mutation(async ({ input: data}) => {
-            return db.apprenticeship.update({
-                data,
-                where: {
-                    id: data.id,
-                },
-            });
-        }),
+  deleteApprenticeship: protectedProcedure
+    .input(apprenticeshipSchema.extend({ id: z.string() }).pick({ id: true }))
+    .mutation(async ({ input: { id } }) => {
+      return db.apprenticeship.delete({
+        where: {
+          id,
+        },
+      });
+    }),
 
-    deleteApprenticeship: protectedProcedure
-        .input(apprenticeshipSchema.extend({id: z.string()}).pick({id: true}))
-        .mutation(async ({ input: {id} }) => {
-            return db.apprenticeship.delete({
-                where: {
-                    id,
-                },
-            });
-        }),
+  getTypes: protectedProcedure.query(async () => {
+    return db.apprenticeshipType.findMany();
+  }),
 });

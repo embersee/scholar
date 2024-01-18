@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import {
   ApprenticeshipForm,
   apprenticeshipFormSchema,
+  ApprenticeshipTypes,
+  GetApprenticeship,
 } from "@/server/schema/apprenticeship";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -31,7 +33,10 @@ import { ru } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
 
-export default function ApprtsForm() {
+export default function ApprtsForm(props: {
+  apprenticeships: GetApprenticeship;
+  apprenticeshipTypes: ApprenticeshipTypes[];
+}) {
   const parent = useRef(null);
 
   useEffect(() => {
@@ -44,21 +49,18 @@ export default function ApprtsForm() {
     // errors locally but not in production
     resolver: zodResolver(apprenticeshipFormSchema),
     defaultValues: {
-      FIO: "",
-      phone_number: "",
-      institution: "",
-      specialty: "",
-      academic_year: "",
+      referral: "",
+      report: "",
       apprenticeship_type: "",
-      // date: {
-      //   from: undefined,
-      //   to: undefined,
-      // },
+      academic_year: "",
     },
-    reValidateMode: "onChange",
+    reValidateMode: "onSubmit",
   });
 
-  // TODO: get data for institutions
+  const apprtsTypes = props.apprenticeshipTypes.map((v) => ({
+    value: v.id,
+    label: v.name,
+  }));
 
   function handleSubmit(data: ApprenticeshipForm) {
     console.log(JSON.stringify(data));
@@ -74,132 +76,56 @@ export default function ApprtsForm() {
       >
         <FormField
           control={form.control}
-          name="FIO"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Display name</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="Иван Иванович"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone number</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="98273947"
-                  type="number"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="institution"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Institution</FormLabel>
-              <FormControl>
-                <Combobox
-                  options={[
-                    {
-                      value: "next.js",
-                      label: "Next.js",
-                    },
-                    {
-                      value: "sveltekit",
-                      label: "SvelteKit",
-                    },
-                    {
-                      value: "nuxt.js",
-                      label: "Nuxt.js",
-                    },
-                    {
-                      value: "remix",
-                      label: "Remix",
-                    },
-                    {
-                      value: "astro",
-                      label: "Astro",
-                    },
-                  ]}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="specialty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Specialty</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="Специальность"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="apprenticeship_type"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Вид практики</FormLabel>
               <FormControl>
                 <Combobox
-                  options={[
-                    {
-                      value: "next.js",
-                      label: "Next.js",
-                    },
-                    {
-                      value: "sveltekit",
-                      label: "SvelteKit",
-                    },
-                    {
-                      value: "nuxt.js",
-                      label: "Nuxt.js",
-                    },
-                    {
-                      value: "remix",
-                      label: "Remix",
-                    },
-                    {
-                      value: "astro",
-                      label: "Astro",
-                    },
-                  ]}
+                  options={apprtsTypes}
+                  {...field}
+                  names={{
+                    button: "Выбрать вид",
+                    empty: "Нету такого...",
+                    search: "Поиск вида практики",
+                  }}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="referral"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Место ссылки направления</FormLabel>
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  placeholder="пока пусть только string отправляет"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="report"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Место ссылки отчета</FormLabel>
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  placeholder="пока пусть только string отправляет"
                   {...field}
                 />
               </FormControl>
@@ -214,10 +140,9 @@ export default function ApprtsForm() {
           name="academic_year"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Курс</FormLabel>
+              <FormLabel>Укажи свой курс</FormLabel>
               <FormControl>
                 <Input
-                  className="w-[300px]"
                   autoComplete="off"
                   placeholder="1"
                   type="number"
@@ -235,7 +160,7 @@ export default function ApprtsForm() {
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Дата начала</FormLabel>
+              <FormLabel>Диапазон дат практики</FormLabel>
               <FormControl>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -243,7 +168,7 @@ export default function ApprtsForm() {
                       id="date"
                       variant={"outline"}
                       className={cn(
-                        "w-[300px] justify-start text-left font-normal",
+                        " justify-start text-left font-normal",
                         !form.watch().date && "text-muted-foreground",
                       )}
                     >
@@ -253,8 +178,8 @@ export default function ApprtsForm() {
                           <>
                             {format(form.watch().date.from, "dd LLLL y", {
                               locale: ru,
-                            })}{" "}
-                            -{" "}
+                            })}
+                            {` – `}
                             {format(form.watch().date.to, "dd LLLL y", {
                               locale: ru,
                             })}
@@ -265,7 +190,7 @@ export default function ApprtsForm() {
                           })
                         )
                       ) : (
-                        <span>Pick a date</span>
+                        <span>Выбери даты</span>
                       )}
                     </Button>
                   </PopoverTrigger>

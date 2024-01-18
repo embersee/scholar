@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/** {*/
+/*  box-sizing: border-box;*/
+/*}*/
+
+body {
+  height: 100vh;
+  /*width: 100vw;*/
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -101,11 +110,19 @@
 }
 
 .nav {
-  @apply rounded-lg border bg-background/30 backdrop-blur-[1px];
+  @apply rounded-lg border bg-background/30 backdrop-blur-[1px] w-full;
 }
 
 main {
-  @apply mx-auto flex max-w-5xl flex-col p-4;
+  @apply mx-auto h-screen min-h-full flex flex-col items-center p-4;
+}
+
+.page {
+ @apply w-full max-w-3xl h-full flex flex-col min-w-80;
+}
+
+.form {
+  @apply w-full max-w-xl;
 }
 
 ul {
@@ -114,10 +131,6 @@ ul {
 
 li {
   @apply rounded-md border bg-background/30 backdrop-blur-[1px];
-}
-
-.page {
-  @apply flex min-h-[calc(100vh-4rem)] flex-grow flex-col items-center justify-center;
 }
 
 h1 {

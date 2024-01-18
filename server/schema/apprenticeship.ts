@@ -9,8 +9,6 @@ export const apprenticeshipSchema = z.object({
   referral: z.string().optional(),
   report: z.string().optional(),
   curator: z.string().optional(),
-  institution: z.string().min(1, "Обьязательное поле"),
-  specialty: z.string().min(1, "Обьязательное поле"),
   academic_year: z.coerce
     .string()
     .min(1, "Обьязательное поле")
@@ -31,27 +29,24 @@ export const apprenticeshipFormSchema = apprenticeshipSchema
     report_signed: true,
     signed: true,
     attendance: true,
-    referral: true,
-    report: true,
+    // referral: true,
+    // report: true,
     curator: true,
     start_date: true,
     end_date: true,
   })
   .extend({
-    FIO: z.string().min(3, "Обьязательное поле"),
-    phone_number: z
-      .string()
-      .regex(
-        /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
-        "Не соотвествует формату номера телефона",
-      )
-      .min(0),
     date: z.object({ from: z.date(), to: z.date() }).required().strict(),
   });
 
+export const apprenticeshipTypes = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
 export type Apprenticeship = z.infer<typeof apprenticeshipSchema>;
 export type ApprenticeshipForm = z.infer<typeof apprenticeshipFormSchema>;
-
-export type GetApprenticeships = NonNullableFields<
+export type ApprenticeshipTypes = z.infer<typeof apprenticeshipTypes>;
+export type GetApprenticeship = NonNullableFields<
   RouterOutputs["apprts"]["getApprenticeships"]
 >;
