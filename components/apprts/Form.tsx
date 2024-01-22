@@ -30,8 +30,9 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
+import { api } from "@/trpc/react";
 
-export default function ApprtsForm() {
+export default function ApprtsForm({session}: {session: any}) {
   const parent = useRef(null);
 
   useEffect(() => {
@@ -59,9 +60,21 @@ export default function ApprtsForm() {
   });
 
   // TODO: get data for institutions
+  const apprts = api.apprts.createApprenticeship.useMutation({
+    onSuccess: ()=> alert("success!!!"),
+    onError: (e)=> {
+      alert("Error");
+      console.error(e);
+    }
+  });
 
-  function handleSubmit(data: ApprenticeshipForm) {
-    console.log(JSON.stringify(data));
+  async function handleSubmit(data: ApprenticeshipForm) {
+    const userId = session.data?.user.id as string;
+    const {date: {from: start_date, to: end_date}} = data;
+
+    const processedData = {...data, user_id: userId, start_date, end_date};
+    console.log(JSON.stringify(processedData));
+    apprts.mutate({...processedData});
   }
 
   return (
@@ -69,7 +82,7 @@ export default function ApprtsForm() {
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
         autoComplete="off"
-        className="flex grow flex-col justify-start"
+        className="flex grow flex-col justify-start items-center gap-4"
         ref={parent}
       >
         <FormField
@@ -116,13 +129,14 @@ export default function ApprtsForm() {
           name="institution"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Institution</FormLabel>
+              <FormLabel>Учебное заведение</FormLabel>
               <FormControl>
                 <Combobox
+                  placeholder="Select university"
                   options={[
                     {
-                      value: "next.js",
-                      label: "Next.js",
+                      value: "СПбГУТ им. М.А. Бонч-Бруевича",
+                      label: "СПбГУТ им. М.А. Бонч-Бруевича",
                     },
                     {
                       value: "sveltekit",
@@ -178,27 +192,28 @@ export default function ApprtsForm() {
               <FormLabel>Вид практики</FormLabel>
               <FormControl>
                 <Combobox
+                  placeholder="Select apprenticeship"
                   options={[
                     {
-                      value: "next.js",
-                      label: "Next.js",
+                      value: "Дипломная",
+                      label: "Дипломная",
                     },
                     {
-                      value: "sveltekit",
-                      label: "SvelteKit",
+                      value: "Преддипломная",
+                      label: "Преддипломная",
                     },
                     {
-                      value: "nuxt.js",
-                      label: "Nuxt.js",
+                      value: "Производственная",
+                      label: "Производственная",
                     },
                     {
-                      value: "remix",
-                      label: "Remix",
+                      value: "Учебная",
+                      label: "Учебная",
                     },
                     {
-                      value: "astro",
-                      label: "Astro",
-                    },
+                      value: "Производственная (UI/UX + CSS)",
+                      label: "UI/UX",
+                    }
                   ]}
                   {...field}
                 />
@@ -235,7 +250,7 @@ export default function ApprtsForm() {
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Дата начала</FormLabel>
+              <FormLabel>Даты практики</FormLabel>
               <FormControl>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -287,7 +302,7 @@ export default function ApprtsForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-[300px]">{apprts.isLoading? "Loading...": "Submit"}</Button>
       </form>
     </Form>
   );
