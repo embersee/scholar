@@ -24,10 +24,11 @@ interface ComboboxProps {
   options: { label: string; value: string }[];
   value?: string;
   onChange: (value: string) => void;
+  placeholder?: string
 }
 
 export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(
-  ({ options, value, onChange }: ComboboxProps, ref) => {
+  ({ options, value, onChange, placeholder="Select framework" }: ComboboxProps, ref) => {
     const [open, setOpen] = React.useState(false);
 
     return (
@@ -41,14 +42,14 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(
           >
             {value
               ? options.find((framework) => framework.value === value)?.label
-              : "Select framework..."}
+              : placeholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[300px] p-0">
           <Command>
             <CommandInput
-              placeholder="Search framework..."
+              placeholder="Search..."
               ref={ref}
               required
             />
