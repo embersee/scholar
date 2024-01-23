@@ -21,6 +21,7 @@ export const env = createEnv({
     BOT_TOKEN: z.string().min(1),
     NEXTAUTH_URL: z.string().min(1),
     WEBHOOK_SECRET: z.string().min(1),
+    BOT_NAME: z.string().min(1),
   },
 
   /**
@@ -42,6 +43,7 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     BOT_TOKEN: process.env.BOT_TOKEN,
     WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
+    BOT_NAME: process.env.BOT_NAME,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
