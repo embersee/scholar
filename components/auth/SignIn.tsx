@@ -3,11 +3,11 @@
 import { LoginButton } from "@telegram-auth/react";
 import { signIn } from "next-auth/react";
 
-export default function SignIn() {
+export default function SignIn({botUsername}: {botUsername: string} ) {
   return (
     <LoginButton
       buttonSize="medium"
-      botUsername="iacstudent_bot"
+      botUsername={botUsername}
       onAuthCallback={(data: any) => {
         void signIn("telegram-login", { callbackUrl: "/dash" }, data as any);
       }}

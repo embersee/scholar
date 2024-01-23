@@ -27,6 +27,7 @@ interface ComboboxProps {
   options: { label: string; value: string }[];
   value?: string;
   onChange: (value: string) => void;
+  placeholder?: string
 }
 
 export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
@@ -43,8 +44,12 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         </PopoverTrigger>
         <PopoverContent className="p-0">
           <Command>
-            <CommandInput placeholder={names.search} ref={ref} required />
-            <CommandEmpty>{names.empty}</CommandEmpty>
+            <CommandInput
+              placeholder="Search framework..."
+              ref={ref}
+              required
+            />
+            <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
               {options.map((framework) => (
                 <CommandItem

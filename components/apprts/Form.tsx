@@ -32,10 +32,12 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
+import { api } from "@/trpc/react";
 
 export default function ApprtsForm(props: {
   apprenticeships: GetApprenticeship;
   apprenticeshipTypes: ApprenticeshipTypes[];
+  session: any
 }) {
   const parent = useRef(null);
 
@@ -52,7 +54,10 @@ export default function ApprtsForm(props: {
       referral: "",
       report: "",
       apprenticeship_type: "",
-      academic_year: "",
+      // date: {
+      //   from: undefined,
+      //   to: undefined,
+      // },
     },
     reValidateMode: "onSubmit",
   });
@@ -61,9 +66,22 @@ export default function ApprtsForm(props: {
     value: v.id,
     label: v.name,
   }));
+  
+  const apprts = api.apprts.createApprenticeship.useMutation({
+    onSuccess: ()=> alert("success!!!"),
+    onError: (e)=> {
+      alert("Error");
+      console.error(e);
+    }
+  });
 
-  function handleSubmit(data: ApprenticeshipForm) {
-    console.log(JSON.stringify(data));
+  async function handleSubmit(data: ApprenticeshipForm) {
+    const userId = props.session.data?.user.id as string;
+    const {date: {from: start_date, to: end_date}} = data;
+
+    const processedData = {...data, user_id: userId, start_date, end_date};
+    console.log(JSON.stringify(processedData));
+    apprts.mutate({...processedData});
   }
 
   return (
@@ -71,7 +89,7 @@ export default function ApprtsForm(props: {
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
         autoComplete="off"
-        className="flex grow flex-col justify-start"
+        className="flex grow flex-col justify-start items-center gap-4"
         ref={parent}
       >
         <FormField
@@ -212,7 +230,7 @@ export default function ApprtsForm(props: {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-[300px]">{apprts.isLoading? "Loading...": "Submit"}</Button>
       </form>
     </Form>
   );

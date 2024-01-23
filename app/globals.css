@@ -156,3 +156,7 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.container {
+  @apply flex bg-white rounded-sm p-10 border-solid border-2 border-gray-100 dark:bg-slate-800 dark:border-none overflow-hidden h-max;
+}
