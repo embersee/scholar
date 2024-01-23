@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import {
   ApprenticeshipForm,
   apprenticeshipFormSchema,
+  ApprenticeshipTypes,
+  GetApprenticeship,
 } from "@/server/schema/apprenticeship";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -32,7 +34,11 @@ import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
 
-export default function ApprtsForm({session}: {session: any}) {
+export default function ApprtsForm(props: {
+  apprenticeships: GetApprenticeship;
+  apprenticeshipTypes: ApprenticeshipTypes[];
+  session: any
+}) {
   const parent = useRef(null);
 
   useEffect(() => {
@@ -45,21 +51,22 @@ export default function ApprtsForm({session}: {session: any}) {
     // errors locally but not in production
     resolver: zodResolver(apprenticeshipFormSchema),
     defaultValues: {
-      FIO: "",
-      phone_number: "",
-      institution: "",
-      specialty: "",
-      academic_year: "",
+      referral: "",
+      report: "",
       apprenticeship_type: "",
       // date: {
       //   from: undefined,
       //   to: undefined,
       // },
     },
-    reValidateMode: "onChange",
+    reValidateMode: "onSubmit",
   });
 
-  // TODO: get data for institutions
+  const apprtsTypes = props.apprenticeshipTypes.map((v) => ({
+    value: v.id,
+    label: v.name,
+  }));
+  
   const apprts = api.apprts.createApprenticeship.useMutation({
     onSuccess: ()=> alert("success!!!"),
     onError: (e)=> {
@@ -69,7 +76,7 @@ export default function ApprtsForm({session}: {session: any}) {
   });
 
   async function handleSubmit(data: ApprenticeshipForm) {
-    const userId = session.data?.user.id as string;
+    const userId = props.session.data?.user.id as string;
     const {date: {from: start_date, to: end_date}} = data;
 
     const processedData = {...data, user_id: userId, start_date, end_date};
@@ -87,134 +94,56 @@ export default function ApprtsForm({session}: {session: any}) {
       >
         <FormField
           control={form.control}
-          name="FIO"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Display name</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="Иван Иванович"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone number</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="98273947"
-                  type="number"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="institution"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Учебное заведение</FormLabel>
-              <FormControl>
-                <Combobox
-                  placeholder="Select university"
-                  options={[
-                    {
-                      value: "СПбГУТ им. М.А. Бонч-Бруевича",
-                      label: "СПбГУТ им. М.А. Бонч-Бруевича",
-                    },
-                    {
-                      value: "sveltekit",
-                      label: "SvelteKit",
-                    },
-                    {
-                      value: "nuxt.js",
-                      label: "Nuxt.js",
-                    },
-                    {
-                      value: "remix",
-                      label: "Remix",
-                    },
-                    {
-                      value: "astro",
-                      label: "Astro",
-                    },
-                  ]}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="specialty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Specialty</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="Специальность"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="apprenticeship_type"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Вид практики</FormLabel>
               <FormControl>
                 <Combobox
-                  placeholder="Select apprenticeship"
-                  options={[
-                    {
-                      value: "Дипломная",
-                      label: "Дипломная",
-                    },
-                    {
-                      value: "Преддипломная",
-                      label: "Преддипломная",
-                    },
-                    {
-                      value: "Производственная",
-                      label: "Производственная",
-                    },
-                    {
-                      value: "Учебная",
-                      label: "Учебная",
-                    },
-                    {
-                      value: "Производственная (UI/UX + CSS)",
-                      label: "UI/UX",
-                    }
-                  ]}
+                  options={apprtsTypes}
+                  {...field}
+                  names={{
+                    button: "Выбрать вид",
+                    empty: "Нету такого...",
+                    search: "Поиск вида практики",
+                  }}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="referral"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Место ссылки направления</FormLabel>
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  placeholder="пока пусть только string отправляет"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="report"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Место ссылки отчета</FormLabel>
+              <FormControl>
+                <Input
+                  autoComplete="off"
+                  placeholder="пока пусть только string отправляет"
                   {...field}
                 />
               </FormControl>
@@ -229,10 +158,9 @@ export default function ApprtsForm({session}: {session: any}) {
           name="academic_year"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Курс</FormLabel>
+              <FormLabel>Укажи свой курс</FormLabel>
               <FormControl>
                 <Input
-                  className="w-[300px]"
                   autoComplete="off"
                   placeholder="1"
                   type="number"
@@ -250,7 +178,7 @@ export default function ApprtsForm({session}: {session: any}) {
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Даты практики</FormLabel>
+              <FormLabel>Диапазон дат практики</FormLabel>
               <FormControl>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -258,7 +186,7 @@ export default function ApprtsForm({session}: {session: any}) {
                       id="date"
                       variant={"outline"}
                       className={cn(
-                        "w-[300px] justify-start text-left font-normal",
+                        " justify-start text-left font-normal",
                         !form.watch().date && "text-muted-foreground",
                       )}
                     >
@@ -268,8 +196,8 @@ export default function ApprtsForm({session}: {session: any}) {
                           <>
                             {format(form.watch().date.from, "dd LLLL y", {
                               locale: ru,
-                            })}{" "}
-                            -{" "}
+                            })}
+                            {` – `}
                             {format(form.watch().date.to, "dd LLLL y", {
                               locale: ru,
                             })}
@@ -280,7 +208,7 @@ export default function ApprtsForm({session}: {session: any}) {
                           })
                         )
                       ) : (
-                        <span>Pick a date</span>
+                        <span>Выбери даты</span>
                       )}
                     </Button>
                   </PopoverTrigger>

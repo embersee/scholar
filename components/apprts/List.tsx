@@ -1,9 +1,9 @@
-import { GetApprenticeships } from "@/server/schema/apprenticeship";
+import { GetApprenticeship } from "@/server/schema/apprenticeship";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 type Props = {
-  apprts: GetApprenticeships;
+  apprts: GetApprenticeship;
 };
 export default function ApprtsList(props: Props) {
   if (!props.apprts.length) {

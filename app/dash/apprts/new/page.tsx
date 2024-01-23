@@ -1,20 +1,18 @@
 import Heading from "@/components/ui/heading";
 import ApprtsForm from "@/components/apprts/Form";
-import { getUserAuth } from "@/server/auth";
-import Container from "@/components/ui/container";
-//import { createContext } from "react";
+import { api } from "@/trpc/server";
 
 export default async function New() {
-  const {session} = await getUserAuth();
-  if (!session) return null;
-  
+  const apprenticeshipTypes = await api.apprts.getTypes.query();
   return (
     <>
       <Heading
         title="Fill out this form."
         description="this is required to submit a referal."
       ></Heading>
-      <Container className="justify-center"><ApprtsForm session={session}/></Container>
+      <div className="form">
+        <ApprtsForm apprenticeshipTypes={apprenticeshipTypes} />
+      </div>
     </>
   );
 }
