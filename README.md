@@ -1,33 +1,25 @@
 # Scholar
 Система учета студентов на практике.
-Собрана на стеке Next.js + PostgreSQL + Prisma + tRPC
-# Настройка проекта
-Проект для запуска использует `bash` скрипты, поэтому для корректной работы понадобятся настроенные WSL и Docker.
-Дальнейшие инструкции по установке зависимостей будут производиться для дистрибутива Ubuntu.
 
-Клонировать репоз внутри wsl
+## Installation
+
+Install ngrok and register your account using the CLI at https://ngrok.com/download
+
+Fill in required env vars
 ```bash
-git clone https://github.com/embersee/scholar.git
-cd scholar
+cp .env.example .env
 ```
-Установить ngrok и добавить автотокен (для этого нужно зарегаться) https://ngrok.com/download<br />
-Установить зависимости
-```bash
-apt update && upgrade
-apt install curl
-curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - &&\
-sudo apt-get install -y nodejs
-npm i -g npm@latest
-apt install jq
-```
-Создать `.env` файл и вставить в него код из `.env.example`. Заполнить то, что там указано.<br/>
-Запустить скрипт
+Dev enviroment bash script
 ```bash
 bash ./scripts/run-dev.sh
 ```
-Поменять `botUsername` в `components/auth/SignIn.tsx` на имя вашего бота.<br/>
-Скопировать адрес в командной строке и добавить его как домен для своего бота в https://t.me/botfather.
+*Might require to get ```jq``` dependency, depending on your OS.
 
-## ❗️Важно!
+or
 
-После каждого запуска Docker-контейнера прийдется заново привязывать домен бота.<br/>
+Manually start a ngrok instance using said env vars -> connect ngrok url to telegram bot domain in bot settings @BotFather.
+
+
+## Important
+
+After each project launch, make sure to add the ngrok url to your telegram bot's domain in bot settings @BotFather.
