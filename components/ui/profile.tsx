@@ -34,6 +34,9 @@ export const Profile = ({ name, image }: { name: string; image: string }) => {
         <Link href="/dash/settings">
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </Link>
+        <Link href="/dash">
+          <DropdownMenuItem>Main</DropdownMenuItem>
+        </Link>
 
         <DropdownMenuItem
           className=" bg-destructive/70 text-destructive-foreground shadow-sm"
