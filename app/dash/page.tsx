@@ -1,3 +1,4 @@
+import ApprtsTypeList from "@/components/dash/ApprtsTypeList"
 import Heading from "@/components/ui/heading";
 
 export default async function Dash() {
@@ -7,7 +8,7 @@ export default async function Dash() {
         title="Dash"
         description="Create or select which bot to manage here."
       ></Heading>
-
+      <ApprtsTypeList />
       {/*<BotList bots={bots} />*/}
 
       {/*{!bots.length && (*/}
