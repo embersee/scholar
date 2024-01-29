@@ -48,7 +48,7 @@ export const apprenticeshipRouter = createTRPCRouter({
             },
             apprenticeship_type: {
               connect: {
-                name: data.apprenticeship_type,
+                id: data.apprenticeship_type,
               },
             },
           },
