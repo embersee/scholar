@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import {
   apprenticeshipFormSchema,
   apprenticeshipSchema,
+  apprenticeshipTypes,
 } from "@/server/schema/apprenticeship";
 import { z } from "zod";
 
@@ -54,6 +55,23 @@ export const apprenticeshipRouter = createTRPCRouter({
         });
       },
     ),
+
+  createApprtType: protectedProcedure
+    .input(apprenticeshipTypes).mutation(async ({ input: apprtTypes }) => {
+      return db.apprenticeshipType.create({
+        data: {
+          ...apprtTypes
+        }
+      });
+    }),
+
+  removeApprtType: protectedProcedure
+    .input(apprenticeshipTypes.extend({ id: z.string() }).pick({ id: true }))
+    .mutation(async ({ input: { id } }) => {
+      return db.apprenticeshipType.delete({
+        where: { id, }
+      })
+    }),
 
   deleteApprenticeship: protectedProcedure
     .input(apprenticeshipSchema.extend({ id: z.string() }).pick({ id: true }))
