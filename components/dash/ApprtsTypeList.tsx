@@ -29,10 +29,10 @@ const ApprtsTypeList = () => {
 
     return (
         <Container className="flex-col gap-4">
+            <div>Apprenticeship types</div>
             {
                 apprtTypesList.data && apprtTypesList.data.length > 0 ? (
                     <>
-                        <div>Apprenticeship types</div>
                         <ul>
                             {apprtTypesList.data.map(
                                 (apprtType: ApprenticeshipType) => (
@@ -59,7 +59,7 @@ const ApprtsTypeList = () => {
                             Make changes to your profile here. Click save when you're done.
                         </DrawerDescription>
                     </DrawerHeader>
-                    <ApprtTypeCreateForm onCreate={()=> {apprtTypesList.refetch(); setOpen(false); }}/>
+                    <ApprtTypeCreateForm onCreate={() => { apprtTypesList.refetch(); setOpen(false); }} />
                     <DrawerFooter>
                         <DrawerClose asChild>
                             <Button className="w-72" variant="outline">Cancel</Button>
