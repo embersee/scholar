@@ -8,7 +8,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 type Props = {
   apprts: GetApprenticeship;
 };
-export default function ApprtsList(props: Props) {
+export default async function ApprtsList(props: Props) {
   if (!props.apprts.length) {
     return (
       <div className="text-center">
@@ -26,11 +26,10 @@ export default function ApprtsList(props: Props) {
     );
   }
 
+  const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
   return (
     <ul>
-      {props.apprts.map(async (apprt, i) => {
-        const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
-        if (!user) return null;
+      {props.apprts.map((apprt, i) => {
         //const user1 = {...user, FIO: "Ivanov Alexey Vladimirovich"};
         return (
           <li key={i}><ApprenticeShip user={user} apprt={apprt} /></li>
@@ -47,13 +46,13 @@ const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) 
   const apprtsTypes = await api.apprts.getTypes.query();
   return (
     <Drawer>
-      <DrawerTrigger className="w-[100%]">
+      <DrawerTrigger asChild>
         <Button variant="ghost" className="flex justify-between w-[100%] px-10 h-[64px] items-center">
           <div className="flex flex-col items-start">
             <div>{`@${user?.username}`}</div>
             <div className="hidden md:block">{user?.FIO}</div>
           </div>
-          <div>{apprt.apprenticeshipTypeId}</div>
+          <div>{apprtsTypes.find((apprt_type)=> apprt_type.id === apprt.apprenticeshipTypeId )?.name}</div>
           <div>{`${apprt.signed}`}</div>
         </Button>
       </DrawerTrigger>
@@ -67,7 +66,7 @@ const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) 
           <div className="p-10">Dates</div>
         </div>
         <DrawerFooter>
-          <DrawerClose>
+          <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
