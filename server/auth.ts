@@ -6,6 +6,8 @@ import { AuthDataValidator, objectToAuthDataMap } from "@telegram-auth/server";
 
 import { db } from "@/server/db";
 import { redirect } from "next/navigation";
+import { GetUser } from "./schema/user";
+import { api } from "@/trpc/server";
 
 declare module "next-auth" {
   interface Session {
@@ -99,4 +101,6 @@ export const getUserAuth = async () => {
 export const checkAuth = async () => {
   const { session } = await getUserAuth();
   if (!session) redirect("/");
+  const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
+  if (!user) redirect("/");
 };
