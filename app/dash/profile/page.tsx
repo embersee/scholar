@@ -3,13 +3,11 @@ import { api } from "@/trpc/server";
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import ApprtsList from "@/components/apprts/List";
 import Container from "@/components/ui/container";
-import ProfileForm from "@/components/profile/Form";
 import { GetUser } from "@/server/schema/user";
 
 export default async function Profile() {
 
   const apprts = await api.apprts.getApprenticeships.query();
-  const data = await api.institutions.getInstitutions.query();
   const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
 
   return (
@@ -23,9 +21,6 @@ export default async function Profile() {
         <div className="flex flex-col gap-4 md:gap-6">
           <Container className="justify-center">
             <ApprtsList apprts={apprts} />
-          </Container>
-          <Container>
-            <ProfileForm user={user} institutions={data} />
           </Container>
         </div>
       </div>
