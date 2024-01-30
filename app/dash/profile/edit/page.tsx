@@ -1,16 +1,17 @@
 import ProifleEditForm from "@/components/profile/ProfileEditForm";
+import Container from "@/components/ui/container";
 import Heading from "@/components/ui/heading";
-import { getUserAuth } from "@/server/auth";
+import { GetUser } from "@/server/schema/user";
 import { api } from "@/trpc/server";
 
 const EditPage = async () => {
-    const {session} = await getUserAuth();
-    if (!session) return null;
-    const user = await api.user.getUserById.query({telegram_id: session.user.id});
-    if (!user) return null;
+    const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
+    const data = await api.institutions.getInstitutions.query();
     return <>
         <Heading title="Edit Profile" description="..."></Heading>
-        <ProifleEditForm user={user}/>
+        <div>
+            <ProifleEditForm user={user} institutions={data} />
+        </div>
     </>
 }
 
