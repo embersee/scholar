@@ -34,11 +34,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
 import Container from "@/components/ui/container";
+import { useRouter } from "next/navigation";
 
 export default function ApprtsForm(props: {
   apprenticeshipTypes: ApprenticeshipTypes[];
   session: any
 }) {
+  const router = useRouter()
   const parent = useRef(null);
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function ApprtsForm(props: {
   }));
 
   const apprts = api.apprts.createApprenticeship.useMutation({
-    onSuccess: () => alert("success!!!"),
+    onSuccess: () => router.push("/dash/apprts"),
     onError: (e) => {
       alert("Error");
       console.error(e);

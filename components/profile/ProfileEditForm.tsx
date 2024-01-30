@@ -1,87 +1,85 @@
 "use client";
 import Container from "@/components/ui/container";
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { User, updateUserSchema } from "@/server/schema/user";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Input } from "../ui/input";
-import { User as UserClient } from "@prisma/client";
-import { Button } from "../ui/button";
-import Link from "next/link";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useEffect, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
+import { Combobox } from "@/components/ui/combobox";
+import { GetUser, UserForm, userFormSchema } from "@/server/schema/user";
+import { Institution } from "@/server/schema/institution";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 
-const ProifleEditForm = ({ user }: { user: UserClient }) => {
+const ProifleEditForm = (props: {
+    user: GetUser;
+    institutions: Institution[];
+}) => {
+    const router = useRouter();
     const parent = useRef(null);
+
+    const institutions = props.institutions.map((v, i) => ({
+        value: v.id,
+        label: v.name,
+    }));
 
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
-    }, [parent])
+    }, [parent]);
 
-    const form = useForm<User>({
-        resolver: zodResolver(updateUserSchema),
+    const form = useForm<UserForm>({
+
+        resolver: zodResolver(userFormSchema),
         defaultValues: {
-            id: user.id,
-            telegram_id: user.telegram_id,
-            username: user.username ?? "",
-            display_name: user.display_name ?? "",
-            FIO: user.FIO ?? "",
-            phone_number: user.phone_number ?? "",
+            ...props.user,
+            institution: props.user?.institution?.name,
+        } ?? {
+            FIO: "",
+            phone_number: "",
+            institution: "",
+            specialty: "",
         },
         reValidateMode: "onChange",
     });
 
-    const router = useRouter();
+    const userShema = api.user.updateUser.useMutation({ onError: console.error, onSuccess: () => router.push("/dash/profile") })
 
-    const {mutate: updateUSer, isLoading: isUserUpdating} = api.user.updateUser.useMutation({
-        onSuccess: ()=> router.push("/dash/profile"),
-        onError: console.error
-    })
-
-    function handleSubmit(data: User) {
-        alert("hell")
+    function handleSubmit(data: UserForm) {
         console.log(JSON.stringify(data));
-        updateUSer({...data});
+        userShema.mutate({
+            ...data,
+            id: props.user?.id as string,
+            telegram_id: props.user?.telegram_id as string,
+        })
     }
 
-    
+
     return (
         <Container className="justify-center">
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(handleSubmit)}
                     autoComplete="off"
-                    className="flex flex-col gap-6"
+                    className="flex flex-col justify-start w-72"
                     ref={parent}
                 >
                     <FormField
                         control={form.control}
-                        name="display_name"
-                        render={({ field }) => (
-                            <FormItem className="w-max">
-                                <FormLabel>Display name</FormLabel>
-                                <Input
-                                    className="w-72"
-                                    autoComplete="off"
-                                    {...field}
-                                />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
                         name="FIO"
                         render={({ field }) => (
-                            <FormItem className="w-max">
+                            <FormItem>
                                 <FormLabel>FIO</FormLabel>
-                                <Input
-                                    className="w-72"
-                                    autoComplete="off"
-                                    placeholder="Ivanov Ivan Ivanovich"
-                                    {...field}
-                                />
+                                <FormControl>
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="Иван Иванович"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -89,26 +87,66 @@ const ProifleEditForm = ({ user }: { user: UserClient }) => {
                         control={form.control}
                         name="phone_number"
                         render={({ field }) => (
-                            <FormItem className="w-max">
-                                <FormLabel>Phone Number</FormLabel>
-                                <Input
-                                    type="number"
-                                    className="w-72"
-                                    placeholder="88005553535"
-                                    autoComplete="off" {...field}
-                                />
+                            <FormItem>
+                                <FormLabel>Phone number</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="98273947"
+                                        type="number"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <div className="mt-4 flex flex-col gap-4">
-                        <Link href="/dash/profile">
-                            <Button type="reset" className="w-72">Discard Changes</Button>
-                        </Link>
-                        <Button type="submit" className="w-72">Submit</Button>
-                    </div>
+                    <FormField
+                        control={form.control}
+                        name="institution"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Institution</FormLabel>
+                                <FormControl>
+                                    <Combobox
+                                        options={institutions}
+                                        {...field}
+                                        names={{
+                                            button: "Выбрать учеб. заведение",
+                                            empty: "Нету такого учеб. заведения...",
+                                            search: "Поиск по учеб. заведениям",
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="specialty"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Specialty</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        autoComplete="off"
+                                        placeholder="Специальность"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription></FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <Button type="submit">{userShema.isLoading? "Submitting...": "Submit"}</Button>
                 </form>
             </Form>
-        </Container >
+        </Container>
     );
 }
 
