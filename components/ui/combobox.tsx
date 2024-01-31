@@ -35,7 +35,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     return (
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" role="combobox" className="justify-between">
+          <Button variant="outline" role="combobox" className="justify-between w-[100%]">
             {value
               ? options.find((framework) => framework.value === value)?.label
               : names.button}

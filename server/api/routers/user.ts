@@ -82,7 +82,7 @@ export const userRouter = createTRPCRouter({
           ...user,
           institution: {
             connect: {
-              name: user.institution,
+              id: user.institution,
             },
           },
         },

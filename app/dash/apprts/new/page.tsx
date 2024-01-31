@@ -15,7 +15,7 @@ export default async function New() {
         description="this is required to submit a referal."
       ></Heading>
       <div className="form">
-        <ApprtsForm session={session} apprenticeships={[]} apprenticeshipTypes={apprenticeshipTypes}/>
+        <ApprtsForm session={session} apprenticeshipTypes={apprenticeshipTypes}/>
       </div>
     </>
   );
