@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "prisma db push --force-reset && next dev",
+    "dev": "prisma db push --force-reset && next dev --port 80",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc",
