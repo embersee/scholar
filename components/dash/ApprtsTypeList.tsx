@@ -29,7 +29,7 @@ const ApprtsTypeList = () => {
   }, [parent]);
 
   const apprtTypesList = api.apprts.getTypes.useQuery();
-
+  console.log(apprtTypesList);
   const apprtTypeRemove = api.apprts.removeApprtType.useMutation({
     onError: console.error,
     onSuccess: () => apprtTypesList.refetch(),
