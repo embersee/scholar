@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import {MoreHorizontal} from "lucide-react";
@@ -17,62 +16,48 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
-import UserEditForm from "@/components/dash/UserEditForm";
-import {User as UserSchema} from "@/server/schema/user";
-import {User} from "@prisma/client";
+
+import {Institution} from "@/server/schema/institution";
+
+import InstitutionEditForm from "@/components/dash/InstitutionEditForm";
 
 
-const UsersTable = () => {
+
+const InstitutionsTable = ({refetch, institutions}: {refetch: () => void, institutions: Institution[]}) => {
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
-    const [animationState, setAnimationState] = useState('');
-    const [user, setUser] = useState<UserSchema>()
-    const handleCreate = () => {
-        usersList.refetch();
-        setOpen(false);
-    };
+    const [institution, setInstitution] = useState<Institution>()
 
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
+    const handleCreate = () => {
+        refetch();
+        setOpen(false);
+    }
+    const institutionRemove = api.institutions.removeInstitution.useMutation({
+        onError: console.error,
+        onSuccess: () => refetch(),
+    });
 
-    const columns: ColumnDef<User>[] = [
+    const removeInstitution = (institutionId: string) => {
+        if (confirm("Are you shure?"))
+            institutionRemove.mutate({ id: institutionId });
+    };
+
+    const columns: ColumnDef<Institution>[] = [
         {
             header: 'ID',
             accessorKey: 'id',
         },
         {
-            header: 'Telegram ID',
-            accessorKey: 'telegram_id',
-        },
-        {
-            header: 'Username',
-            accessorKey: 'username',
-        },
-        {
-            header: 'Display Name',
-            accessorKey: 'display_name',
-        },
-        {
-            header: 'FIO',
-            accessorKey: 'FIO',
-        },
-        {
-            header: 'Phone Number',
-            accessorKey: 'phone_number',
-        },
-        {
-            header: 'Email',
-            accessorKey: 'email',
-        },
-        {
-            header: 'Role',
-            accessorKey: 'role',
+            header: 'name',
+            accessorKey: 'name',
         },
         {
             id: "actions",
             cell: ({ row }) => {
-                const user = row.original
+                const institution = row.original
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -80,12 +65,16 @@ const UsersTable = () => {
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className={`shadow-md ${animationState}`}>
+                        <DropdownMenuContent align="end" className={`shadow-md `}>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => {setOpen(true)
-                          setUser(user as UserSchema) }}>
+                          setInstitution(institution)}}>
                                 Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                                removeInstitution(institution.id)}}>
+                                Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -93,32 +82,22 @@ const UsersTable = () => {
             },
         },
     ];
-
-
-
-
-    const usersList = api.user.getUsers.useQuery();
-
-    const router = useRouter();
-    if (usersList.isLoading) {
-        return <div>Loading...</div>;
-    }
-
     return (
-        <div className="w-full">
-            {usersList.data && usersList.data.length > 0 ? (
+        <div className="w-full mt-2">
+            {institutions && institutions.length > 0 ? (
                 <div className="w-full  rounded-lg bg-white shadow-lg">
-                    <DataTable columns={columns} data={usersList.data} />
+                    <DataTable columns={columns} data={institutions} />
+
                     <Drawer
                         open={open}
                     >
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Institution
+                                    Edit Student
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {user && <UserEditForm onCreate={handleCreate}  data={user}/>}
+                            {institution && <InstitutionEditForm onCreate={handleCreate}  data={institution}/>}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
@@ -131,14 +110,14 @@ const UsersTable = () => {
                 </div>
             ) : (
                 <div className="text-center font-medium">
-                    Still No Users Yet
+                    Still No Institutions Yet
                 </div>
             )}
         </div>
     );
 };
 
-export default UsersTable;
+export default InstitutionsTable;
 
 
 
