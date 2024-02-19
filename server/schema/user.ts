@@ -8,6 +8,7 @@ export const userSchema = z.object({
   username: z.string().optional(),
   display_name: z.string().optional(),
   FIO: z.string().optional(),
+  email: z.string().optional(),
   phone_number: z.string().optional(),
   institution: z.string().optional(),
   specialty: z.string().optional(),
