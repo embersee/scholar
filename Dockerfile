@@ -1,4 +1,4 @@
-FROM node:18-alpine as base
+FROM node:21-alpine as base
 
 ##### DEPENDENCIES
 FROM base as deps
