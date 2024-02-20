@@ -20,6 +20,7 @@ import {
 import UserEditForm from "@/components/dash/UserEditForm";
 import {User as UserSchema} from "@/server/schema/user";
 import {User} from "@prisma/client";
+import {useSession} from "next-auth/react";
 
 
 const UsersTable = () => {
@@ -96,7 +97,9 @@ const UsersTable = () => {
 
 
 
-
+    // const session = useSession()
+    // console.log(session)
+    // const user =  api.user.getUserById.useQuery();
     const usersList = api.user.getUsers.useQuery();
 
     const router = useRouter();
