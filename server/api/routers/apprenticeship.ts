@@ -12,8 +12,12 @@ export const apprenticeshipRouter = createTRPCRouter({
   getApprenticeships: publicProcedure.query(async () => {
     return db.apprenticeship.findMany();
   }),
+  getApprenticeshipsWithUsers: protectedProcedure.query(async () => {
+    return db.apprenticeship.findMany({include: {user: true, apprenticeship_type: true}});
+  }),
 
-  getApprenticeshipById: protectedProcedure
+
+  getApprenticeshipsById: protectedProcedure
     .input(apprenticeshipSchema.pick({ user_id: true }))
     .query(async ({ input: { user_id } }) => {
       return db.apprenticeship.findFirst({

@@ -11,17 +11,18 @@ import {
     useReactTable,
     VisibilityState
 } from "@tanstack/react-table";
-import {useState} from "react";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "../ui/button";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 export function DataTable<TData, TValue>({
-                                             columns,
-                                             data,
-                                         }: DataTableProps<TData, TValue>) {
+    columns,
+    data,
+}: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({})
     const [columnVisibility, setColumnVisibility] =
         useState<VisibilityState>({})
@@ -53,7 +54,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="space-y-4">
+        <div className="">
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -61,7 +62,14 @@ export function DataTable<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                        <TableHead key={header.id} colSpan={header.colSpan}
+                                            style={{
+                                                position: `${header.column.id == 'user_username' ? 'sticky' : 'static'}`,
+                                                backgroundColor: "white",
+                                                left: 0,
+                                                zIndex: 100,
+                                                width: "100%",
+                                            }}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -81,12 +89,29 @@ export function DataTable<TData, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
+                                    {row.getVisibleCells().map((cell: any) => (
+                                        <TableCell key={cell.id} style={{
+                                            position: `${cell.column.id == 'user_username' ? 'sticky' : 'static'}`,
+                                            backgroundColor: "white",
+                                            left: 0,
+                                            zIndex: 100,
+                                            width: "100%",
+                                        }}>
+                                            {typeof cell.getValue() === 'object' && cell.getValue() instanceof Date
+                                                ? new Intl.DateTimeFormat('ru-RU', {
+                                                    year: 'numeric',
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                    second: '2-digit',
+                                                    hour12: false,
+                                                    timeZone: 'UTC',
+                                                }).format(cell.getValue() as Date)
+                                                : flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
                                         </TableCell>
                                     ))}
                                 </TableRow>
@@ -104,7 +129,25 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-        </div>
+            <div className="flex items-center justify-center space-x-2 py-4">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                >
+                    Previous
+                </Button>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                >
+                    Next
+                </Button>
+            </div>
+        </div >
     )
 }
 

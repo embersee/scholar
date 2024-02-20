@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import {MoreHorizontal} from "lucide-react";
-import {DataTable} from "@/components/dash/Table";
+import { MoreHorizontal } from "lucide-react";
+import { DataTable } from "@/components/dash/Table";
 import {
     Drawer,
     DrawerClose,
@@ -18,15 +17,14 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 import UserEditForm from "@/components/dash/UserEditForm";
-import {User as UserSchema} from "@/server/schema/user";
-import {User} from "@prisma/client";
-import {useSession} from "next-auth/react";
+import { User as UserSchema } from "@/server/schema/user";
+import { User } from "@prisma/client";
+
 
 
 const UsersTable = () => {
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
-    const [animationState, setAnimationState] = useState('');
     const [user, setUser] = useState<UserSchema>()
     const handleCreate = () => {
         usersList.refetch();
@@ -81,11 +79,13 @@ const UsersTable = () => {
                                 <MoreHorizontal className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className={`shadow-md ${animationState}`}>
+                        <DropdownMenuContent align="end" className='shadow-md'>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => {setOpen(true)
-                          setUser(user as UserSchema) }}>
+                            <DropdownMenuItem onClick={() => {
+                                setOpen(true)
+                                setUser(user as UserSchema)
+                            }}>
                                 Edit
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -95,14 +95,8 @@ const UsersTable = () => {
         },
     ];
 
-
-
-    // const session = useSession()
-    // console.log(session)
-    // const user =  api.user.getUserById.useQuery();
     const usersList = api.user.getUsers.useQuery();
 
-    const router = useRouter();
     if (usersList.isLoading) {
         return <div>Loading...</div>;
     }
@@ -121,7 +115,7 @@ const UsersTable = () => {
                                     Edit Institution
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {user && <UserEditForm onCreate={handleCreate}  data={user}/>}
+                            {user && <UserEditForm onCreate={handleCreate} data={user} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
