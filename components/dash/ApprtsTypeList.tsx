@@ -17,7 +17,6 @@ import { api } from "@/trpc/react";
 import Container from "../ui/container";
 import { ApprenticeshipType } from "@prisma/client";
 import ApprtTypeCreateForm from "./ApprtTypeCreateForm";
-import { Cross1Icon } from "@radix-ui/react-icons";
 
 const ApprtsTypeList = () => {
   const parent = useRef(null);
