@@ -100,12 +100,22 @@ enum Role {
 }
 
 model Curator {
-  id          String  @id @default(cuid())
-  telegram_id String  @unique
-  FIO         String?
-  group_url   String?
+  id          String @id @default(cuid())
+  telegram_id String @unique
+  FIO         String
+  // group_url   String[]
 
   Apprenticeship Apprenticeship[]
+  group_links    CuratorGroups[]
+}
+
+model CuratorGroups {
+  id         String @id @default(cuid())
+  group_name String
+  group_link String
+  curatorId  String
+
+  Curator Curator @relation(fields: [curatorId], references: [id], onDelete: Cascade)
 }
 
 model Institution {
