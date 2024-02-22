@@ -7,16 +7,25 @@ import {
 } from "@/server/api/trpc";
 import {db} from "@/server/db";
 import {Curator, curatorSchema, curatorSchemaUpdate} from "@/server/schema/curator";
-import {institutionSchema} from "@/server/schema/institution";
+
 
 export const curatorRouter = createTRPCRouter({
 
     getCurators: protectedProcedure.query(async () => {
-        return db.curator.findMany({
-            include: {
-                group_links: true,
-            },
-        }) as unknown as Curator[];
+        return db.curator.findMany({ 
+            select: {
+                id: true,
+                telegram_id: true,
+                FIO: true,
+                group_links: {
+                    select: {
+                        id: true,
+                        group_name: true,
+                        group_link: true,
+                    }
+                }
+            }, 
+        });
     }),
 
     createCurator: protectedProcedure
@@ -28,21 +37,11 @@ export const curatorRouter = createTRPCRouter({
                            session: { user },
                        },
                    }) => {
-                const data1 = curator as any;
-
-
                 return db.curator.create({
                     data: {
-                        ...data1,
+                        ...curator,
                         group_links: {
-                            deleteMany: {
-                                curatorId: data1.id
-                            },
-                            create: curator.group_links.map((el: any) => {
-                                const newEl = {...el};
-                                delete newEl.curatorId;
-                                return newEl;
-                            })
+                            create: curator.group_links,
                         }
                     }
                 });
@@ -52,20 +51,16 @@ export const curatorRouter = createTRPCRouter({
     updateCurator: protectedProcedure
         .input(curatorSchemaUpdate)
         .mutation(async ({ input: curator }) => {
-
-            const data1 = curator;
-
             return db.curator.update({
                 where: {
                     id: curator.id,
                 },
                 data: {
-                    ...data1,
+                    ...curator,
                     group_links: {
                         deleteMany: {},
-                        create: data1.group_links.map((el: any) => {
-                            const {curatorId, ...data} = el;
-                            return data;
+                        create: curator.group_links.map((el) => {
+                            return el;
                         }),
                     }
                 },
@@ -77,6 +72,9 @@ export const curatorRouter = createTRPCRouter({
             return db.curator.delete({
                 where: {
                     id,
+                },
+                include: {
+                    group_links: true,
                 }
             })
         })

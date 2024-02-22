@@ -5,8 +5,8 @@ import Heading from "@/components/ui/heading";
 import {api} from "@/trpc/react";
 import AddCuratorForm from "@/app/dash/curators/addCuratorForm";
 import CuratorsTable from "@/components/dash/CuratorsTable";
-
-const Curators = async () => {
+ 
+const Curators = () => {
     const curators = api.curators.getCurators.useQuery();
 
     console.log(curators.data);

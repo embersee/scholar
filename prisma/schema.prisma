@@ -115,7 +115,7 @@ model CuratorGroups {
   group_link String
   curatorId  String
 
-  Curator Curator @relation(fields: [curatorId], references: [id])
+  Curator Curator @relation(fields: [curatorId], references: [id], onDelete: Cascade)
 }
 
 model Institution {

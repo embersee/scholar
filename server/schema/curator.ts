@@ -9,7 +9,7 @@ export const curatorSchema = z.object({
             id: z.string(),
             group_name: z.string(),
             group_link: z.string(),
-            curatorId: z.string().optional()
+            // curatorId: z.string().optional()
         }
     )),
 });
