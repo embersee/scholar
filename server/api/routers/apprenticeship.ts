@@ -13,7 +13,7 @@ export const apprenticeshipRouter = createTRPCRouter({
     return db.apprenticeship.findMany();
   }),
   getApprenticeshipsWithUsers: protectedProcedure.query(async () => {
-    return db.apprenticeship.findMany({include: {user: true, apprenticeship_type: true}});
+    return db.apprenticeship.findMany({include: {user: true, curator:true, apprenticeship_type: true}});
   }),
 
 
@@ -83,6 +83,20 @@ export const apprenticeshipRouter = createTRPCRouter({
       return db.apprenticeship.delete({
         where: {
           id,
+        },
+      });
+    }),
+  
+    updateApprenticeship: protectedProcedure
+    .input(apprenticeshipTypes.extend({ id: z.string() }).pick({ id: true }))
+    .mutation(async ({ input: apprt }) => {
+      return db.apprenticeship.update({
+        data: {
+          ...apprt
+         
+        },
+        where: {
+          id: apprt.id,
         },
       });
     }),

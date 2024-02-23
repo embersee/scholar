@@ -7,7 +7,7 @@ import { api } from "@/trpc/react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { DataTable } from "@/components/dash/Table";
+import { DataTable } from "@/components/dash/dataTable/Table";
 import {
     Drawer,
     DrawerClose,
@@ -102,9 +102,9 @@ const UsersTable = () => {
     }
 
     return (
-        <div className="w-full">
+        <>
             {usersList.data && usersList.data.length > 0 ? (
-                <div className="w-full  rounded-lg bg-white shadow-lg">
+                <>
                     <DataTable columns={columns} data={usersList.data} />
                     <Drawer
                         open={open}
@@ -125,13 +125,13 @@ const UsersTable = () => {
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
-                </div>
+                </>
             ) : (
                 <div className="text-center font-medium">
                     Still No Users Yet
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

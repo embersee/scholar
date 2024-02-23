@@ -6,8 +6,8 @@ import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import {Copy, MoreHorizontal} from "lucide-react";
-import {DataTable} from "@/components/dash/Table";
+import { Copy, MoreHorizontal } from "lucide-react";
+
 import {
     Drawer,
     DrawerClose,
@@ -17,14 +17,15 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 
-import {Curator} from "@/server/schema/curator";
+import { Curator } from "@/server/schema/curator";
 
 import CuratorCreateForm from "@/components/dash/CuratorCreateForm";
 import CuratorEditForm from "@/components/dash/CuratorEditForm";
+import { DataTable } from "./dataTable/Table";
 
 
 
-const CuratorsTable = ({refetch, curators}: {refetch: () => void, curators: Curator[]}) => {
+const CuratorsTable = ({ refetch, curators }: { refetch: () => void, curators: Curator[] }) => {
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
     const [curatorSelected, setCuratorSelected] = useState<Curator>()
@@ -69,10 +70,10 @@ const CuratorsTable = ({refetch, curators}: {refetch: () => void, curators: Cura
                 return (
                     <div className={"flex flex-col gap-[5px]"}>
                         {curator?.group_links?.map((link, i) => <div className={"flex gap-[7px] items-center"}
-                                                                     key={link.id}>
+                            key={link.id}>
                             <a href={link.group_link} target="_blank">{i + 1}. {link.group_name}</a>
                             <Copy size={16} className={"hover:opacity-50 hover:cursor-pointer"}
-                                  onClick={() => copyToClipboard(link.group_link)}/>
+                                onClick={() => copyToClipboard(link.group_link)} />
                         </div>)}
                     </div>
 
@@ -93,12 +94,15 @@ const CuratorsTable = ({refetch, curators}: {refetch: () => void, curators: Cura
                         <DropdownMenuContent align="end" className={`shadow-md `}>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => {setOpen(true)
-                                setCuratorSelected(curator)}}>
+                            <DropdownMenuItem onClick={() => {
+                                setOpen(true)
+                                setCuratorSelected(curator)
+                            }}>
                                 Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => {
-                                deleteCurator(curator.id)}}>
+                                deleteCurator(curator.id)
+                            }}>
                                 Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -109,6 +113,7 @@ const CuratorsTable = ({refetch, curators}: {refetch: () => void, curators: Cura
     ];
     return (
         <div className="w-full mt-2">
+            {JSON.stringify(curators)}
             {curators && curators.length > 0 ? (
                 <div className="w-full  rounded-lg bg-white shadow-lg">
                     <DataTable columns={columns} data={curators} />
@@ -122,7 +127,7 @@ const CuratorsTable = ({refetch, curators}: {refetch: () => void, curators: Cura
                                     Edit Curator
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {curatorSelected && <CuratorEditForm onCreate={handleCreate}  data={curatorSelected}/>}
+                            {curatorSelected && <CuratorEditForm onCreate={handleCreate} data={curatorSelected} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>

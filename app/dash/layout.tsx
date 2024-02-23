@@ -13,7 +13,7 @@ export default async function DashLayout({
     <>
       <main>
         <Nav />
-        <div className="page">{children}</div>
+        <div className={`${'page'}`}>{children}</div>
       </main>
     </>
   );

@@ -70,7 +70,7 @@ model Apprenticeship {
   referral   String?
   report     String?
   curatorId  String?
-
+  curatorGroupId String?
   academic_year        String
   apprenticeshipTypeId String?
 
@@ -83,6 +83,7 @@ model Apprenticeship {
   apprenticeship_type ApprenticeshipType? @relation(fields: [apprenticeshipTypeId], references: [id])
   user                User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
   curator             Curator?            @relation(fields: [curatorId], references: [id])
+  curatorGroup        CuratorGroups?      @relation(fields: [curatorGroupId], references: [id])
 }
 
 model ApprenticeshipType {
@@ -116,6 +117,7 @@ model CuratorGroups {
   curatorId  String
 
   Curator Curator @relation(fields: [curatorId], references: [id], onDelete: Cascade)
+  Apprenticeship Apprenticeship[]
 }
 
 model Institution {

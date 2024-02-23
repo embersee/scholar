@@ -7,7 +7,7 @@ import { api } from "@/trpc/react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { DataTable } from "@/components/dash/Table";
+import { DataTable } from "@/components/dash/dataTable/Table";
 
 
 import {
@@ -22,15 +22,22 @@ import {
 
 import { GetApprenticeship } from "@/server/schema/apprenticeship";
 import { useRouter } from "next/navigation";
+import ApprtsWithUsersEditForm from "./ApprtsWithUsersEditForm";
 
 const ApprtsTable = ({ apprts }: { apprts: any }) => {
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
-
+    const [apprtWithUser, setApprtWithUser] = useState();
     type apprt = GetApprenticeship[0];
+    const { refetch } = api.apprts.getApprenticeshipsWithUsers.useQuery();
+    const curators = api.curators.getCurators.useQuery();
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
+    const handleCreate = () => {
+        refetch();
+        setOpen(false);
+    };
 
     const router = useRouter()
     const columns: ColumnDef<any>[] = [
@@ -246,53 +253,47 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
                 )
             },
         },
-
-        // {
-        //     id: "actions",
-        //     cell: ({ row }) => {
-        //         const user = row.original
-        //         return (
-        //             <DropdownMenu>
-        //                 <DropdownMenuTrigger asChild>
-        //                     <Button variant="ghost" className="h-8 w-8 p-0">
-        //                         <MoreHorizontal className="h-4 w-4" />
-        //                     </Button>
-        //                 </DropdownMenuTrigger>
-        //                 <DropdownMenuContent align="end" className='shadow-md'>
-        //                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        //                     <DropdownMenuSeparator />
-        //                     <DropdownMenuItem onClick={() => {
-        //                         setOpen(true)
-
-        //                     }}>
-        //                         Edit
-        //                     </DropdownMenuItem>
-        //                 </DropdownMenuContent>
-        //             </DropdownMenu>
-        //         )
-        //     },
-        // },
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                const user = row.original
+                return (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className='shadow-md'>
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => {
+                                setOpen(true)
+                                setApprtWithUser(user)
+                            }}>
+                                Edit
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )
+            },
+        },
     ];
-
-
-
-
-
     return (
-        <div className="w-full">
+        <>
             {apprts && apprts.length > 0 ? (
-                <div className="w-full  rounded-lg bg-white shadow-lg">
+                <div className="w-full rounded-lgshadow-lg">
                     <DataTable columns={columns} data={apprts} />
                     <Drawer
                         open={open}
                     >
-                        <DrawerContent className="flex flex-col items-center">
+                        <DrawerContent className="h-screen flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
                                     Edit Institution
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {/* {apprenticeship && <UserEditForm onCreate={handleCreate} data={apprenticeship} />} */}
+                            {apprtWithUser && curators.data && <ApprtsWithUsersEditForm curators={curators.data} onCreate={handleCreate} data={apprtWithUser} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
@@ -308,7 +309,7 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
                     Still No apprts Yet
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

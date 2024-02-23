@@ -6,8 +6,8 @@ import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { ColumnDef } from "@tanstack/react-table"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import {MoreHorizontal} from "lucide-react";
-import {DataTable} from "@/components/dash/Table";
+import { MoreHorizontal } from "lucide-react";
+import { DataTable } from "@/components/dash/dataTable/Table";
 import {
     Drawer,
     DrawerClose,
@@ -17,13 +17,13 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 
-import {Institution} from "@/server/schema/institution";
+import { Institution } from "@/server/schema/institution";
 
 import InstitutionEditForm from "@/components/dash/InstitutionEditForm";
 
 
 
-const InstitutionsTable = ({refetch, institutions}: {refetch: () => void, institutions: Institution[]}) => {
+const InstitutionsTable = ({ refetch, institutions }: { refetch: () => void, institutions: Institution[] }) => {
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
     const [institution, setInstitution] = useState<Institution>()
@@ -68,12 +68,15 @@ const InstitutionsTable = ({refetch, institutions}: {refetch: () => void, instit
                         <DropdownMenuContent align="end" className={`shadow-md `}>
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => {setOpen(true)
-                          setInstitution(institution)}}>
+                            <DropdownMenuItem onClick={() => {
+                                setOpen(true)
+                                setInstitution(institution)
+                            }}>
                                 Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => {
-                                removeInstitution(institution.id)}}>
+                                removeInstitution(institution.id)
+                            }}>
                                 Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -85,7 +88,7 @@ const InstitutionsTable = ({refetch, institutions}: {refetch: () => void, instit
     return (
         <div className="w-full mt-2">
             {institutions && institutions.length > 0 ? (
-                <div className="w-full  rounded-lg bg-white shadow-lg">
+                <div className="w-full">
                     <DataTable columns={columns} data={institutions} />
 
                     <Drawer
@@ -97,7 +100,7 @@ const InstitutionsTable = ({refetch, institutions}: {refetch: () => void, instit
                                     Edit Student
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {institution && <InstitutionEditForm onCreate={handleCreate}  data={institution}/>}
+                            {institution && <InstitutionEditForm onCreate={handleCreate} data={institution} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
