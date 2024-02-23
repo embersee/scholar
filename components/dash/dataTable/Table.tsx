@@ -13,7 +13,8 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "../ui/button";
+import { DataTableToolbar } from "./DataTableToolbar";
+import { DataTablePagination } from "./DataTablePagination";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -54,7 +55,8 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="">
+        <div className="space-y-4">
+            <DataTableToolbar table={table} />
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -67,7 +69,7 @@ export function DataTable<TData, TValue>({
                                                 position: `${header.column.id == 'user_username' ? 'sticky' : 'static'}`,
                                                 backgroundColor: "white",
                                                 left: 0,
-                                                zIndex: 100,
+                                                zIndex: 5,
                                                 width: "100%",
                                             }}>
                                             {header.isPlaceholder
@@ -94,7 +96,7 @@ export function DataTable<TData, TValue>({
                                             position: `${cell.column.id == 'user_username' ? 'sticky' : 'static'}`,
                                             backgroundColor: "white",
                                             left: 0,
-                                            zIndex: 100,
+                                            zIndex: 5,
                                             width: "100%",
                                         }}>
                                             {typeof cell.getValue() === 'object' && cell.getValue() instanceof Date
@@ -129,24 +131,7 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-center space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Previous
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Next
-                </Button>
-            </div>
+            <DataTablePagination table={table} />
         </div >
     )
 }

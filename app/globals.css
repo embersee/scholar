@@ -117,6 +117,8 @@ main {
   @apply mx-auto h-screen min-h-full flex flex-col items-center p-4;
 }
 
+
+
 .page {
  @apply w-full max-w-3xl h-full flex flex-col min-w-80;
 }
@@ -160,3 +162,7 @@ input[type=number] {
 .container {
   @apply flex bg-white rounded-sm p-10 border-solid border-2 border-gray-100 dark:bg-slate-800 dark:border-none overflow-hidden h-max;
 }
+
+.full {
+  @apply w-full max-w-full h-full flex flex-col min-w-80;
+ }

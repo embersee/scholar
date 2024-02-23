@@ -95,7 +95,7 @@ export default function ApprtsForm(props: {
             control={form.control}
             name="apprenticeship_type"
             render={({ field }) => (
-              <FormItem  className="w-72">
+              <FormItem className="w-72">
                 <FormLabel>Вид практики</FormLabel>
                 <FormControl>
                   <Combobox
@@ -118,7 +118,7 @@ export default function ApprtsForm(props: {
             control={form.control}
             name="referral"
             render={({ field }) => (
-              <FormItem  className="w-72">
+              <FormItem className="w-72">
                 <FormLabel>Место ссылки направления</FormLabel>
                 <FormControl>
                   <Input
