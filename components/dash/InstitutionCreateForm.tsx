@@ -7,9 +7,10 @@ import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
 import { institutionSchema, Institution } from "@/server/schema/institution";
+import { toast } from "../ui/use-toast";
 
 
-const InstitutionCreateForm = ({onCreate}:{onCreate: Function}) => {
+const InstitutionCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const parent = useRef(null);
 
     useEffect(() => {
@@ -25,7 +26,26 @@ const InstitutionCreateForm = ({onCreate}:{onCreate: Function}) => {
         reValidateMode: "onChange"
     });
 
-    const institutionMutation = api.institutions.createInstitution.useMutation({ onSuccess: () => onCreate(), onError: console.error })
+    const institutionMutation = api.institutions.createInstitution.useMutation({
+        onMutate: () => {
+            toast({
+                title: '🔄 Creating...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'Instituton created'
+            })
+            onCreate()
+        },
+    })
 
 
     function handleSubmit(data: Institution): void {

@@ -6,11 +6,11 @@ import {
     publicProcedure,
 } from "@/server/api/trpc";
 import {db} from "@/server/db";
-import {Curator, curatorSchema, curatorSchemaUpdate} from "@/server/schema/curator";
+import { curatorSchema, curatorSchemaUpdate} from "@/server/schema/curator";
+import { TRPCError } from "@trpc/server";
 
 
 export const curatorRouter = createTRPCRouter({
-
     getCurators: protectedProcedure.query(async () => {
         return db.curator.findMany({ 
             select: {
@@ -37,45 +37,66 @@ export const curatorRouter = createTRPCRouter({
                            session: { user },
                        },
                    }) => {
-                return db.curator.create({
-                    data: {
-                        ...curator,
-                        group_links: {
-                            create: curator.group_links,
+                try {
+                    const result = await db.curator.create({
+                        data: {
+                            ...curator,
+                            group_links: {
+                                create: curator.group_links,
+                            }
                         }
-                    }
-                });
+                    });
+                    return { success: true, result };
+                  } catch (error) {
+                    throw new TRPCError({ code: "BAD_REQUEST",
+                    message: "Error while creating, try again"
+                  });
+                  }
             },
         ),
 
     updateCurator: protectedProcedure
         .input(curatorSchemaUpdate)
         .mutation(async ({ input: curator }) => {
-            return db.curator.update({
-                where: {
-                    id: curator.id,
-                },
-                data: {
-                    ...curator,
-                    group_links: {
-                        deleteMany: {},
-                        create: curator.group_links.map((el) => {
-                            return el;
-                        }),
-                    }
-                },
-            });
+            try {
+                const result = await db.curator.update({
+                    where: {
+                        id: curator.id,
+                    },
+                    data: {
+                        ...curator,
+                        group_links: {
+                            deleteMany: {},
+                            create: curator.group_links.map((el) => {
+                                return el;
+                            }),
+                        }
+                    },
+                });
+                return { success: true, result };
+              } catch (error) {
+                throw new TRPCError({ code: "BAD_REQUEST",
+                message: "Curator does not exist"
+              });
+              }
         }),
     removeCurator: protectedProcedure
         .input(curatorSchema.extend({ id: z.string() }).pick({id: true}))
-        .mutation(async ({input: {id}})=>{
-            return db.curator.delete({
-                where: {
-                    id,
-                },
-                include: {
-                    group_links: true,
-                }
-            })
+        .mutation(async ({input: {id}})=>{          
+            try {
+                const result = await db.curator.delete({
+                    where: {
+                        id,
+                    },
+                    include: {
+                        group_links: true,
+                    }
+                })
+                return { success: true, result };
+              } catch (error) {
+                throw new TRPCError({ code: "BAD_REQUEST",
+                message: "Curator does not exist"
+              });
+              }
         })
 });

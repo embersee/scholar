@@ -17,6 +17,7 @@ import { api } from "@/trpc/react";
 import Container from "../ui/container";
 import { Institution } from "@prisma/client";
 import InstitutionCreateForm from "./InstitutionCreateForm";
+import { toast } from "../ui/use-toast";
 
 const InstitutionList = () => {
   const parent = useRef(null);
@@ -30,8 +31,24 @@ const InstitutionList = () => {
   const institutionList = api.institutions.getInstitutions.useQuery();
 
   const institutionRemove = api.institutions.removeInstitution.useMutation({
-    onError: console.error,
-    onSuccess: () => institutionList.refetch(),
+    onMutate: () => {
+      toast({
+        title: '🔄 Removing...',
+      })
+    },
+    onError: (e) => {
+      toast({
+        title: '🚫 Error',
+        description: e.message
+      })
+    },
+    onSuccess: () => {
+      toast({
+        title: '✅ Success',
+        description: 'Institution removed'
+      })
+      institutionList.refetch()
+    },
   });
 
   const removeInstitution = (institutionId: string) => {
@@ -73,7 +90,7 @@ const InstitutionList = () => {
           <DrawerHeader>
             <DrawerTitle>New Institution</DrawerTitle>
             <DrawerDescription>
-              Make changes to your profile here. Click save when you're done.
+              {"Make changes to your profile here. Click save when you're done."}
             </DrawerDescription>
           </DrawerHeader>
           <InstitutionCreateForm

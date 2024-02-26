@@ -22,6 +22,7 @@ import { Curator } from "@/server/schema/curator";
 import CuratorCreateForm from "@/components/dash/CuratorCreateForm";
 import CuratorEditForm from "@/components/dash/CuratorEditForm";
 import { DataTable } from "./dataTable/Table";
+import { toast } from "../ui/use-toast";
 
 
 
@@ -39,8 +40,24 @@ const CuratorsTable = ({ refetch, curators }: { refetch: () => void, curators: C
         setOpen(false);
     }
     const curatorRemove = api.curators.removeCurator.useMutation({
-        onError: console.error,
-        onSuccess: () => refetch(),
+        onMutate: () => {
+            toast({
+                title: '🔄 Removing...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'Curator removed'
+            })
+            refetch()
+        },
     });
 
     const deleteCurator = (id: string) => {

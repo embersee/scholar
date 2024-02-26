@@ -118,7 +118,6 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
     },
   });
 });
-
 /**
  * Protected (authenticated) procedure
  *

@@ -7,10 +7,10 @@ import { useEffect, useId, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { Focus } from "lucide-react";
+import { toast } from "../ui/use-toast";
 
 
-const ApprtTypeCreateForm = ({onCreate}:{onCreate: Function}) => {
+const ApprtTypeCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const parent = useRef(null);
 
     useEffect(() => {
@@ -26,7 +26,26 @@ const ApprtTypeCreateForm = ({onCreate}:{onCreate: Function}) => {
         reValidateMode: "onChange"
     });
 
-    const apprtTypeMutation = api.apprts.createApprtType.useMutation({ onSuccess: () => onCreate(), onError: console.error })
+    const apprtTypeMutation = api.apprts.createApprtType.useMutation({
+        onMutate: () => {
+            toast({
+                title: '🔄 Creating...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'Apprenticeship type created'
+            })
+            onCreate()
+        },
+    })
 
 
     function handleSubmit(data: ApprenticeshipTypes): void {
