@@ -60,7 +60,6 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
             curatorRemove.mutate({ id });
     };
 
-
     function copyToClipboard(text: string) {
         navigator.clipboard.writeText(text);
     }
@@ -82,7 +81,7 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
                 return (
                     <div className={"flex flex-col gap-[5px]"}>
                         {curator?.group_links?.map((link, i) => <div className={"flex gap-[7px] items-center"}
-                            key={link.id}>
+                            key={link.curatorId}>
                             <a href={link.group_link} target="_blank">{i + 1}. {link.group_name}</a>
                             <Copy size={16} className={"hover:opacity-50 hover:cursor-pointer"}
                                 onClick={() => copyToClipboard(link.group_link)} />

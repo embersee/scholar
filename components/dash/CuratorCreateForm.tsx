@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Curator, curatorSchemaForm, CuratorForm } from "@/server/schema/curator";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "../ui/use-toast";
+import { useZodForm } from "@/lib/utils";
 // const validationSchema = curatorSchema;
 // function useZodForm<TSchema extends z.ZodType>(
 //     props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
@@ -29,40 +30,24 @@ import { toast } from "../ui/use-toast";
 // }
 const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const parent = useRef(null);
+
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
-    // const form = useZodForm({
-    //     schema: validationSchema,
-    //     defaultValues: {
-    //         id: useId(),
-    //         telegram_id: "",
-    //         FIO: "",
-    //         group_links: [
-    //             {
-    //                 id: "",
-    //                 group_link: "",
-    //                 group_name: "",
-    //             }
-    //         ],
-    //     },
-    //     mode: "onChange",
-    // });
-    const form = useForm<CuratorForm>({
-        resolver: zodResolver(curatorSchemaForm),
+
+    const form = useZodForm({
+        schema: curatorSchemaForm,
         defaultValues: {
-            id: useId(),
-            FIO: '',
-            telegram_id: '',
+            telegram_id: "",
+            FIO: "",
             group_links: [
                 {
-                    id: useId(),
                     group_link: "",
                     group_name: "",
                 }
             ],
         },
-        reValidateMode: "onChange"
+        mode: "onChange",
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -92,9 +77,8 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
     })
 
 
-    function handleSubmit(data: Curator): void {
-        let newUrls = data.group_links.map(el => ({ ...el, id: el.group_link + data.id }));
-        curatorMutation.mutate({ ...data, group_links: newUrls });
+    function handleSubmit(data: CuratorForm): void {
+        curatorMutation.mutate(data);
     }
 
 
@@ -124,7 +108,6 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
 
             <FormItem>
                 <FormLabel>Group links</FormLabel>
-
                 {fields.map((field, index) => {
                     return (
                         <div key={field.id} className="flex justify-between items-end gap-4">
@@ -166,8 +149,6 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                                     </FormItem>
                                 )}
                             />
-
-
                             <Button
                                 type="button"
                                 variant="destructive"
@@ -185,7 +166,6 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                     variant="secondary"
                     onClick={() =>
                         append({
-                            id: "",
                             group_link: "",
                             group_name: ""
                         })}

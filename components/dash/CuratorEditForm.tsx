@@ -16,16 +16,8 @@ import { Button } from "@/components/ui/button";
 import { Curator, CuratorForm, curatorSchemaForm } from "@/server/schema/curator";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "../ui/use-toast";
-// function useZodForm<TSchema extends z.ZodType>(
-//     props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
-//         schema: TSchema;
-//     },
-// ) {
-//     return useForm<TSchema["_input"]>({
-//         ...props,
-//         resolver: zodResolver(props.schema, undefined, {}),
-//     });
-// }
+import { useZodForm } from "@/lib/utils";
+
 const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator }) => {
     const parent = useRef(null);
 
@@ -33,21 +25,12 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
         parent.current && autoAnimate(parent.current);
     }, [parent]);
 
-    // const form = useZodForm({
-    //     schema: validationSchema,
-    //     defaultValues: data,
-    //     mode: "onChange",
-    // });
-    const form = useForm<CuratorForm>({
-        resolver: zodResolver(curatorSchemaForm),
-        defaultValues: {
-            id: data.id,
-            FIO: data.FIO,
-            telegram_id: data.telegram_id,
-            group_links: data.group_links,
-        },
-        reValidateMode: "onChange"
+    const form = useZodForm({
+        schema: curatorSchemaForm,
+        defaultValues: data,
+        mode: "onChange",
     });
+
 
     const { fields, append, remove } = useFieldArray({
         name: "group_links",
@@ -76,7 +59,7 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
             },
         });
 
-    const handleSubmit = (values: Curator) => {
+    const handleSubmit = (values: CuratorForm) => {
         curatorMutation(values);
     };
 
@@ -166,7 +149,6 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
                     variant="secondary"
                     onClick={() =>
                         append({
-                            id: "",
                             group_link: "",
                             group_name: ""
                         })}
