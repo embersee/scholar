@@ -35,6 +35,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
 import Container from "@/components/ui/container";
 import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 export default function ApprtsForm(props: {
   apprenticeshipTypes: ApprenticeshipTypes[];
@@ -70,11 +71,24 @@ export default function ApprtsForm(props: {
   }));
 
   const apprts = api.apprts.createApprenticeship.useMutation({
-    onSuccess: () => router.push("/dash/apprts"),
+    onMutate: () => {
+      toast({
+        title: '🔄 Creating...',
+      })
+    },
     onError: (e) => {
-      alert("Error");
-      console.error(e);
-    }
+      toast({
+        title: '🚫 Error',
+        description: e.message
+      })
+    },
+    onSuccess: () => {
+      toast({
+        title: '✅ Success',
+        description: 'Apprenticeship type created'
+      })
+      router.push("/dash/apprts",)
+    },
   });
 
   async function handleSubmit(data: ApprenticeshipForm) {

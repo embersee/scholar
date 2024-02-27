@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Combobox } from "../ui/combobox";
 import { Curator } from "@/server/schema/curator";
+import { toast } from "../ui/use-toast";
 
 
 
@@ -41,7 +42,26 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators }: { onCreate: Funct
         },
         reValidateMode: "onChange"
     });
-    const apprtsEditMutation = api.apprts.updateApprenticeship.useMutation({ onSuccess: () => onCreate(), onError: console.error })
+    const apprtsEditMutation = api.apprts.updateApprenticeship.useMutation({
+        onMutate: () => {
+            toast({
+                title: '🔄 Updating...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'Apprenticeship updated'
+            })
+            onCreate()
+        },
+    })
     const catalogCurators = curators.map((v) => ({
         value: v.id,
         label: v.FIO,

@@ -12,6 +12,7 @@ import { GetUser, UserForm, userFormSchema } from "@/server/schema/user";
 import { Institution } from "@/server/schema/institution";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
 
 const ProifleEditForm = (props: {
     user: GetUser;
@@ -44,7 +45,26 @@ const ProifleEditForm = (props: {
         reValidateMode: "onChange",
     });
 
-    const userShema = api.user.updateUser.useMutation({ onError: console.error, onSuccess: () => router.push("/dash/profile") })
+    const userShema = api.user.updateUser.useMutation({
+        onMutate: () => {
+            toast({
+                title: '🔄 Updating...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'User updated'
+            })
+            router.push("/dash/profile")
+        },
+    })
 
     function handleSubmit(data: UserForm) {
         console.log(JSON.stringify(data));
@@ -143,7 +163,7 @@ const ProifleEditForm = (props: {
                         )}
                     />
 
-                    <Button type="submit">{userShema.isLoading? "Submitting...": "Submit"}</Button>
+                    <Button type="submit">{userShema.isLoading ? "Submitting..." : "Submit"}</Button>
                 </form>
             </Form>
         </Container>

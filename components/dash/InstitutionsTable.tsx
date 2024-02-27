@@ -20,6 +20,7 @@ import {
 import { Institution } from "@/server/schema/institution";
 
 import InstitutionEditForm from "@/components/dash/InstitutionEditForm";
+import { toast } from "../ui/use-toast";
 
 
 
@@ -36,8 +37,24 @@ const InstitutionsTable = ({ refetch, institutions }: { refetch: () => void, ins
         setOpen(false);
     }
     const institutionRemove = api.institutions.removeInstitution.useMutation({
-        onError: console.error,
-        onSuccess: () => refetch(),
+        onMutate: () => {
+            toast({
+                title: '🔄 Removing...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'Institution removed'
+            })
+            refetch()
+        },
     });
 
     const removeInstitution = (institutionId: string) => {

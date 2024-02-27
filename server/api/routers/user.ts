@@ -6,7 +6,7 @@ import {
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 import { db } from "@/server/db";
-
+import { TRPCError } from "@trpc/server";
 export const userRouter = createTRPCRouter({
   getUsers: protectedProcedure.query(async () => {
     return db.user.findMany();
@@ -49,6 +49,7 @@ export const userRouter = createTRPCRouter({
       });
 
       if (isCurator) {
+        
         return db.user.create({
           data: {
             ...user,
@@ -77,19 +78,26 @@ export const userRouter = createTRPCRouter({
   updateUser: protectedProcedure
     .input(updateUserParams)
     .mutation(async ({ input: user }) => {
-      return db.user.update({
-        data: {
-          ...user,
-          institution: {
-            connect: {
-              id: user.institution,
+      try {
+        const result = await db.user.update({
+          data: {
+            ...user,
+            institution: {
+              connect: {
+                id: user.institution,
+              },
             },
           },
-        },
-        where: {
-          telegram_id: user.telegram_id,
-        },
+          where: {
+            telegram_id: user.telegram_id,
+          },
+        });
+        return { success: true, result };
+      } catch (error) {
+        throw new TRPCError({ code: "BAD_REQUEST",
+        message: "Apprenticeship does not exist"
       });
+      }
     }),
 
   deleteUser: protectedProcedure

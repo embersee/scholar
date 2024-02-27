@@ -6,14 +6,15 @@ import { useEffect, useId, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import {updateUserParams, User} from "@/server/schema/user";
+import { updateUserParams, User } from "@/server/schema/user";
 
-import {z} from "zod";
+import { z } from "zod";
+import { toast } from "../ui/use-toast";
 
 
 
 
-const UserEditForm = ({onCreate, data}:{onCreate: Function, data: User }) => {
+const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) => {
     const parent = useRef(null);
 
     useEffect(() => {
@@ -23,17 +24,36 @@ const UserEditForm = ({onCreate, data}:{onCreate: Function, data: User }) => {
     const form = useForm<User>({
         resolver: zodResolver(updateUserParams),
         defaultValues: {
-            id: data.id ,
+            id: data.id,
             username: data.username,
             FIO: data.FIO,
-            display_name: data  ? data.display_name : '' ,
-            phone_number: data.phone_number ,
+            display_name: data ? data.display_name : '',
+            phone_number: data.phone_number,
             email: data.email,
         },
         reValidateMode: "onChange"
     });
 
-    const userEditMutation = api.user.updateUser.useMutation({ onSuccess: () => onCreate(), onError: console.error })
+    const userEditMutation = api.user.updateUser.useMutation({
+        onMutate: () => {
+            toast({
+                title: '🔄 Updating...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            toast({
+                title: '✅ Success',
+                description: 'User updated'
+            })
+            onCreate()
+        },
+    })
 
 
     function handleSubmit(data: User): void {
@@ -58,7 +78,7 @@ const UserEditForm = ({onCreate, data}:{onCreate: Function, data: User }) => {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Username</FormLabel>
-                        <Input  autoComplete="off" aria-autocomplete="none" placeholder="Username" {...field} />
+                        <Input autoComplete="off" aria-autocomplete="none" placeholder="Username" {...field} />
                     </FormItem>
                 )} />
             <FormField
