@@ -42,7 +42,7 @@ export default async function Apprenticeships() {
   ]*/
 
   return (
-    <div className="absolute p-4 w-full left-0 max-w-full">
+    <div className={`${user?.role !== 'STUDENT' && 'absolute p-4 w-full left-0 max-w-full'}`}>
       <div className="">
         <Heading
           title={`${user?.role !== 'STUDENT' ? 'My' : ''} Apprenticeships`}
@@ -50,7 +50,7 @@ export default async function Apprenticeships() {
         ></Heading>
       </div>
       {
-        user?.role !== "STUDENT" ?
+        user?.role == "STUDENT" ?
           <ApprtsList apprts={apprts} /> :
           <ApprtsTable />
       }

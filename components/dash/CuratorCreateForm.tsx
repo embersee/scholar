@@ -1,7 +1,6 @@
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -14,51 +13,56 @@ import { useEffect, useId, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { curatorSchema, Curator, curatorSchemaForm, CuratorForm } from "@/server/schema/curator";
-import { useState } from "react";
-import { X } from 'lucide-react';
-
-import { z } from "zod";
-import { UseFormProps, useFieldArray, useForm } from "react-hook-form";
+import { Curator, curatorSchemaForm, CuratorForm } from "@/server/schema/curator";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "../ui/use-toast";
-
-
-const validationSchema = curatorSchema;
-
-function useZodForm<TSchema extends z.ZodType>(
-    props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
-        schema: TSchema;
-    },
-) {
-    return useForm<TSchema["_input"]>({
-        ...props,
-        resolver: zodResolver(props.schema, undefined, {}),
-    });
-}
-
-
+// const validationSchema = curatorSchema;
+// function useZodForm<TSchema extends z.ZodType>(
+//     props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
+//         schema: TSchema;
+//     },
+// ) {
+//     return useForm<TSchema["_input"]>({
+//         ...props,
+//         resolver: zodResolver(props.schema, undefined, {}),
+//     });
+// }
 const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const parent = useRef(null);
-
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
-
-    const form = useZodForm({
-        schema: validationSchema,
+    // const form = useZodForm({
+    //     schema: validationSchema,
+    //     defaultValues: {
+    //         id: useId(),
+    //         telegram_id: "",
+    //         FIO: "",
+    //         group_links: [
+    //             {
+    //                 id: "",
+    //                 group_link: "",
+    //                 group_name: "",
+    //             }
+    //         ],
+    //     },
+    //     mode: "onChange",
+    // });
+    const form = useForm<CuratorForm>({
+        resolver: zodResolver(curatorSchemaForm),
         defaultValues: {
             id: useId(),
-            telegram_id: "",
-            FIO: "",
+            FIO: '',
+            telegram_id: '',
             group_links: [
                 {
-                    id: "",
+                    id: useId(),
                     group_link: "",
                     group_name: "",
                 }
             ],
         },
-        mode: "onChange",
+        reValidateMode: "onChange"
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -89,8 +93,6 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
 
 
     function handleSubmit(data: Curator): void {
-        console.log(JSON.stringify(data));
-
         let newUrls = data.group_links.map(el => ({ ...el, id: el.group_link + data.id }));
         curatorMutation.mutate({ ...data, group_links: newUrls });
     }

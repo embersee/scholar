@@ -1,41 +1,31 @@
 // import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
-import { useEffect, useState, useId, useRef } from "react";
+import { useEffect, useRef, } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-
-import { Curator, CuratorForm, curatorSchema } from "@/server/schema/curator";
-import { z } from "zod";
-import { UseFormProps, useFieldArray, useForm } from "react-hook-form";
+import { Curator, CuratorForm, curatorSchemaForm } from "@/server/schema/curator";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "../ui/use-toast";
-
-const validationSchema = curatorSchema;
-
-function useZodForm<TSchema extends z.ZodType>(
-    props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
-        schema: TSchema;
-    },
-) {
-    return useForm<TSchema["_input"]>({
-        ...props,
-        resolver: zodResolver(props.schema, undefined, {}),
-    });
-}
-
-
+// function useZodForm<TSchema extends z.ZodType>(
+//     props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
+//         schema: TSchema;
+//     },
+// ) {
+//     return useForm<TSchema["_input"]>({
+//         ...props,
+//         resolver: zodResolver(props.schema, undefined, {}),
+//     });
+// }
 const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator }) => {
     const parent = useRef(null);
 
@@ -43,10 +33,20 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
         parent.current && autoAnimate(parent.current);
     }, [parent]);
 
-    const form = useZodForm({
-        schema: validationSchema,
-        defaultValues: data,
-        mode: "onChange",
+    // const form = useZodForm({
+    //     schema: validationSchema,
+    //     defaultValues: data,
+    //     mode: "onChange",
+    // });
+    const form = useForm<CuratorForm>({
+        resolver: zodResolver(curatorSchemaForm),
+        defaultValues: {
+            id: data.id,
+            FIO: data.FIO,
+            telegram_id: data.telegram_id,
+            group_links: data.group_links,
+        },
+        reValidateMode: "onChange"
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -112,7 +112,7 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
                         <div key={field.id} className="flex justify-between items-end gap-4">
                             <FormField
                                 control={form.control}
-                                name={`group_links.${index}.group_name` as const}
+                                name={`group_links.${index}.group_name`}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Name: </FormLabel>
@@ -124,14 +124,13 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
                                                 {...field}
                                             />
                                         </FormControl>
-
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
-                                name={`group_links.${index}.group_link` as const}
+                                name={`group_links.${index}.group_link`}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Link: </FormLabel>

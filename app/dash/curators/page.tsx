@@ -1,29 +1,17 @@
-'use client'
-
 import React from 'react';
 import Heading from "@/components/ui/heading";
-import {api} from "@/trpc/react";
-import AddCuratorForm from "@/app/dash/curators/addCuratorForm";
-import CuratorsTable from "@/components/dash/CuratorsTable";
- 
-const Curators = () => {
-    const curators = api.curators.getCurators.useQuery();
+import { api } from "@/trpc/server";
+import CuratorList from './CuratorList';
 
-    console.log(curators.data);
-
-    const refetch = () => {
-        curators.refetch();
-    };
-
+async function Curators() {
+    const curators = await api.curators.getCurators.query();
     return (
         <div>
             <Heading
                 title="Curators"
                 description="View all curators here."
             />
-
-            <AddCuratorForm refetch={refetch}/>
-            <CuratorsTable refetch={refetch} curators={curators.data || []}/>
+            <CuratorList curators={curators} />
         </div>
     );
 };

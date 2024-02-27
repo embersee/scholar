@@ -6,7 +6,7 @@ import {
     publicProcedure,
 } from "@/server/api/trpc";
 import {db} from "@/server/db";
-import { curatorSchema, curatorSchemaUpdate} from "@/server/schema/curator";
+import { curatorSchema} from "@/server/schema/curator";
 import { TRPCError } from "@trpc/server";
 
 
@@ -56,7 +56,7 @@ export const curatorRouter = createTRPCRouter({
         ),
 
     updateCurator: protectedProcedure
-        .input(curatorSchemaUpdate)
+        .input(curatorSchema)
         .mutation(async ({ input: curator }) => {
             try {
                 const result = await db.curator.update({
