@@ -9,7 +9,6 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLab
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { DataTable } from "@/components/dash/dataTable/Table";
 
-
 import {
     Drawer,
     DrawerClose,
@@ -23,19 +22,22 @@ import {
 import { GetApprenticeship } from "@/server/schema/apprenticeship";
 import { useRouter } from "next/navigation";
 import ApprtsWithUsersEditForm from "./ApprtsWithUsersEditForm";
+import { toast } from "../ui/use-toast";
 
-const ApprtsTable = ({ apprts }: { apprts: any }) => {
+const ApprtsTable = () => {
+    const apprts = api.apprts.getApprenticeshipsWithUsers.useQuery();
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
     const [apprtWithUser, setApprtWithUser] = useState();
     type apprt = GetApprenticeship[0];
-    const { refetch } = api.apprts.getApprenticeshipsWithUsers.useQuery();
+
     const curators = api.curators.getCurators.useQuery();
+    const apprenticeshipTypes = api.apprts.getTypes.useQuery();
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
     const handleCreate = () => {
-        refetch();
+        apprts.refetch();
         setOpen(false);
     };
 
@@ -140,7 +142,7 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
             },
         },
         {
-            accessorKey: 'curator',
+            accessorKey: 'curator.FIO',
             header: ({ column }) => {
                 return (
                     <Button
@@ -148,6 +150,20 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         curator
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                )
+            },
+        },
+        {
+            accessorKey: 'curatorGroup.group_name',
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        {"curator's group"}
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 )
@@ -209,6 +225,8 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
                     </Button>
                 )
             },
+
+
         },
         {
             accessorKey: 'signed',
@@ -256,6 +274,126 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
         {
             id: "actions",
             cell: ({ row }) => {
+                const data = row.original;
+                const { mutate } = api.apprts.attendance.useMutation({
+                    onMutate: () => {
+                        toast({
+                            title: '🔄 Updating...',
+                        })
+                    },
+                    onError: (e) => {
+                        toast({
+                            title: '🚫 Error',
+                            description: e.message
+                        })
+                    },
+                    onSuccess: () => {
+                        toast({
+                            title: '✅ Success',
+                            description: 'Apprenticeship updated'
+                        })
+                        apprts.refetch()
+                    },
+                })
+
+                return (
+                    <Button variant="secondary" onClick={() => mutate({ id: data.id, user_id: data.user_id, attendance: data.attendance })}>Attendance</Button>
+                )
+            },
+        },
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                const data = row.original;
+                const { mutate } = api.apprts.signed.useMutation({
+                    onMutate: () => {
+                        toast({
+                            title: '🔄 Updating...',
+                        })
+                    },
+                    onError: (e) => {
+                        toast({
+                            title: '🚫 Error',
+                            description: e.message
+                        })
+                    },
+                    onSuccess: () => {
+                        toast({
+                            title: '✅ Success',
+                            description: 'Apprenticeship updated'
+                        })
+                        apprts.refetch()
+                    },
+                })
+
+                return (
+                    <Button variant="secondary" onClick={() => mutate({ id: data.id, user_id: data.user_id, signed: data.signed })}>signed</Button>
+                )
+            },
+        },
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                const data = row.original;
+                const { mutate } = api.apprts.reportSigned.useMutation({
+                    onMutate: () => {
+                        toast({
+                            title: '🔄 Updating...',
+                        })
+                    },
+                    onError: (e) => {
+                        toast({
+                            title: '🚫 Error',
+                            description: e.message
+                        })
+                    },
+                    onSuccess: () => {
+                        toast({
+                            title: '✅ Success',
+                            description: 'Apprenticeship updated'
+                        })
+                        apprts.refetch()
+                    },
+                })
+
+                return (
+                    <Button variant="secondary" onClick={() => mutate({ id: data.id, user_id: data.user_id, report_signed: data.report_signed })}>report signed</Button>
+                )
+            },
+        },
+        {
+            id: "actions",
+            cell: ({ row }) => {
+                const data = row.original;
+                const { mutate } = api.apprts.referralSigned.useMutation({
+                    onMutate: () => {
+                        toast({
+                            title: '🔄 Updating...',
+                        })
+                    },
+                    onError: (e) => {
+                        toast({
+                            title: '🚫 Error',
+                            description: e.message
+                        })
+                    },
+                    onSuccess: () => {
+                        toast({
+                            title: '✅ Success',
+                            description: 'Apprenticeship updated'
+                        })
+                        apprts.refetch()
+                    },
+                })
+
+                return (
+                    <Button variant="secondary" onClick={() => mutate({ id: data.id, user_id: data.user_id, referral_signed: data.referral_signed })}>referral signed</Button>
+                )
+            },
+        },
+        {
+            id: "actions",
+            cell: ({ row }) => {
                 const user = row.original
                 return (
                     <DropdownMenu>
@@ -281,9 +419,9 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
     ];
     return (
         <>
-            {apprts && apprts.length > 0 ? (
+            {apprts.data && apprts.data.length > 0 ? (
                 <div className="w-full rounded-lgshadow-lg">
-                    <DataTable columns={columns} data={apprts} />
+                    <DataTable columns={columns} data={apprts.data} />
                     <Drawer
                         open={open}
                     >
@@ -293,7 +431,7 @@ const ApprtsTable = ({ apprts }: { apprts: any }) => {
                                     Edit Institution
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {apprtWithUser && curators.data && <ApprtsWithUsersEditForm curators={curators.data} onCreate={handleCreate} data={apprtWithUser} />}
+                            {apprtWithUser && apprenticeshipTypes.data && curators.data && <ApprtsWithUsersEditForm apprenticeshipTypes={apprenticeshipTypes.data} curators={curators.data} onCreate={handleCreate} data={apprtWithUser} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>

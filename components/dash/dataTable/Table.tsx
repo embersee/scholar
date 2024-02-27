@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
                                         <TableCell key={cell.id} style={{
                                             position: `${cell.column.id == 'user_username' ? 'sticky' : 'static'}`,
                                             backgroundColor: "white",
-                                            left: 0,
+                                            textAlign: "center",
                                             zIndex: 5,
                                             width: "100%",
                                         }}>

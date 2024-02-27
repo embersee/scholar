@@ -3,17 +3,19 @@ import { RouterOutputs } from "@/trpc/shared";
 import { NonNullableFields } from "@/server/types";
 
 export const apprenticeshipSchema = z.object({
+  id: z.string(),
   user_id: z.string(),
   start_date: z.date(),
   end_date: z.date(),
   referral: z.string().optional(),
   report: z.string().optional(),
-  curator: z.string().optional(),
+  curatorId: z.string().optional(),
+  curatorGroupId: z.string().optional(),
   academic_year: z.coerce
     .string()
     .min(1, "Обьязательное поле")
     .max(2, "Превышено количество"),
-  apprenticeship_type: z.string().min(1, "Обьязательное поле"),
+  apprenticeshipTypeId: z.string(),
   employment_status: z.boolean().optional(),
   attendance: z.boolean().optional(),
   signed: z.boolean().optional(),
@@ -23,6 +25,7 @@ export const apprenticeshipSchema = z.object({
 
 export const apprenticeshipFormSchema = apprenticeshipSchema
   .omit({
+    id: true,
     user_id: true,
     referral_signed: true,
     employment_status: true,
@@ -31,7 +34,9 @@ export const apprenticeshipFormSchema = apprenticeshipSchema
     attendance: true,
     // referral: true,
     // report: true,
-    curator: true,
+    // apprenticeshipTypeId: true,
+    curatorId: true,
+    curatorGroupId: true,
     start_date: true,
     end_date: true,
   })
@@ -43,6 +48,9 @@ export const apprenticeshipTypes = z.object({
   id: z.string(),
   name: z.string(),
 });
+
+
+export const updateApprenticeshipParams = apprenticeshipSchema.extend({});
 
 export type Apprenticeship = z.infer<typeof apprenticeshipSchema>;
 export type ApprenticeshipForm = z.infer<typeof apprenticeshipFormSchema>;
