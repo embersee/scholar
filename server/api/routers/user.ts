@@ -29,7 +29,32 @@ export const userRouter = createTRPCRouter({
       });
     },
   ),
+  getAuthedUser: protectedProcedure.query(
+    async ({
+      ctx: {
+        session: { user },
+      },
+    }) => {
+      const data = db.user.findFirst({
+        // select: {
+        //   username: true,
+        //   id: true,
+        //   telegram_id: true,
+        //   display_name: true,
+        //   FIO: true,
+        //   email: true,
+        //   phone_number: true,
+        //   institutionId: true,
+        //   specialty: true,
+        // },
+        where: {
+          telegram_id: user.id,
+        },
+      });
 
+      return data;
+    },
+  ),
   getUserById: protectedProcedure
     .input(userTelegramIdSchema)
     .query(async ({ input: { telegram_id } }) => {

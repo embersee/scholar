@@ -1,3 +1,4 @@
+'use client'
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -7,14 +8,11 @@ import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
 import { updateUserParams, User } from "@/server/schema/user";
-
-import { z } from "zod";
 import { toast } from "../ui/use-toast";
 
 
 
-
-const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) => {
+const UserEditForm = ({ onCreate, data }: { onCreate: () => void, data: User }) => {
     const parent = useRef(null);
 
     useEffect(() => {
@@ -24,7 +22,6 @@ const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) =>
     const form = useForm<User>({
         resolver: zodResolver(updateUserParams),
         defaultValues: {
-            id: data.id,
             username: data.username,
             FIO: data.FIO,
             display_name: data ? data.display_name : '',
@@ -63,15 +60,6 @@ const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) =>
 
     return <Form {...form}>
         <form autoComplete="off" className="flex flex-col w-72 gap-2" onSubmit={form.handleSubmit(handleSubmit)} ref={parent}>
-            <FormField
-                control={form.control}
-                name="id"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Id</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="00001" {...field} />
-                    </FormItem>
-                )} />
             <FormField
                 control={form.control}
                 name="username"

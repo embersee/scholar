@@ -33,13 +33,12 @@ import { ru } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
-import Container from "@/components/ui/container";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
 
 export default function ApprtsForm(props: {
+  onCreate: Function,
   apprenticeshipTypes: ApprenticeshipTypes[];
-  session: any
 }) {
   const router = useRouter()
   const parent = useRef(null);
@@ -87,7 +86,7 @@ export default function ApprtsForm(props: {
         title: '✅ Success',
         description: 'Apprenticeship type created'
       })
-      router.push("/dash/apprts",)
+      props.onCreate();
     },
   });
 
@@ -97,7 +96,7 @@ export default function ApprtsForm(props: {
   }
 
   return (
-    <Container>
+    <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -248,6 +247,6 @@ export default function ApprtsForm(props: {
           <Button type="submit" className="w-[300px]">{apprts.isLoading ? "Loading..." : "Submit"}</Button>
         </form>
       </Form>
-    </Container>
+    </>
   );
 }
