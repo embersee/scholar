@@ -1,3 +1,4 @@
+'use client'
 import {
     Drawer, DrawerClose,
     DrawerContent,
@@ -6,19 +7,19 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer";
-import {Button} from "@/components/ui/button";
-import InstitutionCreateForm from "@/components/dash/InstitutionCreateForm";
-import {useState} from "react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import CuratorCreateForm from "@/components/dash/CuratorCreateForm";
+import { api } from "@/trpc/react";
 
-export default function AddCuratorForm({refetch}: {refetch: () => void}) {
+export default function AddCuratorForm() {
+    const trpcClient = api.useUtils();
     const [open, setOpen] = useState<boolean>(false);
     const handleCreate = () => {
-        refetch()
+        trpcClient.curators.getCurators.refetch();
         setOpen(false);
     }
     return (
-
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
                 <Button>Add</Button>

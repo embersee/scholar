@@ -4,6 +4,8 @@ import Link from "next/link";
 import { api } from "@/trpc/server";
 import { GetUser } from "@/server/schema/user";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
+import Container from "../ui/container";
+
 
 type Props = {
   apprts: GetApprenticeship;
@@ -52,7 +54,7 @@ const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) 
             <div>{`@${user?.username}`}</div>
             <div className="hidden md:block">{user?.FIO}</div>
           </div>
-          <div>{apprtsTypes.find((apprt_type)=> apprt_type.id === apprt.apprenticeshipTypeId )?.name}</div>
+          <div>{apprtsTypes.find((apprt_type) => apprt_type.id === apprt.apprenticeshipTypeId)?.name}</div>
           <div>{`${apprt.signed}`}</div>
         </Button>
       </DrawerTrigger>

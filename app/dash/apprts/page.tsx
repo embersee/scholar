@@ -7,7 +7,6 @@ import ApprtsTable from "@/components/dash/ApprtsWithUsersTable";
 export default async function Apprenticeships() {
   const apprts = await api.apprts.getApprenticeships.query();
   const user = await api.user.getAuthedUserWithInstitution.query();
-  const usersWithApprts = await api.apprts.getApprenticeshipsWithUsers.query();
   // console.log(usersWithApprts[0].user?.id)
   /*const apprtsExtra = [
     { id: "1",
@@ -43,7 +42,7 @@ export default async function Apprenticeships() {
   ]*/
 
   return (
-    <div className="absolute p-4 w-full left-0 max-w-full">
+    <div className={`${user?.role !== 'STUDENT' && 'absolute p-4 w-full left-0 max-w-full'}`}>
       <div className="">
         <Heading
           title={`${user?.role !== 'STUDENT' ? 'My' : ''} Apprenticeships`}
@@ -51,9 +50,9 @@ export default async function Apprenticeships() {
         ></Heading>
       </div>
       {
-        user?.role !== "STUDENT" ?
+        user?.role == "STUDENT" ?
           <ApprtsList apprts={apprts} /> :
-          <ApprtsTable apprts={usersWithApprts} />
+          <ApprtsTable />
       }
     </div>
   );

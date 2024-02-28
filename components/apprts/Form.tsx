@@ -56,7 +56,7 @@ export default function ApprtsForm(props: {
     defaultValues: {
       referral: "",
       report: "",
-      apprenticeship_type: "",
+      apprenticeshipTypeId: "",
       // date: {
       //   from: undefined,
       //   to: undefined,
@@ -107,7 +107,7 @@ export default function ApprtsForm(props: {
         >
           <FormField
             control={form.control}
-            name="apprenticeship_type"
+            name="apprenticeshipTypeId"
             render={({ field }) => (
               <FormItem className="w-72">
                 <FormLabel>Вид практики</FormLabel>
@@ -188,7 +188,6 @@ export default function ApprtsForm(props: {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="date"

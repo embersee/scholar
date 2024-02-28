@@ -4,6 +4,7 @@ import {
   userTelegramIdSchema,
 } from "@/server/schema/user";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { env } from "@/env.mjs";
 
 import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
@@ -103,6 +104,22 @@ export const userRouter = createTRPCRouter({
   deleteUser: protectedProcedure
     .input(userTelegramIdSchema)
     .mutation(async ({ input: { telegram_id } }) => {
+          const exists = await db.user.findFirst({
+            where: { telegram_id: telegram_id },
+          });
+
+          if (!exists) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Пользователя не существует",
+            });
+          }
+          const message = `Добрый день ${exists.FIO}, ваша заявка в ИАЦ была отвержена, вероятно надо обновить и заполнить данные опять.`;
+          fetch(
+            `https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage?chat_id=${telegram_id}&text=${message}&parse_mode=HTML`
+          );
+
+       
       return db.user.delete({
         where: {
           telegram_id,

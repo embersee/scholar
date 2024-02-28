@@ -63,16 +63,16 @@ model User {
 }
 
 model Apprenticeship {
-  id         String   @id @default(cuid())
-  user_id    String
-  start_date DateTime
-  end_date   DateTime
-  referral   String?
-  report     String?
-  curatorId  String?
-  curatorGroupId String?
+  id                   String   @id @default(cuid())
+  user_id              String
+  start_date           DateTime
+  end_date             DateTime
+  referral             String?
+  report               String?
+  curatorId            String?
+  curatorGroupId       String?
   academic_year        String
-  apprenticeshipTypeId String?
+  apprenticeshipTypeId String
 
   employment_status Boolean?
   attendance        Boolean? @default(false)
@@ -80,10 +80,10 @@ model Apprenticeship {
   report_signed     Boolean? @default(false)
   referral_signed   Boolean? @default(false)
 
-  apprenticeship_type ApprenticeshipType? @relation(fields: [apprenticeshipTypeId], references: [id])
-  user                User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  curator             Curator?            @relation(fields: [curatorId], references: [id])
-  curatorGroup        CuratorGroups?      @relation(fields: [curatorGroupId], references: [id])
+  apprenticeship_type ApprenticeshipType @relation(fields: [apprenticeshipTypeId], references: [id])
+  user                User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  curator             Curator?           @relation(fields: [curatorId], references: [id])
+  curatorGroup        CuratorGroups?     @relation(fields: [curatorGroupId], references: [id])
 }
 
 model ApprenticeshipType {
@@ -116,14 +116,13 @@ model CuratorGroups {
   group_link String
   curatorId  String
 
-  Curator Curator @relation(fields: [curatorId], references: [id], onDelete: Cascade)
+  Curator        Curator          @relation(fields: [curatorId], references: [id], onDelete: Cascade)
   Apprenticeship Apprenticeship[]
 }
 
 model Institution {
   id   String @id @default(cuid())
   name String @unique
-
   User User[]
 }
 

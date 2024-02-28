@@ -12,33 +12,28 @@ import { Checkbox } from "../ui/checkbox";
 import { Combobox } from "../ui/combobox";
 import { Curator } from "@/server/schema/curator";
 import { toast } from "../ui/use-toast";
+import { ApprenticeshipTypes } from "@/server/schema/apprenticeship";
 
 
 
 
-const ApprtsWithUsersEditForm = ({ onCreate, data, curators }: { onCreate: Function, data: any, curators: Curator[] }) => {
+const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes }: { onCreate: Function, data: any, curators: Curator[], apprenticeshipTypes: ApprenticeshipTypes[] }) => {
     const parent = useRef(null);
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
-
     const form = useForm<any>({
-
         defaultValues: {
             id: data.id,
-            username: data.user.username,
+            user_id: data.user_id,
             start_date: data.start_date,
             end_date: data.end_date,
             referral: data.referral,
+            apprenticeshipTypeId: data.apprenticeshipTypeId,
             report: data.report,
-            curatorId: data.curator,
-            curatorGroupId: data.curator ? data.curator.group_links.id : '',
+            curatorId: data.curator ? data.curatorId : '',
+            curatorGroupId: data.curator ? data.сuratorGroupId : '',
             academic_year: data.academic_year,
-            attendance: data.attendance,
-            signed: data.signed,
-            report_signed: data.report_signed,
-            referral_signed: data.referral_signed,
-
         },
         reValidateMode: "onChange"
     });
@@ -66,34 +61,23 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators }: { onCreate: Funct
         value: v.id,
         label: v.FIO,
     }));
+    const apprtsTypes = apprenticeshipTypes.map((v) => ({
+        value: v.id,
+        label: v.name,
+    }));
 
 
     function handleSubmit(data: any): void {
         console.log(JSON.stringify(data));
-        console.log(data)
+        if (!data.curatorId) {
+            data.curatorId = '';
+        }
         apprtsEditMutation.mutate(data);
     }
 
     return <Form {...form}>
         <form autoComplete="off" className="z-10  overflow-auto flex flex-col w-100 gap-2" onSubmit={form.handleSubmit(handleSubmit)} ref={parent}>
-            <FormField
-                control={form.control}
-                name="id"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Id</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="00001" {...field} />
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <Input autoComplete="off" aria-autocomplete="none" placeholder="Username" {...field} />
-                    </FormItem>
-                )} />
+
             <div className="flex">
                 <FormField
                     control={form.control}
@@ -114,6 +98,25 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators }: { onCreate: Funct
                         </FormItem>
                     )} />
             </div>
+            <FormField
+                control={form.control}
+                name="apprenticeshipTypeId"
+                render={({ field }) => (
+                    <FormItem className="w-72">
+                        <FormLabel>Вид практики</FormLabel>
+                        <FormControl>
+                            <Combobox
+                                options={apprtsTypes}
+                                {...field}
+                                names={{
+                                    button: "Выбрать вид",
+                                    empty: "Нету такого...",
+                                    search: "Поиск вида практики",
+                                }}
+                            />
+                        </FormControl>
+                    </FormItem>
+                )} />
             <FormField
                 control={form.control}
                 name="referral"
@@ -156,7 +159,6 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators }: { onCreate: Funct
                 name="curatorGroupId"
                 render={({ field }) => (
                     <FormItem>
-
                         <FormLabel>group</FormLabel>
                         <Combobox
                             options={curators.find(curator => curator.id === form.getValues('curatorId'))?.group_links.map((v) => ({
@@ -180,66 +182,6 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators }: { onCreate: Funct
                     <FormItem>
                         <FormLabel>academic_year</FormLabel>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="academic_year" {...field} />
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="attendance"
-                render={({ field }) => (
-                    <FormItem className="flex  items-center">
-                        <FormLabel>
-                            <Checkbox
-                                className="mr-4"
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                            attendance
-                        </FormLabel>
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="signed"
-                render={({ field }) => (
-                    <FormItem className="flex items-center">
-                        <FormLabel>
-                            <Checkbox
-                                className="mr-4"
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                            signed
-                        </FormLabel>
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="report_signed"
-                render={({ field }) => (
-                    <FormItem className="flex items-center">
-                        <FormLabel>
-                            <Checkbox
-                                className="mr-4"
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                            report_signed
-                        </FormLabel>
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="referral_signed"
-                render={({ field }) => (
-                    <FormItem className="flex items-center">
-                        <FormLabel>
-                            <Checkbox
-                                className="mr-4"
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                            referral_signed
-                        </FormLabel>
                     </FormItem>
                 )} />
             <Button type="submit">{apprtsEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>
