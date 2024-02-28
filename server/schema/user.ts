@@ -3,14 +3,14 @@ import { NonNullableFields } from "@/server/types";
 import { RouterOutputs } from "@/trpc/shared";
 
 export const userSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   telegram_id: z.string(),
   username: z.string().optional(),
   display_name: z.string().optional(),
   FIO: z.string().optional(),
   email: z.string().optional(),
   phone_number: z.string().optional(),
-  institution: z.string().optional(),
+  institutionId: z.string().optional(),
   specialty: z.string().optional(),
 });
 
@@ -23,7 +23,7 @@ export const insertUserParams = userSchema.extend({
 });
 
 export const updateUserSchema = userSchema.extend({
-  id: z.string(),
+  telegram_id: z.string(),
 });
 
 export const userFormSchema = z.object({
