@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { updateUserSchema, User } from "@/server/schema/user";
+import { User, UserForm, userFormSchema } from "@/server/schema/user";
 import { toast } from "../ui/use-toast";
 import { Combobox } from "../ui/combobox";
 import { Institution } from "@/server/schema/institution";
@@ -21,14 +21,15 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
         parent.current && autoAnimate(parent.current);
     }, [parent]);
 
-    const form = useForm<User>({
-        resolver: zodResolver(updateUserSchema),
+    const form = useForm<UserForm>({
+        resolver: zodResolver(userFormSchema),
         defaultValues: {
-            institutionId: data.institutionId,
-            telegram_id: data.telegram_id,
+            id: data.id,
             username: data.username,
+            telegram_id: data.telegram_id,
+            display_name: data.display_name,
+            institutionId: data.institutionId,
             FIO: data.FIO,
-            display_name: data ? data.display_name : '',
             phone_number: data.phone_number,
             email: data.email,
             specialty: data.specialty
@@ -61,31 +62,12 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
         value: v.id,
         label: v.name,
     }));
-    function handleSubmit(data: User): void {
-        console.log(JSON.stringify(data));
+    function handleSubmit(data: UserForm): void {
         userEditMutation.mutate(data);
     }
 
     return <Form {...form}>
         <form autoComplete="off" className="flex flex-col w-72 gap-2" onSubmit={form.handleSubmit(handleSubmit)} ref={parent}>
-            <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <Input autoComplete="off" aria-autocomplete="none" placeholder="Username" {...field} />
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="display_name"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Display name</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="display name" {...field} />
-                    </FormItem>
-                )} />
             <FormField
                 control={form.control}
                 name="FIO"
@@ -113,15 +95,7 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="email" {...field} />
                     </FormItem>
                 )} />
-            <FormField
-                control={form.control}
-                name="phone_number"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Phone number</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="phone number" {...field} />
-                    </FormItem>
-                )} />
+
             <FormField
                 control={form.control}
                 name="specialty"
@@ -136,7 +110,7 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                 name="institutionId"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>curator</FormLabel>
+                        <FormLabel>institution</FormLabel>
                         <FormControl>
                             <Combobox
                                 options={catalogInstitutions}

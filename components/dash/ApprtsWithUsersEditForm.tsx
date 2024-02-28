@@ -68,7 +68,6 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
 
 
     function handleSubmit(data: any): void {
-        console.log(JSON.stringify(data));
         if (!data.curatorId) {
             data.curatorId = '';
         }

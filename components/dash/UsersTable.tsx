@@ -31,7 +31,7 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState<UserSchema>()
     const handleCreate = () => {
-        trpcClient.user.getUsers.refetch();
+        trpcClient.user.getUsersWithInstitution.refetch();
         setOpen(false);
     };
     useEffect(() => {
@@ -72,10 +72,6 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
             accessorKey: 'role',
         },
         {
-            header: 'Role',
-            accessorKey: 'role',
-        },
-        {
             header: 'Specialty',
             accessorKey: 'specialty',
         },
@@ -83,8 +79,6 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
             header: 'institution',
             accessorKey: 'institution.name',
         },
-
-
         {
             id: "actions",
             cell: ({ row }) => {
@@ -124,7 +118,7 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Institution
+                                    Edit Student
                                 </DrawerTitle>
                             </DrawerHeader>
                             {user && institutions.data && <UserEditForm onCreate={handleCreate} data={user} institutions={institutions.data} />}

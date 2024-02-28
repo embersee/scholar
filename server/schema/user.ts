@@ -27,6 +27,10 @@ export const updateUserSchema = userSchema.extend({
 });
 
 export const userFormSchema = z.object({
+  id: z.string().optional(),
+  telegram_id: z.string(),
+  username: z.string().optional(),
+  display_name: z.string().optional(),
   FIO: z.string().min(3, "Обьязательное поле"),
   phone_number: z
     .string()
@@ -35,7 +39,9 @@ export const userFormSchema = z.object({
       "Не соотвествует формату номера телефона",
     )
     .min(1),
-  institution: z.string().min(1, "Обьязательное поле"),
+  email: z.string().email('Не соотвествует формату электронной почты')
+  .min(1),
+  institutionId: z.string().min(1, "Обьязательное поле"),
   specialty: z.string().min(1, "Обьязательное поле"),
 });
 

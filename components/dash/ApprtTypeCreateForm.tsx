@@ -21,7 +21,6 @@ const ApprtTypeCreateForm = ({ onCreate }: { onCreate: Function }) => {
         resolver: zodResolver(apprenticeshipTypes),
         defaultValues: {
             name: "",
-            id: useId(),
         },
         reValidateMode: "onChange"
     });
