@@ -33,7 +33,7 @@ function displayTimeFromDate(date: Date) {
     const seconds = date.getSeconds().toString().padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`
 }
-        
+
 
 function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersWithInstitution"] }) {
     const { data } = api.user.getUsersWithInstitution.useQuery(undefined, {
@@ -133,10 +133,10 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
             },
         },
     ];
-  
-    const trpcClient = api.useUtils();
 
-    const usersList = users;
+    // const trpcClient = api.useUtils();
+
+    // const usersList = users;
 
     useEffect(() => {
         setLastQueryDate(new Date());
@@ -172,7 +172,7 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
 
     function handleMakeAdmin(data: User, newRole: Role): void {
         if (!data.institutionId) return;
-        userEditMutation.mutate({id: data.id, telegram_id: data.telegram_id, role: newRole, institution: data.institutionId});
+        userEditMutation.mutate({id: data.id, telegram_id: data.telegram_id, role: newRole, institutionId: data.institutionId});
     }
 
     const [rolesDisplayed, setRolesDisplayed] = useState<Role[]>(Object.keys(Role) as Role[]);
@@ -181,14 +181,14 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
         console.log(roles);
         setRolesDisplayed(roles);
     };
- 
+
 
     return (
-        <> 
+        <>
             {data ? (
                 <>
-                    <DataTable columns={columns} data={data} />
-                  
+                    {/*<DataTable columns={columns} data={data} />*/}
+
                    <DataTable additionalFilters={
                         <div className="basis-full  flex items-center gap-2 justify-beetween">
                         <div className="flex gap-2 items-center">

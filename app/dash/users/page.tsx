@@ -16,7 +16,6 @@ export default async function Users() {
                 title="Users"
                 description=""
             />
-            ></Heading>
             <UsersTable usersList={usersList} />
         </div>
     );
