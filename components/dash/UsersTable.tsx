@@ -18,11 +18,13 @@ import {
 } from "@/components/ui/drawer";
 import UserEditForm from "@/components/dash/UserEditForm";
 import { User as UserSchema } from "@/server/schema/user";
+
 import { Role, User } from "@prisma/client";
 import {UserMakeAdminButton} from "@/components/dash/UserMakeAdminButton";
 import { toast } from "../ui/use-toast";
 import { DataTableRightsSelector } from "./dataTable/DataTableRightsSelector";
 import { RotateCw } from "lucide-react";
+import { RouterOutputs } from "@/trpc/shared";
 
 
 function displayTimeFromDate(date: Date) {
@@ -31,8 +33,15 @@ function displayTimeFromDate(date: Date) {
     const seconds = date.getSeconds().toString().padStart(2, '0');
     return `${hours}:${minutes}:${seconds}`
 }
+        
 
-const UsersTable = ({users}: {users: User[]}) => {
+function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersWithInstitution"] }) {
+    const { data } = api.user.getUsersWithInstitution.useQuery(undefined, {
+        initialData: usersList,
+        refetchOnMount: false
+    });
+    const trpcClient = api.useUtils();
+
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState<UserSchema>()
@@ -42,7 +51,6 @@ const UsersTable = ({users}: {users: User[]}) => {
         handleRefetch();
         setOpen(false);
     };
-
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
@@ -81,6 +89,14 @@ const UsersTable = ({users}: {users: User[]}) => {
             accessorKey: 'role',
         },
         {
+            header: 'Specialty',
+            accessorKey: 'specialty',
+        },
+        {
+            header: 'institution',
+            accessorKey: 'institution.name',
+        },
+        {
             id: "actions",
             cell: ({ row,}) => {
                 const user = row.original
@@ -117,9 +133,7 @@ const UsersTable = ({users}: {users: User[]}) => {
             },
         },
     ];
-
-   
-
+  
     const trpcClient = api.useUtils();
 
     const usersList = users;
@@ -129,8 +143,10 @@ const UsersTable = ({users}: {users: User[]}) => {
     }, []);
 
     const handleRefetch = () => {
-        trpcClient.user.getUsers.refetch().then(() => setLastQueryDate(new Date()));
+        trpcClient.user.getUsersWithInstitution.refetch().then(() => setLastQueryDate(new Date()));
     }
+
+    const institutions = api.institutions.getInstitutions.useQuery()
 
     const userEditMutation = api.user.updateUser.useMutation({
         onMutate: () => {
@@ -168,11 +184,12 @@ const UsersTable = ({users}: {users: User[]}) => {
  
 
     return (
-        <>
-            {usersList && usersList.length > 0 ? (
+        <> 
+            {data ? (
                 <>
-                
-                    <DataTable additionalFilters={
+                    <DataTable columns={columns} data={data} />
+                  
+                   <DataTable additionalFilters={
                         <div className="basis-full  flex items-center gap-2 justify-beetween">
                         <div className="flex gap-2 items-center">
                             <span>
@@ -190,17 +207,18 @@ const UsersTable = ({users}: {users: User[]}) => {
                         </div>
                         <DataTableRightsSelector onChange={handleOnlyAdmins} />
                     </div>
-                    } columns={columns} data={usersList.filter(user => rolesDisplayed.includes(user.role))} />
+                    } columns={columns} data={data.filter(user => rolesDisplayed.includes(user.role))} />
+
                     <Drawer
                         open={open}
                     >
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit user
+                                    Edit Student
                                 </DrawerTitle>
                             </DrawerHeader>
-                            {user && <UserEditForm onCreate={handleCreate} data={user} />}
+                            {user && institutions.data && <UserEditForm onCreate={handleCreate} data={user} institutions={institutions.data} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>

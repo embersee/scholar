@@ -1,3 +1,4 @@
+'use client'
 import {
     Drawer, DrawerClose,
     DrawerContent,
@@ -6,14 +7,16 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import InstitutionCreateForm from "@/components/dash/InstitutionCreateForm";
-import {useState} from "react";
+import { useState } from "react";
+import { api } from "@/trpc/react";
 
-export default function AddInstutionForm({refetch}: {refetch: () => void}) {
+export default function AddInstutionForm() {
+    const trpcClient = api.useUtils();
     const [open, setOpen] = useState<boolean>(false);
     const handleCreate = () => {
-        refetch()
+        trpcClient.institutions.getInstitutions.refetch();
         setOpen(false);
     }
     return (
@@ -26,7 +29,7 @@ export default function AddInstutionForm({refetch}: {refetch: () => void}) {
                 <DrawerHeader>
                     <DrawerTitle>New Institution</DrawerTitle>
                     <DrawerDescription>
-                      description
+                        description
                     </DrawerDescription>
                 </DrawerHeader>
                 <InstitutionCreateForm

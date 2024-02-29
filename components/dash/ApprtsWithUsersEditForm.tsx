@@ -68,7 +68,6 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
 
 
     function handleSubmit(data: any): void {
-        console.log(JSON.stringify(data));
         if (!data.curatorId) {
             data.curatorId = '';
         }
@@ -162,7 +161,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                         <FormLabel>group</FormLabel>
                         <Combobox
                             options={curators.find(curator => curator.id === form.getValues('curatorId'))?.group_links.map((v) => ({
-                                value: v.id,
+                                value: v.id as string,
                                 label: v.group_name
                             })) || []}
                             {...field}

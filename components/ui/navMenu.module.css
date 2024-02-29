@@ -1,0 +1,8 @@
+.nav_menu li {
+  border-width: 0px;
+  margin-top: 0px;
+}
+.nav_menu ul > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0px;
+
+  }

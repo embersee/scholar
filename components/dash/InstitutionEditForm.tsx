@@ -6,11 +6,9 @@ import { useEffect, useId, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { Institution } from "@/server/schema/institution";
+import { Institution, InstitutionForm, institutionSchema, institutionSchemaForm } from "@/server/schema/institution";
 import { toast } from "../ui/use-toast";
-
-
-
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const InstitutionEditForm = ({ onCreate, data }: { onCreate: Function, data: Institution }) => {
     const parent = useRef(null);
@@ -20,6 +18,7 @@ const InstitutionEditForm = ({ onCreate, data }: { onCreate: Function, data: Ins
     }, [parent]);
 
     const form = useForm<Institution>({
+        resolver: zodResolver(institutionSchema),
         defaultValues: {
             id: data.id,
             name: data.name,
@@ -50,7 +49,6 @@ const InstitutionEditForm = ({ onCreate, data }: { onCreate: Function, data: Ins
 
 
     function handleSubmit(data: Institution): void {
-        console.log(JSON.stringify(data));
         institutionEditMutation.mutate(data);
     }
 

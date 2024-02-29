@@ -19,16 +19,16 @@ import { ApprenticeshipType } from "@prisma/client";
 import ApprtTypeCreateForm from "./ApprtTypeCreateForm";
 import { toast } from "../ui/use-toast";
 
-const ApprtsTypeList = () => {
+const ApprtsTypeList = ({ apprtsTypes }: { apprtsTypes: ApprenticeshipType[] }) => {
   const parent = useRef(null);
-
+  const trpcClient = api.useUtils();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
   }, [parent]);
 
-  const apprtTypesList = api.apprts.getTypes.useQuery();
+
   const apprtTypeRemove = api.apprts.removeApprtType.useMutation({
     onMutate: () => {
       toast({
@@ -46,7 +46,7 @@ const ApprtsTypeList = () => {
         title: '✅ Success',
         description: 'Apprenticeship type removed'
       })
-      apprtTypesList.refetch()
+      trpcClient.apprts.getTypes.refetch()
     },
 
   });
@@ -58,10 +58,10 @@ const ApprtsTypeList = () => {
   return (
     <Container className="flex-col gap-4">
       <div>Apprenticeship types</div>
-      {apprtTypesList.data && apprtTypesList.data.length > 0 ? (
+      {apprtsTypes ? (
         <>
           <ul>
-            {apprtTypesList.data.map((apprtType: ApprenticeshipType) => (
+            {apprtsTypes.map((apprtType: ApprenticeshipType) => (
               <li
                 className="flex flex-row items-center justify-between overflow-hidden pl-10 dark:border-none"
                 key={apprtType.id}
@@ -96,7 +96,7 @@ const ApprtsTypeList = () => {
           </DrawerHeader>
           <ApprtTypeCreateForm
             onCreate={() => {
-              apprtTypesList.refetch();
+              trpcClient.apprts.getTypes.refetch()
               setOpen(false);
             }}
           />

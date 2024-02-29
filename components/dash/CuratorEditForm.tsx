@@ -31,7 +31,6 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
         mode: "onChange",
     });
 
-
     const { fields, append, remove } = useFieldArray({
         name: "group_links",
         control: form.control,
@@ -103,7 +102,7 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
                                             <Input
                                                 className="w-[250px]"
                                                 autoComplete="off"
-                                                placeholder="e.g. start, catalog, help etc."
+                                                placeholder="Name"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -121,7 +120,7 @@ const CuratorEditForm = ({ onCreate, data }: { onCreate: Function, data: Curator
                                             <Input
                                                 className="w-[250px]"
                                                 autoComplete="off"
-                                                placeholder="e.g. start, catalog, help etc."
+                                                placeholder="Link"
                                                 {...field}
                                             />
                                         </FormControl>
