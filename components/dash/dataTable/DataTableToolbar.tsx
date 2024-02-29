@@ -2,23 +2,20 @@
 
 import { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@radix-ui/react-select";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, PromiseLikeOfReactNode } from "react";
-import { DataTableViewOptions } from "./DataTableViewOptions";
-import { api } from "@/trpc/server";
-
+import { Button } from "@/components/ui/button"; 
+import { DataTableViewOptions } from "./DataTableViewOptions"; 
+import { Role } from "@prisma/client";
 
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
+    additionalFilters?: React.ReactNode;
 }
 
 export function DataTableToolbar<TData>({
+    additionalFilters,
     table,
+
 }: DataTableToolbarProps<TData>) {
     const isFiltered =
         table.getPreFilteredRowModel().rows.length >
@@ -28,7 +25,7 @@ export function DataTableToolbar<TData>({
 
     return (
         <div className="flex items-center justify-between">
-            <div className="flex flex-1 items-center space-x-2">
+            {/* <div className="flex flex-1 items-center space-x-2"> */}
 
 
                 {/* <Input
@@ -72,7 +69,7 @@ export function DataTableToolbar<TData>({
                     </SelectContent>
                 </Select> */}
 
-                {isFiltered && (
+                {/* {isFiltered && (
                     <Button
                         variant="ghost"
                         onClick={() => table.resetColumnFilters()}
@@ -82,8 +79,8 @@ export function DataTableToolbar<TData>({
                         <X className="ml-2 h-4 w-4" />
                     </Button>
                 )}
-            </div>
-
+            </div>  */}
+            {additionalFilters && additionalFilters}
             <DataTableViewOptions table={table} />
         </div>
     );

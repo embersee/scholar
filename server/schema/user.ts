@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { NonNullableFields } from "@/server/types";
 import { RouterOutputs } from "@/trpc/shared";
+import { Role } from "@prisma/client";
 
 export const userSchema = z.object({
   id: z.string(),
@@ -23,7 +24,7 @@ export const insertUserParams = userSchema.extend({
 });
 
 export const updateUserSchema = userSchema.extend({
-  id: z.string(),
+  role: z.nativeEnum(Role).optional(),
 });
 
 export const userFormSchema = z.object({

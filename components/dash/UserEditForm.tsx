@@ -25,11 +25,14 @@ const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) =>
         resolver: zodResolver(updateUserParams),
         defaultValues: {
             id: data.id,
+            telegram_id: data.telegram_id,
             username: data.username,
             FIO: data.FIO,
             display_name: data ? data.display_name : '',
             phone_number: data.phone_number,
             email: data.email,
+            institution: data.institution,
+            specialty: data.specialty
         },
         reValidateMode: "onChange"
     });
@@ -116,16 +119,7 @@ const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) =>
                         <FormLabel>Email</FormLabel>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="email" {...field} />
                     </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="phone_number"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Phone number</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="phone number" {...field} />
-                    </FormItem>
-                )} />
+                )} /> 
             <Button type="submit">{userEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>
         </form>
     </Form>
