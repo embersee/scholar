@@ -13,7 +13,7 @@ export default async function New() {
         description="this is required to submit a referal."
       ></Heading>
       <Container className="form">
-        <ApprtsForm onCreate={() => redirect("/dash/apprts")} apprenticeshipTypes={apprenticeshipTypes} />
+        <ApprtsForm onCreate={undefined} apprenticeshipTypes={apprenticeshipTypes} />
       </Container>
     </>
   );

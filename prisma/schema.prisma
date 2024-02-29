@@ -74,7 +74,7 @@ model Apprenticeship {
   academic_year        String
   apprenticeshipTypeId String
 
-  employment_status Boolean?
+  employment_status Boolean? @default(false)
   attendance        Boolean? @default(false)
   signed            Boolean? @default(false)
   report_signed     Boolean? @default(false)

@@ -6,6 +6,7 @@ import {
   apprenticeshipFormSchema,
   apprenticeshipSchema,
   apprenticeshipTypes,
+  updateApprenticeshipFormSchema,
   updateApprenticeshipParams, 
 } from "@/server/schema/apprenticeship";
 import type { Apprenticeship} from "@/server/schema/apprenticeship"
@@ -114,9 +115,14 @@ export const apprenticeshipRouter = createTRPCRouter({
     }),
   
     updateApprenticeship: protectedProcedure
-    .input(apprenticeshipSchema)
+    .input(updateApprenticeshipFormSchema)
     .mutation(async ({  input: apprt }) => {
-      const { user_id, apprenticeshipTypeId, curatorId, curatorGroupId, ...data} = apprt;
+
+      const { date, user_id, curatorId, curatorGroupId, apprenticeshipTypeId, ...data } = {
+        ...apprt,
+        start_date: apprt.date.from,
+        end_date: apprt.date.to,
+      };
       try {
         const curatorRecord = curatorId ? await db.curator.findUnique({ where: { id: apprt.curatorId } }) : null;
         const curatorGroupRecord = curatorGroupId ? await db.curatorGroups.findUnique({ where: { id: apprt.curatorGroupId } }) : null;

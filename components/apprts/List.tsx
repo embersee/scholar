@@ -1,16 +1,19 @@
+'use client'
 import { GetApprenticeship } from "@/server/schema/apprenticeship";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { api } from "@/trpc/server";
+import { api } from "@/trpc/react";
 import { GetUser } from "@/server/schema/user";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import Container from "../ui/container";
+import { RouterOutputs } from "@/trpc/shared";
 
 
 type Props = {
   apprts: GetApprenticeship;
+  user: RouterOutputs["user"]["getAuthedUserWithInstitution"];
 };
-export default async function ApprtsList(props: Props) {
+export default function ApprtsList(props: Props) {
   if (!props.apprts.length) {
     return (
       <div className="text-center">
@@ -28,13 +31,13 @@ export default async function ApprtsList(props: Props) {
     );
   }
 
-  const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
+  // const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
   return (
     <ul>
       {props.apprts.map((apprt, i) => {
         //const user1 = {...user, FIO: "Ivanov Alexey Vladimirovich"};
         return (
-          <li key={i}><ApprenticeShip user={user} apprt={apprt} /></li>
+          <li key={i}><ApprenticeShip user={props.user as GetUser} apprt={apprt} /></li>
         )
       }
       )}
@@ -45,7 +48,7 @@ export default async function ApprtsList(props: Props) {
 type apprt = GetApprenticeship[0];
 
 const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) => {
-  const apprtsTypes = await api.apprts.getTypes.query();
+  const apprtsTypes = await api.apprts.getTypes.useQuery();
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -54,7 +57,9 @@ const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) 
             <div>{`@${user?.username}`}</div>
             <div className="hidden md:block">{user?.FIO}</div>
           </div>
-          <div>{apprtsTypes.find((apprt_type) => apprt_type.id === apprt.apprenticeshipTypeId)?.name}</div>
+          {apprtsTypes.data && <div>
+            {apprtsTypes.data.find((apprt_type) => apprt_type.id === apprt.apprenticeshipTypeId)?.name}
+          </div>}
           <div>{`${apprt.signed}`}</div>
         </Button>
       </DrawerTrigger>

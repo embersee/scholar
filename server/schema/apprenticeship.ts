@@ -23,6 +23,26 @@ export const apprenticeshipSchema = z.object({
   referral_signed: z.boolean().optional(),
 });
 
+export const updateApprenticeshipFormSchema = apprenticeshipSchema
+.omit({
+  // id: true,
+  // user_id: true,
+  referral_signed: true,
+  employment_status: true,
+  report_signed: true,
+  signed: true,
+  attendance: true,
+  // referral: true,
+  // report: true,
+  // apprenticeshipTypeId: true,
+  // curatorId: true,
+  // curatorGroupId: true,
+  // start_date: true,
+  // end_date: true,
+})
+  .extend({
+     date: z.object({ from: z.date(), to: z.date() }).strict(),
+  });
 export const apprenticeshipFormSchema = apprenticeshipSchema
   .omit({
     id: true,
