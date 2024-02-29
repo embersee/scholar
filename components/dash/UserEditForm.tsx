@@ -1,35 +1,38 @@
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
+'use client'
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { updateUserParams, User } from "@/server/schema/user";
-
-import { z } from "zod";
+import { User, UserForm, userFormSchema } from "@/server/schema/user";
 import { toast } from "../ui/use-toast";
+import { Combobox } from "../ui/combobox";
+import { Institution } from "@/server/schema/institution";
 
 
 
-
-const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) => {
+const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, data: User, institutions: Institution[] }) => {
     const parent = useRef(null);
 
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
 
-    const form = useForm<User>({
-        resolver: zodResolver(updateUserParams),
+    const form = useForm<UserForm>({
+        resolver: zodResolver(userFormSchema),
         defaultValues: {
             id: data.id,
             username: data.username,
+            telegram_id: data.telegram_id,
+            display_name: data.display_name,
+            institutionId: data.institutionId,
             FIO: data.FIO,
-            display_name: data ? data.display_name : '',
             phone_number: data.phone_number,
             email: data.email,
+            specialty: data.specialty
         },
         reValidateMode: "onChange"
     });
@@ -55,41 +58,16 @@ const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) =>
         },
     })
 
-
-    function handleSubmit(data: User): void {
-        console.log(JSON.stringify(data));
+    const catalogInstitutions = institutions.map((v) => ({
+        value: v.id,
+        label: v.name,
+    }));
+    function handleSubmit(data: UserForm): void {
         userEditMutation.mutate(data);
     }
 
     return <Form {...form}>
         <form autoComplete="off" className="flex flex-col w-72 gap-2" onSubmit={form.handleSubmit(handleSubmit)} ref={parent}>
-            <FormField
-                control={form.control}
-                name="id"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Id</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="00001" {...field} />
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <Input autoComplete="off" aria-autocomplete="none" placeholder="Username" {...field} />
-                    </FormItem>
-                )} />
-            <FormField
-                control={form.control}
-                name="display_name"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Display name</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="display name" {...field} />
-                    </FormItem>
-                )} />
             <FormField
                 control={form.control}
                 name="FIO"
@@ -117,13 +95,33 @@ const UserEditForm = ({ onCreate, data }: { onCreate: Function, data: User }) =>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="email" {...field} />
                     </FormItem>
                 )} />
+
             <FormField
                 control={form.control}
-                name="phone_number"
+                name="specialty"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Phone number</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="phone number" {...field} />
+                        <FormLabel>specialty</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="specialty" {...field} />
+                    </FormItem>
+                )} />
+            <FormField
+                control={form.control}
+                name="institutionId"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>institution</FormLabel>
+                        <FormControl>
+                            <Combobox
+                                options={catalogInstitutions}
+                                {...field}
+                                names={{
+                                    button: "Выбрать вид",
+                                    empty: "Нету такого...",
+                                    search: "Поиск вида практики",
+                                }}
+                            />
+                        </FormControl>
                     </FormItem>
                 )} />
             <Button type="submit">{userEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>

@@ -103,4 +103,14 @@ export const checkAuth = async () => {
   if (!session) redirect("/");
   const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
   if (!user) redirect("/");
+  const apprts = await api.apprts.getApprenticeshipsById.query({user_id:user.id});
+  if (!apprts) redirect('/registration')
 };
+
+export const checkAuthForRegistation = async () => {
+  const { session } = await getUserAuth();
+  if (!session) redirect("/");
+  const user = (await api.user.getAuthedUserWithInstitution.query()) as GetUser;
+  if (!user) redirect("/");
+};
+

@@ -45,8 +45,8 @@ export const apprenticeshipFormSchema = apprenticeshipSchema
   });
 
 export const apprenticeshipTypes = z.object({
-  id: z.string(),
-  name: z.string(),
+  id: z.string().optional(),
+  name: z.string().min(1,'Обязательное поле'),
 });
 
 

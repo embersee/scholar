@@ -17,17 +17,7 @@ import { Curator, curatorSchemaForm, CuratorForm } from "@/server/schema/curator
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "../ui/use-toast";
 import { useZodForm } from "@/lib/utils";
-// const validationSchema = curatorSchema;
-// function useZodForm<TSchema extends z.ZodType>(
-//     props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & {
-//         schema: TSchema;
-//     },
-// ) {
-//     return useForm<TSchema["_input"]>({
-//         ...props,
-//         resolver: zodResolver(props.schema, undefined, {}),
-//     });
-// }
+
 const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const parent = useRef(null);
 
@@ -121,7 +111,7 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                                             <Input
                                                 className="w-[250px] max-w-full"
                                                 autoComplete="off"
-                                                placeholder="e.g. start, catalog, help etc."
+                                                placeholder="Name"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -140,7 +130,7 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                                             <Input
                                                 className="w-[250px] max-w-full"
                                                 autoComplete="off"
-                                                placeholder="e.g. start, catalog, help etc."
+                                                placeholder="Link"
                                                 {...field}
                                             />
                                         </FormControl>

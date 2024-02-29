@@ -24,8 +24,9 @@ import { toast } from "../ui/use-toast";
 
 
 
-const InstitutionsTable = ({ refetch, institutions }: { refetch: () => void, institutions: Institution[] }) => {
+const InstitutionsTable = ({ institutions }: { institutions: Institution[] }) => {
     const parent = useRef(null);
+    const trpcClient = api.useUtils();
     const [open, setOpen] = useState(false);
     const [institution, setInstitution] = useState<Institution>()
 
@@ -33,7 +34,7 @@ const InstitutionsTable = ({ refetch, institutions }: { refetch: () => void, ins
         parent.current && autoAnimate(parent.current);
     }, [parent]);
     const handleCreate = () => {
-        refetch();
+        trpcClient.institutions.getInstitutions.refetch();
         setOpen(false);
     }
     const institutionRemove = api.institutions.removeInstitution.useMutation({
@@ -53,7 +54,7 @@ const InstitutionsTable = ({ refetch, institutions }: { refetch: () => void, ins
                 title: '✅ Success',
                 description: 'Institution removed'
             })
-            refetch()
+            trpcClient.institutions.getInstitutions.refetch();
         },
     });
 
@@ -114,7 +115,7 @@ const InstitutionsTable = ({ refetch, institutions }: { refetch: () => void, ins
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Student
+                                    Edit Institution
                                 </DrawerTitle>
                             </DrawerHeader>
                             {institution && <InstitutionEditForm onCreate={handleCreate} data={institution} />}

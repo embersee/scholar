@@ -1,8 +1,8 @@
 import { db } from "@/server/db";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { institutionSchema } from "@/server/schema/institution";
+import { updateInstitutionSchema, institutionSchema, institutionSchemaForm, InputInstitutionSchema } from "@/server/schema/institution";
 import { z } from "zod";
-import {updateUserParams} from "@/server/schema/user";
+
 import { TRPCError } from "@trpc/server";
 
 export const institutionRouter = createTRPCRouter({
@@ -11,7 +11,7 @@ export const institutionRouter = createTRPCRouter({
   }),
 
   createInstitution: protectedProcedure
-  .input(institutionSchema).mutation(async ({ input: institution }) => {  
+  .input(updateInstitutionSchema).mutation(async ({ input: institution }) => {  
     try {
       const result = await db.institution.create({
         data: {
@@ -26,7 +26,7 @@ export const institutionRouter = createTRPCRouter({
     }
   }),
   updateInstitution: protectedProcedure
-      .input(institutionSchema)
+      .input(InputInstitutionSchema)
       .mutation(async ({ input: institution }) => {
         try {
           const result = await db.institution.update({

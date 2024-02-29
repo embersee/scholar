@@ -19,16 +19,16 @@ import { Institution } from "@prisma/client";
 import InstitutionCreateForm from "./InstitutionCreateForm";
 import { toast } from "../ui/use-toast";
 
-const InstitutionList = () => {
+const InstitutionList = ({ institutions }: { institutions: Institution[] }) => {
   const parent = useRef(null);
-
+  const trpcClient = api.useUtils();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
   }, [parent]);
 
-  const institutionList = api.institutions.getInstitutions.useQuery();
+
 
   const institutionRemove = api.institutions.removeInstitution.useMutation({
     onMutate: () => {
@@ -47,7 +47,7 @@ const InstitutionList = () => {
         title: '✅ Success',
         description: 'Institution removed'
       })
-      institutionList.refetch()
+      trpcClient.institutions.getInstitutions.refetch();
     },
   });
 
@@ -59,10 +59,10 @@ const InstitutionList = () => {
   return (
     <Container className="flex-col gap-4">
       <div>Institutions</div>
-      {institutionList.data && institutionList.data.length > 0 ? (
+      {institutions ? (
         <>
           <ul>
-            {institutionList.data.map((institution: Institution) => (
+            {institutions.map((institution: Institution) => (
               <li
                 className="flex flex-row items-center justify-between overflow-hidden pl-10 dark:border-none"
                 key={institution.id}
@@ -95,7 +95,7 @@ const InstitutionList = () => {
           </DrawerHeader>
           <InstitutionCreateForm
             onCreate={() => {
-              institutionList.refetch();
+              trpcClient.institutions.getInstitutions.refetch();
               setOpen(false);
             }}
           />

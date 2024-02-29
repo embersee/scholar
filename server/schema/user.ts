@@ -3,14 +3,14 @@ import { NonNullableFields } from "@/server/types";
 import { RouterOutputs } from "@/trpc/shared";
 
 export const userSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   telegram_id: z.string(),
   username: z.string().optional(),
   display_name: z.string().optional(),
   FIO: z.string().optional(),
   email: z.string().optional(),
   phone_number: z.string().optional(),
-  institution: z.string().optional(),
+  institutionId: z.string().optional(),
   specialty: z.string().optional(),
 });
 
@@ -23,10 +23,14 @@ export const insertUserParams = userSchema.extend({
 });
 
 export const updateUserSchema = userSchema.extend({
-  id: z.string(),
+  telegram_id: z.string(),
 });
 
 export const userFormSchema = z.object({
+  id: z.string().optional(),
+  telegram_id: z.string(),
+  username: z.string().optional(),
+  display_name: z.string().optional(),
   FIO: z.string().min(3, "Обьязательное поле"),
   phone_number: z
     .string()
@@ -35,7 +39,9 @@ export const userFormSchema = z.object({
       "Не соотвествует формату номера телефона",
     )
     .min(1),
-  institution: z.string().min(1, "Обьязательное поле"),
+  email: z.string().email('Не соотвествует формату электронной почты')
+  .min(1),
+  institutionId: z.string().min(1, "Обьязательное поле"),
   specialty: z.string().min(1, "Обьязательное поле"),
 });
 

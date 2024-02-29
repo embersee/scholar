@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
 
 const ProifleEditForm = (props: {
+    onCreate: Function | undefined,
     user: GetUser;
     institutions: Institution[];
 }) => {
@@ -62,7 +63,7 @@ const ProifleEditForm = (props: {
                 title: '✅ Success',
                 description: 'User updated'
             })
-            router.push("/dash/profile")
+            props.onCreate ? props.onCreate() : router.push("/dash/profile")
         },
     })
 

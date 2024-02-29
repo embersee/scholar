@@ -1,6 +1,7 @@
 import {
   insertUserParams,
   updateUserParams,
+  updateUserSchema,
   userTelegramIdSchema,
 } from "@/server/schema/user";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -10,9 +11,17 @@ import { db } from "@/server/db";
 import { TRPCError } from "@trpc/server";
 export const userRouter = createTRPCRouter({
   getUsers: protectedProcedure.query(async () => {
-    return db.user.findMany();
+    return db.user.findMany({
+    
+    });
   }),
-
+  getUsersWithInstitution: protectedProcedure.query(async () => {
+    return db.user.findMany({
+      include: {
+        institution: true,
+      },
+    });
+  }),
   getAuthedUserWithInstitution: protectedProcedure.query(
     async ({
       ctx: {
@@ -29,7 +38,32 @@ export const userRouter = createTRPCRouter({
       });
     },
   ),
+  getAuthedUser: protectedProcedure.query(
+    async ({
+      ctx: {
+        session: { user },
+      },
+    }) => {
+      const data = db.user.findFirst({
+        // select: {
+        //   username: true,
+        //   id: true,
+        //   telegram_id: true,
+        //   display_name: true,
+        //   FIO: true,
+        //   email: true,
+        //   phone_number: true,
+        //   institutionId: true,
+        //   specialty: true,
+        // },
+        where: {
+          telegram_id: user.id,
+        },
+      });
 
+      return data;
+    },
+  ),
   getUserById: protectedProcedure
     .input(userTelegramIdSchema)
     .query(async ({ input: { telegram_id } }) => {
@@ -48,16 +82,16 @@ export const userRouter = createTRPCRouter({
           telegram_id: user.telegram_id,
         },
       });
-
+      const { institutionId, ...data } = user
       if (isCurator) {
         
         return db.user.create({
           data: {
-            ...user,
+            ...data,
             role: "CURATOR",
             institution: {
               connect: {
-                name: user.institution,
+                name: user.institutionId,
               },
             },
           },
@@ -66,10 +100,10 @@ export const userRouter = createTRPCRouter({
 
       return db.user.create({
         data: {
-          ...user,
+          ...data,
           institution: {
             connect: {
-              name: user.institution,
+              name: user.institutionId,
             },
           },
         },
@@ -77,15 +111,16 @@ export const userRouter = createTRPCRouter({
     }),
 
   updateUser: protectedProcedure
-    .input(updateUserParams)
+    .input(updateUserSchema)
     .mutation(async ({ input: user }) => {
       try {
+        const { institutionId, ...data } = user
         const result = await db.user.update({
           data: {
-            ...user,
+            ...data,
             institution: {
               connect: {
-                id: user.institution,
+                id: user.institutionId,
               },
             },
           },
