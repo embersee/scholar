@@ -37,7 +37,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
 
 export default function ApprtsForm(props: {
-  onCreate: Function | undefined,
   apprenticeshipTypes: ApprenticeshipTypes[];
 }) {
   const router = useRouter()
@@ -86,7 +85,7 @@ export default function ApprtsForm(props: {
         title: '✅ Success',
         description: 'Apprenticeship type created'
       })
-      props.onCreate ? props.onCreate() : router.push("/dash/apprts")
+      router.push("/dash/apprts")
     },
   });
 

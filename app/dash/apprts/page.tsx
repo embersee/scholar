@@ -1,6 +1,7 @@
 import Heading from "@/components/ui/heading";
 import { api } from "@/trpc/server";
 import ApprtsTables from "./apprtsTables";
+import { cn } from "@/lib/utils";
 
 export default async function Apprenticeships() {
   const apprts = await api.apprts.getApprenticeships.query();
@@ -41,7 +42,7 @@ export default async function Apprenticeships() {
   ]*/
 
   return (
-    <div className={`${user?.role == 'STUDENT' && 'absolute p-4 w-full left-0 max-w-full'}`}>
+    <div className={cn(user?.role == 'STUDENT', 'absolute p-4 w-full left-0 max-w-full')}>
       <div className="">
         <Heading
           title={`${user?.role !== 'STUDENT' ? 'My' : ''} Apprenticeships`}
