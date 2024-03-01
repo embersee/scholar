@@ -11,18 +11,21 @@ import {
     useReactTable,
     VisibilityState
 } from "@tanstack/react-table";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
+import { Role } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
+    additionalFilters?: React.ReactNode;
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 export function DataTable<TData, TValue>({
     columns,
     data,
+    additionalFilters
 }: DataTableProps<TData, TValue>) {
     const [rowSelection, setRowSelection] = useState({})
     const [columnVisibility, setColumnVisibility] =
@@ -54,9 +57,18 @@ export function DataTable<TData, TValue>({
         getFacetedUniqueValues: getFacetedUniqueValues(),
     })
 
+    function handleFilterByRole(roles: Role[]) {
+        table.setColumnFilters([
+            {
+                id: '',
+                value: roles
+            }
+        ])
+    }
+
     return (
         <div className="space-y-4">
-            <DataTableToolbar table={table} />
+            <DataTableToolbar additionalFilters={additionalFilters} table={table}/>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>

@@ -12,44 +12,48 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { Role } from "@prisma/client";
+import { useEffect, useState } from "react";
 
-interface DataTableViewOptionsProps<TData> {
-    table: Table<TData>;
+interface DataTableViewOptionsProps {
+    onChange: (roles: Role[]) => void
 }
 
-export function DataTableViewOptions<TData>({
-    table,
-}: DataTableViewOptionsProps<TData>) {
+export function DataTableRightsSelector({
+    // table,
+    onChange
+}: DataTableViewOptionsProps) {
+    const [selectedRoles, setSelectedRoles] = useState<Role[]>(Object.values(Role));
+
+    useEffect(() => {
+        onChange(selectedRoles)
+    }, [selectedRoles])
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
                     size="sm"
-                    className="ml-2 hidden h-8 lg:flex"
+                    className="ml-auto  hidden flex "
                 >
                     <SlidersHorizontal className="mr-2 h-4 w-4" />
-                    Вид
+                    Фильтр по правам
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[150px]">
-                <DropdownMenuLabel>I/O колоны</DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="w-[180px]">
+                <DropdownMenuLabel>Роли</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {table
-                    .getAllColumns()
-                    .filter(
-                        (column) =>
-                            typeof column.accessorFn !== "undefined" && column.getCanHide()
-                    )
+                {(Object.keys(Role) as Role[])
                     .map((column) => {
                         return (
                             <DropdownMenuCheckboxItem
-                                key={column.id}
+                                key={column}
                                 className="capitalize"
-                                checked={column.getIsVisible()}
-                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                checked={selectedRoles.includes(column)}
+                                onCheckedChange={() => setSelectedRoles(prev => prev.includes(column) ? prev.filter(role => role !== column) : [...prev, column])}
                             >
-                                {column.id}
+                                {column}
                             </DropdownMenuCheckboxItem>
                         );
                     })}
