@@ -1,4 +1,4 @@
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -6,14 +6,17 @@ import { useEffect, useRef } from "react";
 import autoAnimate from "@formkit/auto-animate";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-
-
-import { Checkbox } from "../ui/checkbox";
 import { Combobox } from "../ui/combobox";
 import { Curator } from "@/server/schema/curator";
 import { toast } from "../ui/use-toast";
-import { ApprenticeshipTypes } from "@/server/schema/apprenticeship";
-
+import { ApprenticeshipTypes, apprenticeshipFormSchema, apprenticeshipSchema, updateApprenticeshipFormSchema } from "@/server/schema/apprenticeship";
+import { Checkbox } from "../ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 
 
@@ -23,6 +26,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
         parent.current && autoAnimate(parent.current);
     }, [parent]);
     const form = useForm<any>({
+        resolver: zodResolver(updateApprenticeshipFormSchema),
         defaultValues: {
             id: data.id,
             user_id: data.user_id,
@@ -31,6 +35,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
             referral: data.referral,
             apprenticeshipTypeId: data.apprenticeshipTypeId,
             report: data.report,
+            employment_status: data.employment_status,
             curatorId: data.curator ? data.curatorId : '',
             curatorGroupId: data.curator ? data.сuratorGroupId : '',
             academic_year: data.academic_year,
@@ -62,7 +67,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
         label: v.FIO,
     }));
     const apprtsTypes = apprenticeshipTypes.map((v) => ({
-        value: v.id,
+        value: v.id as string,
         label: v.name,
     }));
 
@@ -71,6 +76,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
         if (!data.curatorId) {
             data.curatorId = '';
         }
+        console.log(data)
         apprtsEditMutation.mutate(data);
     }
 
@@ -80,22 +86,61 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
             <div className="flex">
                 <FormField
                     control={form.control}
-                    name="start_date"
+                    name="date"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>start date</FormLabel>
-                            <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="start_date" {...field} />
+                        <FormItem className="w-72">
+                            <FormLabel>Диапазон дат практики</FormLabel>
+                            <FormControl>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            id="date"
+                                            variant={"outline"}
+                                            className={cn(
+                                                " justify-start text-left font-normal w-[100%]",
+                                                !form.watch().date && "text-muted-foreground",
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {field.value ? (
+                                                form.watch().date.to ? (
+                                                    <>
+                                                        {format(form.watch().date.from, "dd LLLL y", {
+                                                            locale: ru,
+                                                        })}
+                                                        {` – `}
+                                                        {format(form.watch().date.to, "dd LLLL y", {
+                                                            locale: ru,
+                                                        })}
+                                                    </>
+                                                ) : (
+                                                    format(form.watch().date.from, "dd LLLL y", {
+                                                        locale: ru,
+                                                    })
+                                                )
+                                            ) : (
+                                                <span>Выбери даты</span>
+                                            )}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            initialFocus
+                                            mode="range"
+                                            defaultMonth={form.watch().date?.from}
+                                            selected={field.value}
+                                            onSelect={field.onChange}
+                                            numberOfMonths={2}
+                                            locale={ru}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            </FormControl>
+
+
                         </FormItem>
-                    )} />
-                <FormField
-                    control={form.control}
-                    name="end_date"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>end_date</FormLabel>
-                            <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="end_date" {...field} />
-                        </FormItem>
-                    )} />
+                    )}
+                />
             </div>
             <FormField
                 control={form.control}
@@ -181,6 +226,21 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                     <FormItem>
                         <FormLabel>academic_year</FormLabel>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="academic_year" {...field} />
+                    </FormItem>
+                )} />
+            <FormField
+                control={form.control}
+                name="employment_status"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>employment status</FormLabel>
+                        <FormControl>
+                            <Checkbox
+                                className="ml-4"
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
                     </FormItem>
                 )} />
             <Button type="submit">{apprtsEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>

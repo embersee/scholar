@@ -1,4 +1,3 @@
-import { api } from "@/trpc/server";
 import RegList from "./RegList";
 import Container from "@/components/ui/container";
 import Heading from "@/components/ui/heading";

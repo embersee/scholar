@@ -24,7 +24,7 @@ function NavMenu() {
                 <NavigationMenuItem>
                     <NavigationMenuTrigger >Menu</NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <ul className="grid w-[300px] p-4 grid-cols-2  ">
+                        <ul className="z-[100] grid w-[300px] p-4 grid-cols-2  ">
                             <ListItem href="/dash/curators" title="Curators" />
                             <ListItem href="/dash/users" title="Users" />
                             <ListItem href="/dash/institutions" title="Institutions" />

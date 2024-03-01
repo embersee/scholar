@@ -24,7 +24,10 @@ export default async function Nav() {
       {session?.user && (
         <div className="flex items-center space-x-2">
           {/* //TODO: change if admin panel will exist */}
-          {user?.role == 'STUDENT' && <NavMenu />}
+          {user?.role == 'STUDENT' &&
+
+            <div className="z-[20]"><NavMenu />
+            </div>}
           <Profile
             name={session.user.name as string}
             image={session.user.image as string}

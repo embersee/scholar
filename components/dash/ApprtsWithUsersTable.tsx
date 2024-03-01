@@ -24,12 +24,12 @@ import { useRouter } from "next/navigation";
 import ApprtsWithUsersEditForm from "./ApprtsWithUsersEditForm";
 import { toast } from "../ui/use-toast";
 
-const ApprtsTable = () => {
-    const apprts = api.apprts.getApprenticeshipsWithUsers.useQuery();
+const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
+    const trpcClient = api.useUtils();
     const parent = useRef(null);
     const [open, setOpen] = useState(false);
     const [apprtWithUser, setApprtWithUser] = useState();
-    type apprt = GetApprenticeship[0];
+    // type apprt = GetApprenticeship[0];
 
     const curators = api.curators.getCurators.useQuery();
     const apprenticeshipTypes = api.apprts.getTypes.useQuery();
@@ -37,8 +37,37 @@ const ApprtsTable = () => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
     const handleCreate = () => {
-        apprts.refetch();
+        trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
         setOpen(false);
+    };
+
+
+    const apprtRemove = api.apprts.deleteApprenticeship.useMutation({
+        onMutate: () => {
+            toast({
+                title: '🔄 Removing...',
+            })
+        },
+        onError: (e) => {
+            toast({
+                title: '🚫 Error',
+                description: e.message
+            })
+        },
+        onSuccess: () => {
+            trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
+            toast({
+                title: '✅ Success',
+                description: 'Apprenticeship removed'
+            })
+
+        },
+    });
+
+
+    const deleteApprenticeShip = (id: string) => {
+        if (confirm("Are you sure?"))
+            apprtRemove.mutate({ id });
     };
 
     const router = useRouter()
@@ -292,7 +321,7 @@ const ApprtsTable = () => {
                             title: '✅ Success',
                             description: 'Apprenticeship updated'
                         })
-                        apprts.refetch()
+                        trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
                 })
 
@@ -322,7 +351,7 @@ const ApprtsTable = () => {
                             title: '✅ Success',
                             description: 'Apprenticeship updated'
                         })
-                        apprts.refetch()
+                        trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
                 })
 
@@ -352,7 +381,7 @@ const ApprtsTable = () => {
                             title: '✅ Success',
                             description: 'Apprenticeship updated'
                         })
-                        apprts.refetch()
+                        trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
                 })
 
@@ -382,7 +411,7 @@ const ApprtsTable = () => {
                             title: '✅ Success',
                             description: 'Apprenticeship updated'
                         })
-                        apprts.refetch()
+                        trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
                 })
 
@@ -411,6 +440,12 @@ const ApprtsTable = () => {
                             }}>
                                 Edit
                             </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                                console.log(user)
+                                deleteApprenticeShip(user.id)
+                            }}>
+                                Delete
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )
@@ -419,9 +454,9 @@ const ApprtsTable = () => {
     ];
     return (
         <>
-            {apprts.data && apprts.data.length > 0 ? (
+            {apprts ? (
                 <div className="w-full rounded-lgshadow-lg">
-                    <DataTable columns={columns} data={apprts.data} />
+                    <DataTable columns={columns} data={apprts} />
                     <Drawer
                         open={open}
                     >
