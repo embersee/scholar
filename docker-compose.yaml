@@ -13,8 +13,6 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.next
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./certbot/www/:/var/www/certbot/:ro
     ports:
       - "80:80"
       - "443:443"
@@ -26,12 +24,35 @@ services:
     networks:
       - net
 
-  certbot:
-    image: certbot/certbot:latest
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
-      
+      - web-root:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - nodejs
+    networks:
+      - app-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - webserver
+    command: certonly --webroot --webroot-path=/var/www/html --email monashovnikolaye@gmail.com --agree-tos --no-eff-email --staging -d home-server.tech  -d www.home-server.tech
+
+
   db:
     container_name: db
     image: postgres:latest
@@ -50,7 +71,17 @@ services:
       - net
 
 volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/mne/scholar/views/
+      o: bind
   db-data:
 
 networks:
+  app-network:
+    driver: bridge  
   net:
