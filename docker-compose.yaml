@@ -77,7 +77,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/mne/scholar/views/
+      device: /home/mne/sourcels/scholar/scholar/views/
       o: bind
   db-data:
 
