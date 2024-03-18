@@ -33,7 +33,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d
+      - ./nginx:/etc/nginx/conf.d
       - /app/public
     restart: always
     networks:
