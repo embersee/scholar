@@ -12,6 +12,9 @@ RUN npm ci
 
 RUN npx prisma generate
 
+# Install PM2 globally
+RUN npm install --global pm2
+
 ##### DEVELOP
 FROM base AS dev
 WORKDIR /app
@@ -47,4 +50,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-CMD ["node", "server.js"]
+# Run npm start script with PM2 when container starts
+CMD [ "pm2", "start", "--name", "'scholar'", "server.js" ]
