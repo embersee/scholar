@@ -14,13 +14,23 @@ services:
       - /app/node_modules
       - /app/.next
     ports:
-      - "80:80"
+      - "3000:3000"
     restart: always
     depends_on:
       db:
         condition: service_healthy
     networks:
       - net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/ssl:/etc/nginx/ssl:ro
+    restart: always
 
   db:
     container_name: db
