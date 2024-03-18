@@ -25,6 +25,8 @@ services:
   nginx:
     build: ./nginx
     container_name: nginx
+    depends_on:
+      - web
     ports:
       - "80:80"
       - "443:443"
