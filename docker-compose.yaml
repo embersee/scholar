@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     volumes:
-      - staticbuild:.:/app
+      - .:/app
       - staticbuild:/app/node_modules
       - staticbuild:/app/.next
     ports:
