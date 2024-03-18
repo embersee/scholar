@@ -7,7 +7,6 @@ services:
       context: .
       target: dev
     command: npm run dev
-    container_name: web
     env_file:
       - .env
     volumes:
@@ -15,35 +14,13 @@ services:
       - /app/node_modules
       - /app/.next
     ports:
-      - "3000:3000"
+      - "80:80"
     restart: always
     depends_on:
       db:
         condition: service_healthy
     networks:
       - net
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /etc/ssl:/etc/nginx/ssl:ro
-    restart: always
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
-    depends_on:
-      -   nginx
-    command: certonly --webroot --webroot-path=/var/www/html --email monashovnikolaye@gmail.com --agree-tos --no-eff-email --staging -d home-server.tech  -d www.home-server.tech
-
 
   db:
     container_name: db
@@ -63,16 +40,7 @@ services:
       - net
 
 volumes:
-  certbot-etc:
-  certbot-var:
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/mne/source/scholar/scholar/
-      o: bind
   db-data:
 
 networks:
   net:
-    driver: bridge  
