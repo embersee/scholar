@@ -11,8 +11,8 @@ services:
       - .env
     volumes:
       - .:/app
-      - staticbuild:/app/node_modules
-      - staticbuild:/app/.next
+      - /app/node_modules
+      - /app/.next
     ports:
       - "3000:3000"
     restart: always
@@ -32,7 +32,7 @@ services:
       - "443:443"
     volumes:
       - /etc/ssl:/etc/nginx/ssl:ro
-      - staticbuild:/app/public
+      - /app/public
     restart: always
     networks:
       - net
