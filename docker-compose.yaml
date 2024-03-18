@@ -31,6 +31,9 @@ services:
     volumes:
       - /etc/ssl:/etc/nginx/ssl:ro
     restart: always
+    networks:
+      - net
+
 
   db:
     container_name: db
