@@ -14,7 +14,8 @@ services:
       - /app/node_modules
       - /app/.next
     ports:
-      - "4246:4246"
+      - "80:80"
+      - "443:443"
     restart: always
     depends_on:
       db:
@@ -28,8 +29,7 @@ services:
     depends_on:
       - web
     ports:
-      - "80:80"
-      - "443:443"
+      - "4246:4246"
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - /app/.next
