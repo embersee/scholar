@@ -27,13 +27,11 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
             id: data.id,
             telegram_id: data.telegram_id,
             username: data.username,
-            telegram_id: data.telegram_id,
             display_name: data.display_name,
             institutionId: data.institutionId,
             FIO: data.FIO,
             phone_number: data.phone_number,
             email: data.email,
-            institution: data.institution,
             specialty: data.specialty
         },
         reValidateMode: "onChange"
@@ -96,7 +94,7 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                         <FormLabel>Email</FormLabel>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="email" {...field} />
                     </FormItem>
-                )} /> 
+                )} />
             <FormField
                 control={form.control}
                 name="specialty"

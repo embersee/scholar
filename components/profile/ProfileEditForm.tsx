@@ -13,6 +13,26 @@ import { Institution } from "@/server/schema/institution";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
+import { z } from "zod";
+
+interface RegForm {
+    FIO: string,
+    phone_number: string,
+    institutionId: string,
+    specialty: string,
+}
+export const RegFormSchema = z.object({
+    FIO: z.string().min(3, "Обьязательное поле"),
+    phone_number: z
+        .string()
+        .regex(
+            /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+            "Не соотвествует формату номера телефона",
+        )
+        .min(1),
+    institutionId: z.string().min(1, "Обьязательное поле"),
+    specialty: z.string().min(1, "Обьязательное поле"),
+});
 
 const ProifleEditForm = (props: {
     onCreate: Function | undefined,
@@ -30,17 +50,12 @@ const ProifleEditForm = (props: {
     useEffect(() => {
         parent.current && autoAnimate(parent.current);
     }, [parent]);
-
-    const form = useForm<UserForm>({
-
-        resolver: zodResolver(userFormSchema),
+    const form = useForm<RegForm>({
+        resolver: zodResolver(RegFormSchema),
         defaultValues: {
-            ...props.user,
-            institution: props.user?.institution?.name,
-        } ?? {
             FIO: "",
             phone_number: "",
-            institution: "",
+            institutionId: "",
             specialty: "",
         },
         reValidateMode: "onChange",
@@ -67,8 +82,9 @@ const ProifleEditForm = (props: {
         },
     })
 
-    function handleSubmit(data: UserForm) {
+    function handleSubmit(data: RegForm) {
         console.log(JSON.stringify(data));
+
         userShema.mutate({
             ...data,
             id: props.user?.id as string,
@@ -125,7 +141,7 @@ const ProifleEditForm = (props: {
                     />
                     <FormField
                         control={form.control}
-                        name="institution"
+                        name="institutionId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Institution</FormLabel>

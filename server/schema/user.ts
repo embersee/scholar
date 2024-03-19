@@ -41,10 +41,12 @@ export const userFormSchema = z.object({
     )
     .min(1),
   email: z.string().email('Не соотвествует формату электронной почты')
-  .min(1),
+  .min(1).optional(),
   institutionId: z.string().min(1, "Обьязательное поле"),
   specialty: z.string().min(1, "Обьязательное поле"),
 });
+
+
 
 export const updateUserParams = updateUserSchema.extend({});
 export const userTelegramIdSchema = updateUserSchema.pick({

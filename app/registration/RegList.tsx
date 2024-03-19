@@ -15,7 +15,6 @@ function RegList() {
     const institions = api.institutions.getInstitutions.useQuery();
     const apprenticeshipTypes = api.apprts.getTypes.useQuery();
     const router = useRouter();
-
     return (
         <>
             {!status && institions.data && user.data && (
@@ -27,7 +26,6 @@ function RegList() {
             )}
             {status && apprenticeshipTypes.data && (
                 <ApprtsForm
-                    onCreate={() => router.push("/dash/apprts")}
                     apprenticeshipTypes={apprenticeshipTypes.data}
                 />
             )}

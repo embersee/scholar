@@ -1,3 +1,4 @@
+'use client'
 import { api } from "@/trpc/react";
 import AddInstutionForm from "./addInstutionForm";
 import InstitutionsTable from "@/components/dash/InstitutionsTable";
