@@ -34,7 +34,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - /app/public
+      - /app/.next
     restart: always
     networks:
       - net
