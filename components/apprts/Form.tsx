@@ -35,6 +35,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
+import { InputFile } from "../ui/input-file";
 
 export default function ApprtsForm(props: {
   apprenticeshipTypes: ApprenticeshipTypes[];
@@ -133,12 +134,7 @@ export default function ApprtsForm(props: {
               <FormItem className="w-72">
                 <FormLabel>Место ссылки направления</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-[100%]"
-                    autoComplete="off"
-                    placeholder="пока пусть только string отправляет"
-                    {...field}
-                  />
+                  <InputFile />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
@@ -153,12 +149,7 @@ export default function ApprtsForm(props: {
               <FormItem className="w-72">
                 <FormLabel>Место ссылки отчета</FormLabel>
                 <FormControl>
-                  <Input
-                    className="w-[100%]"
-                    autoComplete="off"
-                    placeholder="пока пусть только string отправляет"
-                    {...field}
-                  />
+                  <InputFile />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
