@@ -37,10 +37,25 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - /app/.next
+      - /app/public
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     restart: always
     networks:
       - net
 
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - nginx
+    command: certonly --webroot --webroot-path=/var/www/html --email monashovnikolaye@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
+    networks:
+      - net
 
   db:
     container_name: db
@@ -61,7 +76,9 @@ services:
 
 volumes:
   db-data:
-  staticbuild:
+  certbot-etc:
+  certbot-var:
+  web-root:
 
 networks:
   net:

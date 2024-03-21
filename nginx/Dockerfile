@@ -1,12 +1,12 @@
 # Base on offical NGINX Alpine image
-FROM nginx:alpine
+FROM nginx
 
 # Remove any existing config files
 RUN rm /etc/nginx/conf.d/*
 
 # Copy config files
 # *.conf files in conf.d/ dir get included in main config
-COPY ./default.conf /etc/nginx/conf.d/
+COPY ./nginx-conf/home-server.tech.conf /etc/nginx/conf.d/
 
 
 
