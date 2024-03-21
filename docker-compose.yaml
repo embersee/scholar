@@ -54,7 +54,7 @@ services:
       - web-root:/_next/static/
     depends_on:
       - nginx
-    command: certonly --webroot --webroot-path=/_next/static/ --email monashovnikolaye@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
+    command: certonly --webroot --webroot-path=/_next/static/ --email omlet.omletovich@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
     networks:
       - net
 
