@@ -50,10 +50,10 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
+      - web-root:/app/.next
     depends_on:
       - nginx
-    command: certonly --webroot --webroot-path=/var/www/html --email monashovnikolaye@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
+    command: certonly --webroot --webroot-path=/app/.next --email monashovnikolaye@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
     networks:
       - net
 
