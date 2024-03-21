@@ -13,6 +13,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.next
+      - web-root:/_next/static/
     ports:
       - "4246:4246"
     expose:
@@ -50,10 +51,10 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - web-root:/app/.next
+      - web-root:/_next/static/
     depends_on:
       - nginx
-    command: certonly --webroot --webroot-path=/app/.next --email monashovnikolaye@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
+    command: certonly --webroot --webroot-path=/_next/static/ --email monashovnikolaye@gmail.com --agree-tos --no-eff-email -d home-server.tech  -d www.home-server.tech
     networks:
       - net
 
