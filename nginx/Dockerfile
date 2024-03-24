@@ -12,5 +12,5 @@ COPY ./default.conf /etc/nginx/conf.d/
 
 # Launch NGINX
 CMD [ "nginx", "-g", "daemon off;" ]
-RUN apk add certbot certbot-nginx
-RUN certbot --nginx 
+#RUN apk add certbot certbot-nginx
+#RUN certbot --nginx 
