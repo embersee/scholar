@@ -38,8 +38,6 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - /app/.next
       - /app/public
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
     restart: always
     networks:
       - net
@@ -63,8 +61,6 @@ services:
 
 volumes:
   db-data:
-  certbot-etc:
-  certbot-var:
 
 networks:
   net:
