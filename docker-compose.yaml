@@ -27,7 +27,7 @@ services:
 
   nginx:
     build: ./nginx
-    container_name: nginx
+    container_name: scholar_nginx
     depends_on:
       - web
     ports:
