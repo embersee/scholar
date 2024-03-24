@@ -1,5 +1,5 @@
-# Base on offical NGINX Alpine image
-FROM nginx
+# Base on offical NGINX image
+FROM nginx:alpine
 
 # Remove any existing config files
 RUN rm /etc/nginx/conf.d/*
@@ -11,4 +11,6 @@ COPY ./nginx-conf/default.conf /etc/nginx/conf.d/
 
 
 # Launch NGINX
+RUN apk add certbot certbot-nginx
+RUN certbot --nginx 
 CMD [ "nginx", "-g", "daemon off;" ]
