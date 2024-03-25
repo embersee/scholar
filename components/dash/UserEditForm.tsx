@@ -40,19 +40,19 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
     const userEditMutation = api.user.updateUser.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Updating...',
+                title: '🔄 Обновление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'User updated'
+                title: '✅ Успех',
+                description: 'Пользователь успешно обновлен'
             })
             onCreate()
         },
@@ -73,8 +73,8 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                 name="FIO"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>FIO</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="FIO" {...field} />
+                        <FormLabel>ФИО</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="ФИО" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -82,8 +82,8 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                 name="phone_number"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Phone number</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="phone number" {...field} />
+                        <FormLabel>Номер телефона</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Номер телефона" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -92,7 +92,7 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Email</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="email" {...field} />
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Адрес электронной почты" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -100,8 +100,8 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                 name="specialty"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>specialty</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="specialty" {...field} />
+                        <FormLabel>Специальность</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Специальность" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -109,7 +109,7 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                 name="institutionId"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>institution</FormLabel>
+                        <FormLabel>Учебное заведение</FormLabel>
                         <FormControl>
                             <Combobox
                                 options={catalogInstitutions}
@@ -123,7 +123,7 @@ const UserEditForm = ({ onCreate, data, institutions }: { onCreate: () => void, 
                         </FormControl>
                     </FormItem>
                 )} />
-            <Button type="submit">{userEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>
+            <Button type="submit">{userEditMutation.isLoading ? "Отправка..." : "Отправить"}</Button>
         </form>
     </Form>
 }

@@ -45,8 +45,8 @@ export default async function Apprenticeships() {
     <div className={cn(user?.role == 'STUDENT', 'absolute p-4 w-full left-0 max-w-full')}>
       <div className="">
         <Heading
-          title={`${user?.role !== 'STUDENT' ? 'My' : ''} Apprenticeships`}
-          description={`${user?.role !== 'STUDENT' ? "View your apprenticeships here." : ''}`}
+          title={`${user?.role !== 'STUDENT' ? 'Мои' : ''} Практики`}
+          description={`${user?.role !== 'STUDENT' ? "Ознакомьтесь со своими практиками здесь." : ''}`}
         ></Heading>
       </div>
       <ApprtsTables apprts={apprts} apprtsWithUsers={apprtsWithUsers} user={user} />

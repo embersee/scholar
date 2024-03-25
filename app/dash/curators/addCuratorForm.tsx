@@ -22,13 +22,13 @@ export default function AddCuratorForm() {
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button>Add</Button>
+                <Button>Добавить</Button>
             </DrawerTrigger>
             <DrawerContent className="flex flex-col items-center">
                 <DrawerHeader>
-                    <DrawerTitle>New Curator</DrawerTitle>
+                    <DrawerTitle>Новый Куратор</DrawerTitle>
                     <DrawerDescription>
-                        description
+                        описание
                     </DrawerDescription>
                 </DrawerHeader>
                 <CuratorCreateForm
@@ -37,7 +37,7 @@ export default function AddCuratorForm() {
                 <DrawerFooter>
                     <DrawerClose asChild>
                         <Button className="w-72" variant="outline">
-                            Cancel
+                            Отмена
                         </Button>
                     </DrawerClose>
                 </DrawerFooter>

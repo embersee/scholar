@@ -10,7 +10,7 @@ export default async function Dash() {
     <>
       <Heading
         title="Dash"
-        description="Create or select which bot to manage here."
+        description="Создайте или выберите бота для управления здесь."
       ></Heading>
       <DashList institutions={institutions} apprtTypes={apprtTypes} />
 

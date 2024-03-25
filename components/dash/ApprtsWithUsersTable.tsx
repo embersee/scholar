@@ -45,20 +45,20 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
     const apprtRemove = api.apprts.deleteApprenticeship.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Removing...',
+                title: '🔄 Удаление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
             toast({
-                title: '✅ Success',
-                description: 'Apprenticeship removed'
+                title: '✅ Успех',
+                description: 'Практика успешно удалена'
             })
 
         },
@@ -66,7 +66,7 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
 
 
     const deleteApprenticeShip = (id: string) => {
-        if (confirm("Are you sure?"))
+        if (confirm("Вы уверены?"))
             apprtRemove.mutate({ id });
     };
 
@@ -307,19 +307,19 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                 const { mutate } = api.apprts.attendance.useMutation({
                     onMutate: () => {
                         toast({
-                            title: '🔄 Updating...',
+                            title: '🔄 Обновление...',
                         })
                     },
                     onError: (e) => {
                         toast({
-                            title: '🚫 Error',
+                            title: '🚫 Ошибка',
                             description: e.message
                         })
                     },
                     onSuccess: () => {
                         toast({
-                            title: '✅ Success',
-                            description: 'Apprenticeship updated'
+                            title: '✅ Успех',
+                            description: 'Практика успешно обновлена',
                         })
                         trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
@@ -337,19 +337,19 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                 const { mutate } = api.apprts.signed.useMutation({
                     onMutate: () => {
                         toast({
-                            title: '🔄 Updating...',
+                            title: '🔄 Обновление...',
                         })
                     },
                     onError: (e) => {
                         toast({
-                            title: '🚫 Error',
+                            title: '🚫 Ошибка',
                             description: e.message
                         })
                     },
                     onSuccess: () => {
                         toast({
-                            title: '✅ Success',
-                            description: 'Apprenticeship updated'
+                            title: '✅ Успех',
+                            description: 'Практика успешно обновлена',
                         })
                         trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
@@ -367,19 +367,19 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                 const { mutate } = api.apprts.reportSigned.useMutation({
                     onMutate: () => {
                         toast({
-                            title: '🔄 Updating...',
+                            title: '🔄 Обновление...',
                         })
                     },
                     onError: (e) => {
                         toast({
-                            title: '🚫 Error',
+                            title: '🚫 Ошибка',
                             description: e.message
                         })
                     },
                     onSuccess: () => {
                         toast({
-                            title: '✅ Success',
-                            description: 'Apprenticeship updated'
+                            title: '✅ Успех',
+                            description: 'Практика успешно обновлена',
                         })
                         trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
@@ -397,19 +397,19 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                 const { mutate } = api.apprts.referralSigned.useMutation({
                     onMutate: () => {
                         toast({
-                            title: '🔄 Updating...',
+                            title: '🔄 Обновление...',
                         })
                     },
                     onError: (e) => {
                         toast({
-                            title: '🚫 Error',
+                            title: '🚫 Ошибка',
                             description: e.message
                         })
                     },
                     onSuccess: () => {
                         toast({
-                            title: '✅ Success',
-                            description: 'Apprenticeship updated'
+                            title: '✅ Успех',
+                            description: 'Практика успешно обновлена',
                         })
                         trpcClient.apprts.getApprenticeshipsWithUsers.refetch();
                     },
@@ -432,19 +432,19 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className='shadow-md'>
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>Действия</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => {
                                 setOpen(true)
                                 setApprtWithUser(user)
                             }}>
-                                Edit
+                                Редактировать
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => {
                                 console.log(user)
                                 deleteApprenticeShip(user.id)
                             }}>
-                                Delete
+                                Удалить
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -463,14 +463,14 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                         <DrawerContent className="h-screen flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Institution
+                                    Редактировать учеб. заведение
                                 </DrawerTitle>
                             </DrawerHeader>
                             {apprtWithUser && apprenticeshipTypes.data && curators.data && <ApprtsWithUsersEditForm apprenticeshipTypes={apprenticeshipTypes.data} curators={curators.data} onCreate={handleCreate} data={apprtWithUser} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
-                                        Cancel
+                                        Отмена
                                     </Button>
                                 </DrawerClose>
                             </DrawerFooter>
@@ -479,7 +479,7 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
                 </div>
             ) : (
                 <div className="text-center font-medium">
-                    Still No apprts Yet
+                    Практик пока нет
                 </div>
             )}
         </>

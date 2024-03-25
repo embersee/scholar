@@ -5,7 +5,7 @@ export default async function Settings() {
   return (
     <>
       <Heading
-        title="Settings"
+        title="Настройки"
         description="..."
       ></Heading>
 

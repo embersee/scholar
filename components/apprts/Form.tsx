@@ -72,19 +72,19 @@ export default function ApprtsForm(props: {
   const apprts = api.apprts.createApprenticeship.useMutation({
     onMutate: () => {
       toast({
-        title: '🔄 Creating...',
+        title: '🔄 Создание...',
       })
     },
     onError: (e) => {
       toast({
-        title: '🚫 Error',
+        title: '🚫 Ошибка',
         description: e.message
       })
     },
     onSuccess: () => {
       toast({
-        title: '✅ Success',
-        description: 'Apprenticeship type created'
+        title: '✅ Успех',
+        description: 'Тип практики успешно создан'
       })
       router.push("/dash/apprts")
     },

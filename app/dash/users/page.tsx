@@ -13,7 +13,7 @@ export default async function Users() {
     return (
         <div className='w-full'>
             <Heading
-                title="Users"
+                title="Пользователи"
                 description=""
             />
             <UsersTable usersList={usersList} />

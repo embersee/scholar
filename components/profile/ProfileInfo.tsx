@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { GetUser } from "@/server/schema/user";
 
 const profileInfo = ({ user }: { user: GetUser }) => {
-    if (!user) return "Error loading user data try to log in again";
+    if (!user) return "Ошибка при загрузке данных пользователя, попробуйте войти снова";
     useEffect(()=> console.log(user), [user])
     return <Container className="justify-center">
         <div className="flex flex-col w-max">
@@ -21,14 +21,14 @@ const profileInfo = ({ user }: { user: GetUser }) => {
             </div>
 
             <ProfileMenuPoint name="Telegram id" value={user.telegram_id} />
-            <ProfileMenuPoint name="Username" value={user.username} />
-            <ProfileMenuPoint name="FIO" value={user.FIO} />
-            <ProfileMenuPoint name="Phone" value={user.phone_number} />
-            <ProfileMenuPoint name="Institution" value={user.institution?.name} />
-            <ProfileMenuPoint name="Spetiality" value={user.specialty} />
+            <ProfileMenuPoint name="Имя пользователя" value={user.username} />
+            <ProfileMenuPoint name="ФИО" value={user.FIO} />
+            <ProfileMenuPoint name="Телефон" value={user.phone_number} />
+            <ProfileMenuPoint name="Учебное заведение" value={user.institution?.name} />
+            <ProfileMenuPoint name="Специальность" value={user.specialty} />
 
             <Link href="/dash/profile/edit" className="my-6 w-max">
-                <Button variant="default" size="lg">Edit</Button>
+                <Button variant="default" size="lg">Редактировать</Button>
             </Link>
         </div>
     </Container>

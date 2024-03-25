@@ -10,7 +10,7 @@ const EditPage = async () => {
     const data = await api.institutions.getInstitutions.query();
 
     return <>
-        <Heading title="Edit Profile" description="..."></Heading>
+        <Heading title="Редактировать профиль" description="..."></Heading>
         <div>
             <ProifleEditForm onCreate={undefined} user={user} institutions={data} />
         </div>

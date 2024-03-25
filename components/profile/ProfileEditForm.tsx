@@ -22,7 +22,7 @@ interface RegForm {
     specialty: string,
 }
 export const RegFormSchema = z.object({
-    FIO: z.string().min(3, "Обьязательное поле"),
+    FIO: z.string().min(3, "Обязательное поле"),
     phone_number: z
         .string()
         .regex(
@@ -30,8 +30,8 @@ export const RegFormSchema = z.object({
             "Не соотвествует формату номера телефона",
         )
         .min(1),
-    institutionId: z.string().min(1, "Обьязательное поле"),
-    specialty: z.string().min(1, "Обьязательное поле"),
+    institutionId: z.string().min(1, "Обязательное поле"),
+    specialty: z.string().min(1, "Обязательное поле"),
 });
 
 const ProifleEditForm = (props: {
@@ -64,19 +64,19 @@ const ProifleEditForm = (props: {
     const userShema = api.user.updateUser.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Updating...',
+                title: '🔄 Обновление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'User updated'
+                title: '✅ Успех',
+                description: 'Пользователь успешно обновлен'
             })
             props.onCreate ? props.onCreate() : router.push("/dash/profile")
         },
@@ -107,7 +107,7 @@ const ProifleEditForm = (props: {
                         name="FIO"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>FIO</FormLabel>
+                                <FormLabel>ФИО</FormLabel>
                                 <FormControl>
                                     <Input
                                         autoComplete="off"
@@ -125,7 +125,7 @@ const ProifleEditForm = (props: {
                         name="phone_number"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Phone number</FormLabel>
+                                <FormLabel>Номер телефона</FormLabel>
                                 <FormControl>
                                     <Input
                                         autoComplete="off"
@@ -144,7 +144,7 @@ const ProifleEditForm = (props: {
                         name="institutionId"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Institution</FormLabel>
+                                <FormLabel>Учебное заведение</FormLabel>
                                 <FormControl>
                                     <Combobox
                                         options={institutions}
@@ -166,7 +166,7 @@ const ProifleEditForm = (props: {
                         name="specialty"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Specialty</FormLabel>
+                                <FormLabel>Специальность</FormLabel>
                                 <FormControl>
                                     <Input
                                         autoComplete="off"
@@ -180,7 +180,7 @@ const ProifleEditForm = (props: {
                         )}
                     />
 
-                    <Button type="submit">{userShema.isLoading ? "Submitting..." : "Submit"}</Button>
+                    <Button type="submit">{userShema.isLoading ? "Отправка..." : "Отправить"}</Button>
                 </form>
             </Form>
         </Container>

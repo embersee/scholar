@@ -8,8 +8,8 @@ async function Curators() {
     return (
         <div>
             <Heading
-                title="Curators"
-                description="View all curators here."
+                title="Кураторы"
+                description="Посмотреть всех кураторов можно здесь."
             />
             <CuratorList curators={curators} />
         </div>

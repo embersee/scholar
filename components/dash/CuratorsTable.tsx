@@ -36,27 +36,27 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
     const curatorRemove = api.curators.removeCurator.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Removing...',
+                title: '🔄 Удаление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             trpcClient.curators.getCurators.refetch();
             toast({
-                title: '✅ Success',
-                description: 'Curator removed'
+                title: '✅ Успех',
+                description: 'Куратор успешно удален'
             })
 
         },
     });
 
     const deleteCurator = (id: string) => {
-        if (confirm("Are you sure?"))
+        if (confirm("Вы уверены?"))
             curatorRemove.mutate({ id });
     };
 
@@ -66,7 +66,7 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
 
     const columns: ColumnDef<Curator>[] = [
         {
-            header: 'name',
+            header: 'ФИО',
             accessorKey: 'FIO',
         },
         {
@@ -74,7 +74,7 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
             accessorKey: 'telegram_id',
         },
         {
-            header: 'group_links',
+            header: 'Ссылки на группы',
             accessorKey: 'group_links',
             cell: ({ row }) => {
                 const curator = row.original
@@ -104,18 +104,18 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className={`shadow-md `}>
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>Действия</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => {
                                 setOpen(true)
                                 setCuratorSelected(curator)
                             }}>
-                                Edit
+                                Редактировать
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => {
                                 deleteCurator(curator.id)
                             }}>
-                                Delete
+                                Удалить
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -134,14 +134,14 @@ const CuratorsTable = ({ curators }: { curators: Curator[] }) => {
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Curator
+                                    Редактировать Куратора
                                 </DrawerTitle>
                             </DrawerHeader>
                             {curatorSelected && <CuratorEditForm onCreate={handleCreate} data={curatorSelected} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
-                                        Cancel
+                                        Отмена
                                     </Button>
                                 </DrawerClose>
                             </DrawerFooter>

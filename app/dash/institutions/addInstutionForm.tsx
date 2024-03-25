@@ -23,11 +23,11 @@ export default function AddInstutionForm() {
 
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger asChild>
-                <Button>Add</Button>
+                <Button>Добавить</Button>
             </DrawerTrigger>
             <DrawerContent className="flex flex-col items-center">
                 <DrawerHeader>
-                    <DrawerTitle>New Institution</DrawerTitle>
+                    <DrawerTitle>Новое учебное заведение</DrawerTitle>
                     <DrawerDescription>
                         description
                     </DrawerDescription>
@@ -38,7 +38,7 @@ export default function AddInstutionForm() {
                 <DrawerFooter>
                     <DrawerClose asChild>
                         <Button className="w-72" variant="outline">
-                            Cancel
+                            Отмена
                         </Button>
                     </DrawerClose>
                 </DrawerFooter>

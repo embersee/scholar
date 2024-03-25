@@ -28,19 +28,19 @@ const ApprtTypeCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const apprtTypeMutation = api.apprts.createApprtType.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Creating...',
+                title: '🔄 Создание...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'Apprenticeship type created'
+                title: '✅ Успех',
+                description: 'Тип практики успешно создан'
             })
             onCreate()
         },
@@ -59,11 +59,11 @@ const ApprtTypeCreateForm = ({ onCreate }: { onCreate: Function }) => {
                 name="name"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>Наименование</FormLabel>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Производственная практика" {...field} />
                     </FormItem>
                 )} />
-            <Button type="submit">{apprtTypeMutation.isLoading ? "Submitting..." : "Submit"}</Button>
+            <Button type="submit">{apprtTypeMutation.isLoading ? "Отправка..." : "Отправить"}</Button>
         </form>
     </Form>
 }

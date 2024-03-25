@@ -29,19 +29,19 @@ const InstitutionEditForm = ({ onCreate, data }: { onCreate: Function, data: Ins
     const institutionEditMutation = api.institutions.updateInstitution.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Updating...',
+                title: '🔄 Обновление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'Institution updated'
+                title: '✅ Успех',
+                description: 'Учебное заведение успешно обновлено'
             })
             onCreate()
         },
@@ -59,11 +59,11 @@ const InstitutionEditForm = ({ onCreate, data }: { onCreate: Function, data: Ins
                 name="name"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <Input autoComplete="off" aria-autocomplete="none" placeholder="name" {...field} />
+                        <FormLabel>Название</FormLabel>
+                        <Input autoComplete="off" aria-autocomplete="none" placeholder="Название" {...field} />
                     </FormItem>
                 )} />
-            <Button type="submit">{institutionEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>
+            <Button type="submit">{institutionEditMutation.isLoading ? "Отправка..." : "Отправить"}</Button>
         </form>
     </Form>
 }
