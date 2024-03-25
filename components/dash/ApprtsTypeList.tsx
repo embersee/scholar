@@ -32,19 +32,19 @@ const ApprtsTypeList = ({ apprtsTypes }: { apprtsTypes: ApprenticeshipType[] }) 
   const apprtTypeRemove = api.apprts.removeApprtType.useMutation({
     onMutate: () => {
       toast({
-        title: '🔄 Removing...',
+        title: '🔄 Удаление...',
       })
     },
     onError: (e) => {
       toast({
-        title: '🚫 Error',
+        title: '🚫 Ошибка',
         description: e.message
       })
     },
     onSuccess: () => {
       toast({
-        title: '✅ Success',
-        description: 'Apprenticeship type removed'
+        title: '✅ Успех',
+        description: 'Тип практики успешно удалён'
       })
       trpcClient.apprts.getTypes.refetch()
     },
@@ -52,12 +52,12 @@ const ApprtsTypeList = ({ apprtsTypes }: { apprtsTypes: ApprenticeshipType[] }) 
   });
 
   const removeApprtType = (apprtTypeId: string) => {
-    if (confirm("Are you shure?")) apprtTypeRemove.mutate({ id: apprtTypeId });
+    if (confirm("Вы уверены?")) apprtTypeRemove.mutate({ id: apprtTypeId });
   };
 
   return (
     <Container className="flex-col gap-4">
-      <div>Apprenticeship types</div>
+      <div>Типы практики</div>
       {apprtsTypes ? (
         <>
           <ul>
@@ -80,18 +80,18 @@ const ApprtsTypeList = ({ apprtsTypes }: { apprtsTypes: ApprenticeshipType[] }) 
         </>
       ) : (
         <div className="text-center font-medium">
-          Still No Apprenticeship Types Yet
+          По-прежнему нет типов практики.
         </div>
       )}
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button>Add</Button>
+          <Button>Добавить</Button>
         </DrawerTrigger>
         <DrawerContent className="flex flex-col items-center">
           <DrawerHeader>
-            <DrawerTitle>New Apprenticeship type</DrawerTitle>
+            <DrawerTitle>Новый тип практики</DrawerTitle>
             <DrawerDescription>
-              {"Make changes to your profile here. Click save when you're done."}
+              {"Внесите изменения в свой профиль здесь. Нажмите сохранить, когда закончите."}
             </DrawerDescription>
           </DrawerHeader>
           <ApprtTypeCreateForm
@@ -103,7 +103,7 @@ const ApprtsTypeList = ({ apprtsTypes }: { apprtsTypes: ApprenticeshipType[] }) 
           <DrawerFooter>
             <DrawerClose asChild>
               <Button className="w-72" variant="outline">
-                Cancel
+                Отмена
               </Button>
             </DrawerClose>
           </DrawerFooter>

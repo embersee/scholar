@@ -48,19 +48,19 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
     const curatorMutation = api.curators.createCurator.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Creating...',
+                title: '🔄 Создание...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'Curator created'
+                title: '✅ Успех',
+                description: 'Куратор успешно создан'
             })
             onCreate()
         },
@@ -90,14 +90,14 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                 name="FIO"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>FIO</FormLabel>
+                        <FormLabel>ФИО</FormLabel>
                         <Input autoFocus autoComplete="off" aria-autocomplete="none"
                             placeholder="Введите ФИО" {...field} />
                     </FormItem>
                 )} />
 
             <FormItem>
-                <FormLabel>Group links</FormLabel>
+                <FormLabel>Ссылки на группы</FormLabel>
                 {fields.map((field, index) => {
                     return (
                         <div key={field.id} className="flex justify-between items-end gap-4">
@@ -106,12 +106,12 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                                 name={`group_links.${index}.group_name` as const}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Name: </FormLabel>
+                                        <FormLabel>Название: </FormLabel>
                                         <FormControl>
                                             <Input
                                                 className="w-[250px] max-w-full"
                                                 autoComplete="off"
-                                                placeholder="Name"
+                                                placeholder="Название"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -125,12 +125,12 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                                 name={`group_links.${index}.group_link` as const}
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Link: </FormLabel>
+                                        <FormLabel>Ссылка: </FormLabel>
                                         <FormControl>
                                             <Input
                                                 className="w-[250px] max-w-full"
                                                 autoComplete="off"
-                                                placeholder="Link"
+                                                placeholder="Ссылка"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -142,10 +142,10 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                             <Button
                                 type="button"
                                 variant="destructive"
-                                className=" "
+                                className=""
                                 onClick={() => remove(index)}
                             >
-                                Delete
+                                Удалить
                             </Button>
                         </div>
                     );
@@ -160,11 +160,11 @@ const CuratorCreateForm = ({ onCreate }: { onCreate: Function }) => {
                             group_name: ""
                         })}
                 >
-                    Add new link
+                    Добавить новую ссылку
                 </Button>
             </FormItem>
 
-            <Button type="submit">{curatorMutation.isLoading ? "Submitting..." : "Submit"}</Button>
+            <Button type="submit">{curatorMutation.isLoading ? "Отправка..." : "Отправить"}</Button>
         </form>
     </Form>
 }

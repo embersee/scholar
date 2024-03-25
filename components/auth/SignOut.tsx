@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 export default function SignOut() {
   return (
     <Button variant="destructive" onClick={() => signOut({ callbackUrl: "/" })}>
-      Sign Out
+      Выйти
     </Button>
   );
 }

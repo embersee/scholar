@@ -45,19 +45,19 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
     const apprtsEditMutation = api.apprts.updateApprenticeship.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Updating...',
+                title: '🔄 Обноволение...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'Apprenticeship updated'
+                title: '✅ Успех',
+                description: 'Практика успешно обновлена'
             })
             onCreate()
         },
@@ -166,8 +166,8 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                 name="referral"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>referral</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="referral" {...field} />
+                        <FormLabel>Направление</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Направление" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -175,8 +175,8 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                 name="report"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>report</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="report" {...field} />
+                        <FormLabel>Отчет</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Отчет" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -184,7 +184,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                 name="curatorId"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>curator</FormLabel>
+                        <FormLabel>Куратор</FormLabel>
                         <FormControl>
                             <Combobox
                                 options={catalogCurators}
@@ -203,7 +203,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                 name="curatorGroupId"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>group</FormLabel>
+                        <FormLabel>Группа</FormLabel>
                         <Combobox
                             options={curators.find(curator => curator.id === form.getValues('curatorId'))?.group_links.map((v) => ({
                                 value: v.id as string,
@@ -224,8 +224,8 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                 name="academic_year"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>academic_year</FormLabel>
-                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="academic_year" {...field} />
+                        <FormLabel>Учебный год</FormLabel>
+                        <Input autoFocus autoComplete="off" aria-autocomplete="none" placeholder="Учебный год" {...field} />
                     </FormItem>
                 )} />
             <FormField
@@ -233,7 +233,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                 name="employment_status"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>employment status</FormLabel>
+                        <FormLabel>Трудовой статус</FormLabel>
                         <FormControl>
                             <Checkbox
                                 className="ml-4"
@@ -243,7 +243,7 @@ const ApprtsWithUsersEditForm = ({ onCreate, data, curators, apprenticeshipTypes
                         </FormControl>
                     </FormItem>
                 )} />
-            <Button type="submit">{apprtsEditMutation.isLoading ? "Submitting..." : "Submit"}</Button>
+            <Button type="submit">{apprtsEditMutation.isLoading ? "Отправка..." : "Отправить"}</Button>
         </form>
     </Form>
 }

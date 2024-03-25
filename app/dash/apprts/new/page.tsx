@@ -8,8 +8,8 @@ export default async function New() {
   return (
     <>
       <Heading
-        title="Fill out this form."
-        description="this is required to submit a referal."
+        title="Заполните эту форму."
+        description="это необходимо для отправки направления."
       ></Heading>
       <Container className="form">
         <ApprtsForm apprenticeshipTypes={apprenticeshipTypes} />

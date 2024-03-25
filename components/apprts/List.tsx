@@ -17,14 +17,14 @@ export default function ApprtsList(props: Props) {
   if (!props.apprts.length) {
     return (
       <div className="text-center">
-        <h2 className="mt-2 text-sm font-semibold">No apprenticeships.</h2>
+        <h2 className="mt-2 text-sm font-semibold">Здесь пока нет практик.</h2>
         <p className="mt-1 text-sm text-gray-500">
-          Get started by creating a new apprenticeship!
+          Начни с создания новой практики!
         </p>
 
         <Button asChild>
           <Link href="/dash/apprts/new" className="mt-2">
-            Create
+            Создать
           </Link>
         </Button>
       </div>
@@ -65,16 +65,16 @@ const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) 
       </DrawerTrigger>
       <DrawerContent className="flex flex-column justify-center items-center">
         <DrawerHeader>
-          <DrawerTitle>Student Info</DrawerTitle>
+          <DrawerTitle>Информация о студентах</DrawerTitle>
           <DrawerDescription>View details</DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-row items-center justify-center">
-          <div className="p-10">FIO</div>
-          <div className="p-10">Dates</div>
+          <div className="p-10">ФИО</div>
+          <div className="p-10">Даты</div>
         </div>
         <DrawerFooter>
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">Отмена</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

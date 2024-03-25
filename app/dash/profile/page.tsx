@@ -13,8 +13,8 @@ export default async function Profile() {
   return (
     <>
       <Heading
-        title="Profile"
-        description="Create or select which bot to manage here."
+        title="Профиль"
+        description="Создайте или выберите здесь бота для управления."
       ></Heading>
       <div className="grid grid-flow-row md:grid-flow-col gap-4">
         <ProfileInfo user={user} />

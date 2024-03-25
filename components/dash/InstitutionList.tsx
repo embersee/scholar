@@ -33,32 +33,32 @@ const InstitutionList = ({ institutions }: { institutions: Institution[] }) => {
   const institutionRemove = api.institutions.removeInstitution.useMutation({
     onMutate: () => {
       toast({
-        title: '🔄 Removing...',
+        title: '🔄 Удаление...',
       })
     },
     onError: (e) => {
       toast({
-        title: '🚫 Error',
+        title: '🚫 Ошибка',
         description: e.message
       })
     },
     onSuccess: () => {
       toast({
-        title: '✅ Success',
-        description: 'Institution removed'
+        title: '✅ Успех',
+        description: 'Учебное заведение успешно удалено'
       })
       trpcClient.institutions.getInstitutions.refetch();
     },
   });
 
   const removeInstitution = (institutionId: string) => {
-    if (confirm("Are you shure?"))
+    if (confirm("Вы уверены?"))
       institutionRemove.mutate({ id: institutionId });
   };
 
   return (
     <Container className="flex-col gap-4">
-      <div>Institutions</div>
+      <div>Учебные заведения</div>
       {institutions ? (
         <>
           <ul>
@@ -80,17 +80,17 @@ const InstitutionList = ({ institutions }: { institutions: Institution[] }) => {
           </ul>
         </>
       ) : (
-        <div className="text-center font-medium">Still No Institutions Yet</div>
+        <div className="text-center font-medium">Учебных заведений пока нет</div>
       )}
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button>Add</Button>
+          <Button>Добавить</Button>
         </DrawerTrigger>
         <DrawerContent className="flex flex-col items-center">
           <DrawerHeader>
-            <DrawerTitle>New Institution</DrawerTitle>
+            <DrawerTitle>Новое учебное заведение</DrawerTitle>
             <DrawerDescription>
-              {"Make changes to your profile here. Click save when you're done."}
+              {"Внесите изменения в свой профиль здесь. Нажмите кнопку сохранить, когда закончите."}
             </DrawerDescription>
           </DrawerHeader>
           <InstitutionCreateForm
@@ -102,7 +102,7 @@ const InstitutionList = ({ institutions }: { institutions: Institution[] }) => {
           <DrawerFooter>
             <DrawerClose asChild>
               <Button className="w-72" variant="outline">
-                Cancel
+                Отмена
               </Button>
             </DrawerClose>
           </DrawerFooter>

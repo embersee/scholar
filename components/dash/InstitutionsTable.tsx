@@ -40,26 +40,26 @@ const InstitutionsTable = ({ institutions }: { institutions: Institution[] }) =>
     const institutionRemove = api.institutions.removeInstitution.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Removing...',
+                title: '🔄 Удаление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'Institution removed'
+                title: '✅ Успех',
+                description: 'Учебное заведение успешно удалено'
             })
             trpcClient.institutions.getInstitutions.refetch();
         },
     });
 
     const removeInstitution = (institutionId: string) => {
-        if (confirm("Are you shure?"))
+        if (confirm("Вы уверены?"))
             institutionRemove.mutate({ id: institutionId });
     };
 
@@ -69,7 +69,7 @@ const InstitutionsTable = ({ institutions }: { institutions: Institution[] }) =>
             accessorKey: 'id',
         },
         {
-            header: 'name',
+            header: 'Название',
             accessorKey: 'name',
         },
         {
@@ -84,18 +84,18 @@ const InstitutionsTable = ({ institutions }: { institutions: Institution[] }) =>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className={`shadow-md `}>
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>Действия</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => {
                                 setOpen(true)
                                 setInstitution(institution)
                             }}>
-                                Edit
+                                Редактировать
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => {
                                 removeInstitution(institution.id)
                             }}>
-                                Delete
+                                Удалить
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -115,14 +115,14 @@ const InstitutionsTable = ({ institutions }: { institutions: Institution[] }) =>
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Institution
+                                    Редактировать учебное заведение
                                 </DrawerTitle>
                             </DrawerHeader>
                             {institution && <InstitutionEditForm onCreate={handleCreate} data={institution} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
-                                        Cancel
+                                        Отмена
                                     </Button>
                                 </DrawerClose>
                             </DrawerFooter>
@@ -131,7 +131,7 @@ const InstitutionsTable = ({ institutions }: { institutions: Institution[] }) =>
                 </div>
             ) : (
                 <div className="text-center font-medium">
-                    Still No Institutions Yet
+                    Учебных заведений пока нет
                 </div>
             )}
         </div>

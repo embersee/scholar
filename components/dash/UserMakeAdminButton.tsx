@@ -36,18 +36,18 @@ import {
         </AlertDialogTrigger>
         <AlertDialogContent className="z-[250]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Вы абсолютно уверены?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will give that user admin rights
+            Это действие нельзя отменить. Это даст этому пользователю права администратора
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
               onClick={onClickAction}
             >
-              Make admin
+              Сделать администратором
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

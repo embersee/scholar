@@ -65,19 +65,19 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
             accessorKey: 'telegram_id',
         },
         {
-            header: 'Username',
+            header: 'Имя пользователя',
             accessorKey: 'username',
         },
         {
-            header: 'Display Name',
+            header: 'Отображаемое имя',
             accessorKey: 'display_name',
         },
         {
-            header: 'FIO',
+            header: 'ФИО',
             accessorKey: 'FIO',
         },
         {
-            header: 'Phone Number',
+            header: 'Номер телефона',
             accessorKey: 'phone_number',
         },
         {
@@ -85,15 +85,15 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
             accessorKey: 'email',
         },
         {
-            header: 'Role',
+            header: 'Роль',
             accessorKey: 'role',
         },
         {
-            header: 'Specialty',
+            header: 'Специальность',
             accessorKey: 'specialty',
         },
         {
-            header: 'institution',
+            header: 'Учебное заведение',
             accessorKey: 'institution.name',
         },
         {
@@ -108,23 +108,23 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className='shadow-md'>
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuLabel>Действия</DropdownMenuLabel>
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem onClick={() => {
                                 setOpen(true)
                                 setUser(user as UserSchema)
                             }}>
-                                Edit
+                                Редактировать
                             </DropdownMenuItem>
 
                             <DropdownMenuItem onClick={e => e.preventDefault()}>
                                 <UserMakeAdminButton onClickAction={() => handleMakeAdmin(user, Role.ADMINISTRATION)}>
-                                    Make administrator
+                                    Сделать администратором
                                 </UserMakeAdminButton>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={e => e.preventDefault()}>
                                 <UserMakeAdminButton onClickAction={() => handleMakeAdmin(user, Role.ADMIN)}>
-                                    Make admin
+                                    Сделать админом
                                 </UserMakeAdminButton>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -151,19 +151,19 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
     const userEditMutation = api.user.updateUser.useMutation({
         onMutate: () => {
             toast({
-                title: '🔄 Updating...',
+                title: '🔄 Обновление...',
             })
         },
         onError: (e) => {
             toast({
-                title: '🚫 Error',
+                title: '🚫 Ошибка',
                 description: e.message
             })
         },
         onSuccess: () => {
             toast({
-                title: '✅ Success',
-                description: 'User updated'
+                title: '✅ Успех',
+                description: 'Пользователь успешно обновлен'
             })
             handleRefetch();
         },
@@ -215,14 +215,14 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
                         <DrawerContent className="flex flex-col items-center">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    Edit Student
+                                    Редактировать студента
                                 </DrawerTitle>
                             </DrawerHeader>
                             {user && institutions.data && <UserEditForm onCreate={handleCreate} data={user} institutions={institutions.data} />}
                             <DrawerFooter>
                                 <DrawerClose asChild>
                                     <Button className="w-72" variant="outline" onClick={() => setOpen(false)}>
-                                        Cancel
+                                        Отмена
                                     </Button>
                                 </DrawerClose>
                             </DrawerFooter>
@@ -231,7 +231,7 @@ function UsersTable({ usersList }: { usersList: RouterOutputs["user"]["getUsersW
                 </>
             ) : (
                 <div className="text-center font-medium">
-                    Still No Users Yet
+                    Пока нет пользователей
                 </div>
             )}
         </>

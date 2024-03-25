@@ -23,26 +23,26 @@ export const Profile = ({ name, image }: { name: string; image: string }) => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>Мой аккаунт:</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <Link href="/dash/profile">
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Профиль</DropdownMenuItem>
         </Link>
         <Link href="/dash/apprts">
-          <DropdownMenuItem>Apprenticeships</DropdownMenuItem>
+          <DropdownMenuItem>Практики</DropdownMenuItem>
         </Link>
         <Link href="/dash/settings">
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>Настройки</DropdownMenuItem>
         </Link>
         <Link href="/dash">
-          <DropdownMenuItem>Main</DropdownMenuItem>
+          <DropdownMenuItem>Главная</DropdownMenuItem>
         </Link>
 
         <DropdownMenuItem
           className=" bg-destructive/70 text-destructive-foreground shadow-sm"
           onClick={() => signOut()}
         >
-          Sign out
+          Выйти
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
