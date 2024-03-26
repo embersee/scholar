@@ -26,7 +26,7 @@ services:
       - net
 
   nginx:
-    image: nginx
+    build: ./nginx
     container_name: scholar_nginx
     depends_on:
       - web
