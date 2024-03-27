@@ -2,8 +2,6 @@ import { ThemeToggle } from "@/components/utils/ThemeToggle";
 import { env } from "@/env.mjs"
 import Image from "next/image";
 import EnterButton from "./EnterButton";
-// Test Comment 
-// Test Comment 2
 
 export default async function Home() {
   return (
@@ -20,7 +18,7 @@ export default async function Home() {
       <section
         className={"flex pb-12 md:pb-0 gap-[77px] max-w-[1100px] px-[30px] items-center mt-[100px] max-[1000px]:flex-col mb-[48px] max-[375px]:pb-0"}>
         <p className={"font-light xl:max-w-[700px] lg:max-w-[600px] md:max-w-[500px] xl:text-[24px] 2xl:text-[26px] lg:text-[20px]  md:text-[18px] text-[16px] "}>
-          <span className={"text-[#9381FF]"}>{`Практика.ру`}</span> – это TEST место, где вы сможете
+          <span className={"text-[#9381FF]"}>{`Практика.ру`}</span> – это место, где вы сможете
           найти задания, соответствующие вашим интересам и
           направлению обучения. Независимо от того, посвящена ли ваша специализация программированию,
           маркетингу, инженерии или любой другой области, у нас вы найдете полезные и актуальные
