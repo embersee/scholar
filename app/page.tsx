@@ -2,7 +2,8 @@ import { ThemeToggle } from "@/components/utils/ThemeToggle";
 import { env } from "@/env.mjs"
 import Image from "next/image";
 import EnterButton from "./EnterButton";
-// Test Comment
+// Test Comment 
+// Test Comment 2
 
 export default async function Home() {
   return (
