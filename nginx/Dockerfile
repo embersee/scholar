@@ -10,8 +10,10 @@ COPY ./default.conf /etc/nginx/conf.d/
 
 
 
-# Launch NGINX
+# Install certbot for Nginx
 RUN apk add certbot certbot-nginx
-RUN certbot --nginx && monashovnikolaye@gmail.com && Y && N && 1 2
 
+# Эта команда не работает в Dockerfile
+# RUN certbot --nginx && address@gmail.com && Y && N && 1 2
+# Launch NGINX
 CMD [ "nginx", "-g", "daemon off;" ]
