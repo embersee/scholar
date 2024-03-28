@@ -14,11 +14,26 @@ services:
       - /app/node_modules
       - /app/.next
     ports:
-      - "80:80"
+      - "4246:4246"
+    expose:
+      - "80"
+
     restart: always
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - net
+
+  nginx:
+    build: ./nginx
+    container_name: scholar_nginx
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
     networks:
       - net
 
@@ -44,3 +59,4 @@ volumes:
 
 networks:
   net:
+    driver: bridge
