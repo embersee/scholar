@@ -1,0 +1,22 @@
+import UsersTable from "@/components/dash/UsersTable";
+import Heading from "@/components/ui/heading";
+import { api } from "@/trpc/server";
+
+export const metadata = {
+    title: 'Users',
+}
+
+
+export default async function Users() {
+    const usersList = await api.user.getUsersWithInstitution.query();
+
+    return (
+        <div className='w-full'>
+            <Heading
+                title="Пользователи"
+                description=""
+            />
+            <UsersTable usersList={usersList} />
+        </div>
+    );
+}

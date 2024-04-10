@@ -1,12 +1,19 @@
 import Heading from "@/components/ui/heading";
+import DashList from "./DashList";
+import { api } from "@/trpc/server";
 
 export default async function Dash() {
+  const apprtTypes = await api.apprts.getTypes.query();
+  const institutions = await api.institutions.getInstitutions.query();
+
   return (
     <>
       <Heading
         title="Dash"
-        description="Create or select which bot to manage here."
+        description="Создайте или выберите бота для управления здесь."
       ></Heading>
+      <DashList institutions={institutions} apprtTypes={apprtTypes} />
+
 
       {/*<BotList bots={bots} />*/}
 

@@ -51,31 +51,46 @@ model User {
   emailVerified DateTime?
   image         String?
 
+  institutionId String?
+  specialty     String?
+
   role           Role             @default(STUDENT)
   accounts       Account[]
   sessions       Session[]
   apprenticeship Apprenticeship[]
+
+  institution Institution? @relation(fields: [institutionId], references: [id])
 }
 
 model Apprenticeship {
-  id                  String   @id @default(cuid())
-  user_id             String
-  start_date          DateTime
-  end_date            DateTime
-  referral            String?
-  report              String?
-  curator             String?
-  institution         String
-  specialty           String
-  academic_year       String
-  apprenticeship_type String
-  employment_status   Boolean?
-  attendance          Boolean? @default(false)
-  signed              Boolean? @default(false)
-  report_signed       Boolean? @default(false)
-  referral_signed     Boolean? @default(false)
+  id                   String   @id @default(cuid())
+  user_id              String
+  start_date           DateTime
+  end_date             DateTime
+  referral             String?
+  report               String?
+  curatorId            String?
+  curatorGroupId       String?
+  academic_year        String
+  apprenticeshipTypeId String
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  employment_status Boolean? @default(false)
+  attendance        Boolean? @default(false)
+  signed            Boolean? @default(false)
+  report_signed     Boolean? @default(false)
+  referral_signed   Boolean? @default(false)
+
+  apprenticeship_type ApprenticeshipType @relation(fields: [apprenticeshipTypeId], references: [id])
+  user                User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  curator             Curator?           @relation(fields: [curatorId], references: [id])
+  curatorGroup        CuratorGroups?     @relation(fields: [curatorGroupId], references: [id])
+}
+
+model ApprenticeshipType {
+  id   String @id @default(cuid())
+  name String @unique
+
+  Apprenticeship Apprenticeship[]
 }
 
 enum Role {
@@ -86,15 +101,29 @@ enum Role {
 }
 
 model Curator {
-  id          String  @id @default(cuid())
-  telegram_id String  @unique
-  FIO         String?
-  group_url   String?
+  id          String @id @default(cuid())
+  telegram_id String @unique
+  FIO         String
+  // group_url   String[]
+
+  Apprenticeship Apprenticeship[]
+  group_links    CuratorGroups[]
+}
+
+model CuratorGroups {
+  id         String @id @default(cuid())
+  group_name String
+  group_link String
+  curatorId  String
+
+  Curator        Curator          @relation(fields: [curatorId], references: [id], onDelete: Cascade)
+  Apprenticeship Apprenticeship[]
 }
 
 model Institution {
   id   String @id @default(cuid())
-  name String
+  name String @unique
+  User User[]
 }
 
 model VerificationToken {

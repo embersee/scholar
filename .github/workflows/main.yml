@@ -1,0 +1,44 @@
+name: CI/CD
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:          
+  check-remote-connect:
+    name: TestSSH
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: ls
+        
+  deploy-to-remote-server:
+    needs:  check-remote-connect
+    name: DeployBySSH
+    runs-on: ubuntu-latest
+    steps:
+    - name: SSH git clone on running project
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ${{ secrets.PATH }}
+          git pull
+          docker-compose up -d --no-deps web
+            
+    

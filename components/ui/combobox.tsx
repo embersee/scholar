@@ -19,33 +19,30 @@ import {
 } from "@/components/ui/popover";
 import { InputProps } from "@/components/ui/input";
 import { SelectProps } from "@radix-ui/react-select";
+import { forwardRef } from "react";
+import { Calendar } from "@/components/ui/calendar";
 
 interface ComboboxProps {
+  names: { button: string; empty: string; search: string };
   options: { label: string; value: string }[];
   value?: string;
   onChange: (value: string) => void;
+  placeholder?: string
 }
 
-export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(
-  ({ options, value, onChange }: ComboboxProps, ref) => {
-    const [open, setOpen] = React.useState(false);
-
+export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
+  ({ names, options, value, onChange }: ComboboxProps, ref) => {
     return (
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[300px] justify-between"
-          >
+          <Button variant="outline" role="combobox" className="justify-between w-[100%]">
             {value
               ? options.find((framework) => framework.value === value)?.label
-              : "Select framework..."}
+              : names.button}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0">
+        <PopoverContent className="p-0">
           <Command>
             <CommandInput
               placeholder="Search framework..."
@@ -60,7 +57,6 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(
                   value={framework.value}
                   onSelect={(currentValue) => {
                     onChange(currentValue === value ? "" : currentValue);
-                    setOpen(false);
                   }}
                 >
                   <Check
@@ -79,3 +75,5 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(
     );
   },
 );
+
+Combobox.displayName = "Combobox";

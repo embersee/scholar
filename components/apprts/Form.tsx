@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import {
   ApprenticeshipForm,
   apprenticeshipFormSchema,
+  ApprenticeshipTypes,
+  GetApprenticeship,
 } from "@/server/schema/apprenticeship";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -30,8 +32,15 @@ import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { Combobox } from "@/components/ui/combobox";
+import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
+import { toast } from "../ui/use-toast";
+import { InputFile } from "../ui/input-file";
 
-export default function ApprtsForm() {
+export default function ApprtsForm(props: {
+  apprenticeshipTypes: ApprenticeshipTypes[];
+}) {
+  const router = useRouter()
   const parent = useRef(null);
 
   useEffect(() => {
@@ -44,251 +53,190 @@ export default function ApprtsForm() {
     // errors locally but not in production
     resolver: zodResolver(apprenticeshipFormSchema),
     defaultValues: {
-      FIO: "",
-      phone_number: "",
-      institution: "",
-      specialty: "",
-      academic_year: "",
-      apprenticeship_type: "",
+      referral: "",
+      report: "",
+      apprenticeshipTypeId: "",
       // date: {
       //   from: undefined,
       //   to: undefined,
       // },
     },
-    reValidateMode: "onChange",
+    reValidateMode: "onSubmit",
   });
 
-  // TODO: get data for institutions
+  const apprtsTypes = props.apprenticeshipTypes.map((v) => ({
+    value: v.id as string,
+    label: v.name,
+  }));
 
-  function handleSubmit(data: ApprenticeshipForm) {
-    console.log(JSON.stringify(data));
+  const apprts = api.apprts.createApprenticeship.useMutation({
+    onMutate: () => {
+      toast({
+        title: '🔄 Создание...',
+      })
+    },
+    onError: (e) => {
+      toast({
+        title: '🚫 Ошибка',
+        description: e.message
+      })
+    },
+    onSuccess: () => {
+      toast({
+        title: '✅ Успех',
+        description: 'Тип практики успешно создан'
+      })
+      router.push("/dash/apprts")
+    },
+  });
+
+  async function handleSubmit(data: ApprenticeshipForm) {
+    console.log(data);
+    apprts.mutate({ ...data });
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        autoComplete="off"
-        className="flex grow flex-col justify-start"
-        ref={parent}
-      >
-        <FormField
-          control={form.control}
-          name="FIO"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Display name</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="Иван Иванович"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone number</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="98273947"
-                  type="number"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="institution"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Institution</FormLabel>
-              <FormControl>
-                <Combobox
-                  options={[
-                    {
-                      value: "next.js",
-                      label: "Next.js",
-                    },
-                    {
-                      value: "sveltekit",
-                      label: "SvelteKit",
-                    },
-                    {
-                      value: "nuxt.js",
-                      label: "Nuxt.js",
-                    },
-                    {
-                      value: "remix",
-                      label: "Remix",
-                    },
-                    {
-                      value: "astro",
-                      label: "Astro",
-                    },
-                  ]}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          autoComplete="off"
+          className="flex grow flex-col justify-start items-center gap-4"
+          ref={parent}
+        >
+          <FormField
+            control={form.control}
+            name="apprenticeshipTypeId"
+            render={({ field }) => (
+              <FormItem className="w-72">
+                <FormLabel>Вид практики</FormLabel>
+                <FormControl>
+                  <Combobox
+                    options={apprtsTypes}
+                    {...field}
+                    names={{
+                      button: "Выбрать вид",
+                      empty: "Нету такого...",
+                      search: "Поиск вида практики",
+                    }}
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="specialty"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Specialty</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="Специальность"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="referral"
+            render={({ field }) => (
+              <FormItem className="w-72">
+                <FormLabel>Место ссылки направления</FormLabel>
+                <FormControl>
+                  <InputFile />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="apprenticeship_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Вид практики</FormLabel>
-              <FormControl>
-                <Combobox
-                  options={[
-                    {
-                      value: "next.js",
-                      label: "Next.js",
-                    },
-                    {
-                      value: "sveltekit",
-                      label: "SvelteKit",
-                    },
-                    {
-                      value: "nuxt.js",
-                      label: "Nuxt.js",
-                    },
-                    {
-                      value: "remix",
-                      label: "Remix",
-                    },
-                    {
-                      value: "astro",
-                      label: "Astro",
-                    },
-                  ]}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="report"
+            render={({ field }) => (
+              <FormItem className="w-72">
+                <FormLabel>Место ссылки отчета</FormLabel>
+                <FormControl>
+                  <InputFile />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="academic_year"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Курс</FormLabel>
-              <FormControl>
-                <Input
-                  className="w-[300px]"
-                  autoComplete="off"
-                  placeholder="1"
-                  type="number"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Дата начала</FormLabel>
-              <FormControl>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="date"
-                      variant={"outline"}
-                      className={cn(
-                        "w-[300px] justify-start text-left font-normal",
-                        !form.watch().date && "text-muted-foreground",
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        form.watch().date.to ? (
-                          <>
-                            {format(form.watch().date.from, "dd LLLL y", {
+          <FormField
+            control={form.control}
+            name="academic_year"
+            render={({ field }) => (
+              <FormItem className="w-72">
+                <FormLabel>Укажи свой курс</FormLabel>
+                <FormControl>
+                  <Input
+                    className="w-[100%]"
+                    autoComplete="off"
+                    placeholder="1"
+                    type="number"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem className="w-72">
+                <FormLabel>Диапазон дат практики</FormLabel>
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="date"
+                        variant={"outline"}
+                        className={cn(
+                          " justify-start text-left font-normal w-[100%]",
+                          !form.watch().date && "text-muted-foreground",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {field.value ? (
+                          form.watch().date.to ? (
+                            <>
+                              {format(form.watch().date.from, "dd LLLL y", {
+                                locale: ru,
+                              })}
+                              {` – `}
+                              {format(form.watch().date.to, "dd LLLL y", {
+                                locale: ru,
+                              })}
+                            </>
+                          ) : (
+                            format(form.watch().date.from, "dd LLLL y", {
                               locale: ru,
-                            })}{" "}
-                            -{" "}
-                            {format(form.watch().date.to, "dd LLLL y", {
-                              locale: ru,
-                            })}
-                          </>
+                            })
+                          )
                         ) : (
-                          format(form.watch().date.from, "dd LLLL y", {
-                            locale: ru,
-                          })
-                        )
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={form.watch().date?.from}
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      numberOfMonths={2}
-                      locale={ru}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+                          <span>Выбери даты</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={form.watch().date?.from}
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        numberOfMonths={2}
+                        locale={ru}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-[300px]">{apprts.isLoading ? "Loading..." : "Submit"}</Button>
+        </form>
+      </Form>
+    </>
   );
 }

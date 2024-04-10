@@ -1,10 +1,43 @@
-import SignIn from "@/components/auth/SignIn";
+import { ThemeToggle } from "@/components/utils/ThemeToggle";
+import { env } from "@/env.mjs"
+import Image from "next/image";
+import EnterButton from "./EnterButton";
 
 export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="before:bg-gradient-radial after:bg-gradient-conic relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-15 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]"></div>
-      <SignIn />
+    <main className="flex bg-[#EAEAEA]  min-h-screen flex-col items-center  dark:bg-[#1F1E1F] transition-all ">
+      <header
+        className="z-10 max-w-[1320px] w-full items-center justify-between text-sm flex pt-[20px] px-[30px] md:px-[60px] lg:px-[100px]  ">
+        <button className=" md:text-[26px] font-semibold max-[300px]:w-full">
+          <p className={'px-[12px] md:px-[20px] py-[14px] md:py-[22px] rounded-xl bg-white dark:bg-[#2C2C2C] transition-all'}>Практика.ру</p>
+        </button>
+        <div className="h-10  bg-white dark:bg-[#2C2C2C] rounded-md" >
+          <ThemeToggle />
+        </div>
+      </header>
+      <section
+        className={"flex pb-12 md:pb-0 gap-[77px] max-w-[1100px] px-[30px] items-center mt-[100px] max-[1000px]:flex-col mb-[48px] max-[375px]:pb-0"}>
+        <p className={"font-light xl:max-w-[700px] lg:max-w-[600px] md:max-w-[500px] xl:text-[24px] 2xl:text-[26px] lg:text-[20px]  md:text-[18px] text-[16px] "}>
+          <span className={"text-[#9381FF]"}>{`Практика.ру`}</span> – это место, где вы сможете
+          найти задания, соответствующие вашим интересам и
+          направлению обучения. Независимо от того, посвящена ли ваша специализация программированию,
+          маркетингу, инженерии или любой другой области, у нас вы найдете полезные и актуальные
+          задачи,
+          которые помогут вам почувствовать себя профессионалом уже сейчас.
+        </p>
+        <EnterButton botName={env.BOT_NAME} />
+      </section>
+      <div className="max-[375px]:hidden w-full flex items-center justify-center">
+        <Image
+          className="xl:max-w-screen-lg  p-4 rounded-xl bg-white dark:bg-[#2C2C2C] lg:max-w-screen-md mx-auto transition-all"
+          src={"/people.png"}
+          alt={"people"}
+          layout="responsive"
+          width={1}
+          height={1}
+        />
+      </div>
     </main>
   );
 }
+

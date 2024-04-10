@@ -1,4 +1,4 @@
-FROM node:18-alpine as base
+FROM node:21-alpine as base
 
 ##### DEPENDENCIES
 FROM base as deps
@@ -11,6 +11,9 @@ COPY package*.json prisma ./
 RUN npm ci
 
 RUN npx prisma generate
+
+# Install PM2 globally
+RUN npm install --global pm2
 
 ##### DEVELOP
 FROM base AS dev
@@ -47,5 +50,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-CMD ["node", "server.js"]
-
+# Run npm start script with PM2 when container starts
+CMD [ "pm2", "start", "--name", "'scholar'", "server.js" ]

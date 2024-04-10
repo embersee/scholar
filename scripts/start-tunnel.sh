@@ -41,7 +41,7 @@ PROJECT_PATH=$( cd "$(dirname "${PARENT_PATH}")" || exit ; pwd -P )
 sed -i '' "s#NEXTAUTH_URL=.*#NEXTAUTH_URL=${NGROK_REMOTE_URL}#" "${PROJECT_PATH}/.env" && printf "\n👨🏻‍🎨 Changed .env variables to match new NextAuth address. \n"
 
 # Set our NGROK remote url to our development
-curl -F "url=${NGROK_REMOTE_URL}/api/bot/${BOT_TOKEN}/" https://api.telegram.org/bot${BOT_TOKEN}/setWebhook
+curl -F "url=${NGROK_REMOTE_URL}/api/bot/${BOT_TOKEN}/" https://api.telegram.org/bot"${BOT_TOKEN}"/setWebhook | jq ".description"
 
 bold=$(tput bold)
 normal=$(tput sgr0)

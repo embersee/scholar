@@ -1,9 +1,63 @@
 import { db } from "@/server/db";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { updateInstitutionSchema, institutionSchema, institutionSchemaForm, InputInstitutionSchema } from "@/server/schema/institution";
+import { z } from "zod";
 
-// export const userRouter = createTRPCRouter({
-//   getInstitutions: protectedProcedure.query(async () => {
-//     return db.institutions.findMany();
-//   }),
-// });
-// Here
+import { TRPCError } from "@trpc/server";
+
+export const institutionRouter = createTRPCRouter({
+  getInstitutions: protectedProcedure.query(async () => {
+    return db.institution.findMany();
+  }),
+
+  createInstitution: protectedProcedure
+  .input(updateInstitutionSchema).mutation(async ({ input: institution }) => {  
+    try {
+      const result = await db.institution.create({
+        data: {
+          ...institution
+        }
+      });
+      return { success: true, result };
+    } catch (error) {
+      throw new TRPCError({ code: "BAD_REQUEST",
+      message: "Error while creating, try again"
+    });
+    }
+  }),
+  updateInstitution: protectedProcedure
+      .input(InputInstitutionSchema)
+      .mutation(async ({ input: institution }) => {
+        try {
+          const result = await db.institution.update({
+            data: {
+              ...institution
+            },
+            where: {
+              id: institution.id,
+            },
+          });
+          return { success: true, result };
+        } catch (error) {
+          throw new TRPCError({ code: "BAD_REQUEST",
+          message: "Institution does not exist"
+        });
+        }
+      }),
+  removeInstitution: protectedProcedure
+  .input(institutionSchema.extend({ id: z.string() }).pick({id: true}))
+  .mutation(async ({input: {id}})=>{
+    try {
+      const result = await db.institution.delete({
+        where: {
+          id,
+        }
+      })
+      return { success: true, result };
+    } catch (error) {
+      throw new TRPCError({ code: "BAD_REQUEST",
+      message: "Institution does not exist"
+    });
+    }
+  })
+});

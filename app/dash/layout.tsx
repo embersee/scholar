@@ -11,8 +11,10 @@ export default async function DashLayout({
 
   return (
     <>
-      <Nav />
-      <main>{children}</main>
+      <main>
+        <Nav />
+        <div className={`${'page'}`}>{children}</div>
+      </main>
     </>
   );
 }
