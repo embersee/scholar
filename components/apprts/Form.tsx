@@ -86,6 +86,7 @@ export default function ApprtsForm(props: {
         title: '✅ Успех',
         description: 'Тип практики успешно создан'
       })
+      form.reset();
       router.push("/dash/apprts")
     },
   });
@@ -234,7 +235,7 @@ export default function ApprtsForm(props: {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[300px]">{apprts.isLoading ? "Loading..." : "Submit"}</Button>
+          <Button disabled={apprts.isLoading} type="submit" className="w-[300px]">{apprts.isLoading ? "Loading..." : "Submit"}</Button>
         </form>
       </Form>
     </>
