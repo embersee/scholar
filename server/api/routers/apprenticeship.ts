@@ -48,6 +48,22 @@ export const apprenticeshipRouter = createTRPCRouter({
           end_date: apprts.date.to,
         
         };
+
+    const hasActiveApprenticeships = !!(await db.apprenticeship.findFirst({
+      where: {
+        user: {
+          telegram_id: user.id
+        },
+        report_signed: false,
+      }
+    }));
+
+    if (hasActiveApprenticeships) {
+      const checkError = new Error("Повторное создание");
+      checkError.name = "checkError";
+      throw checkError;
+    }
+
     const newApprenticeship = await db.apprenticeship.create({
       data: {
         ...data,
@@ -67,6 +83,15 @@ export const apprenticeshipRouter = createTRPCRouter({
    return  { success: true, newApprenticeship };
       }
       catch (error) {
+        
+        if (error instanceof Error) {
+          if (error.name === "checkError") {
+            throw new TRPCError({code: "BAD_REQUEST", 
+              message: "У вас уже есть активная практика, сначала завершите ее ;)"
+            })
+          }
+        }
+
         throw new TRPCError({ code: "BAD_REQUEST",
         message: "Error while creating, try again"
       });
@@ -273,7 +298,7 @@ export const apprenticeshipRouter = createTRPCRouter({
           report_signed: true,
         },
       });
-      const message = `Вашу заявку на прохождение практики подтвердили! По окончании практики отчёт необходимо загрузить по ссылке: https://auth.mkrit.ru `;
+      const message = `Ваш отчет по практике успешно подписан! Вы можете забрать его по адресу ул. Черняховского, 59 с понедельника по пятницу с 9:00 до 18:00 https://yandex.ru/maps/2/saint-petersburg/?ll=30.360200%2C59.920650&mode=poi&poi%5Bpoint%5D=30.359953%2C59.920658&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D1207571026&utm_source=share&z=21`;
       await fetch(
         `https://api.telegram.org/bot${
           env.BOT_TOKEN
