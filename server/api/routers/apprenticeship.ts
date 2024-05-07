@@ -99,6 +99,21 @@ export const apprenticeshipRouter = createTRPCRouter({
       },
     ),
 
+  getCurrentApprenticeship: protectedProcedure.query(
+    async ({
+      ctx: {
+        session: { user },
+      },
+    }) => {
+      return db.apprenticeship.findFirst({
+        where: {
+          user_id: user.id,
+          report_signed: false
+        }
+      });
+    },
+  ),
+
   createApprtType: protectedProcedure
     .input(apprenticeshipTypes).mutation(async ({ input: apprtTypes }) => {
       try {
