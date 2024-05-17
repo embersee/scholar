@@ -1,6 +1,7 @@
 import Heading from "@/components/ui/heading";
 import DashList from "./DashList";
 import { api } from "@/trpc/server";
+import { StudentDashBoard } from "@/components/dash/StudentDashBoard";
 
 export default async function Dash() {
   const apprtTypes = await api.apprts.getTypes.query();
@@ -18,6 +19,7 @@ export default async function Dash() {
         }
       ></Heading>
       {!(user?.role !== 'STUDENT') && <DashList institutions={institutions} apprtTypes={apprtTypes} />}
+      {(user?.role !== 'STUDENT') && <StudentDashBoard />}
 
 
       {/*<BotList bots={bots} />*/}
