@@ -5,7 +5,6 @@ import {
   ApprenticeshipForm,
   apprenticeshipFormSchema,
   ApprenticeshipTypes,
-  GetApprenticeship,
 } from "@/server/schema/apprenticeship";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -35,8 +34,6 @@ import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
-import { InputFile } from "../ui/input-file";
-import { TRPCClientError } from "@trpc/client";
 
 export default function ApprtsForm(props: {
   apprenticeshipTypes: ApprenticeshipTypes[];
@@ -99,10 +96,10 @@ export default function ApprtsForm(props: {
     console.log(data);
 
     try {
-    if (!referralFile) throw new TRPCClientError("Прикрепите файл направления"); 
+    if (!referralFile) throw new Error("Прикрепите файл направления"); 
 
     // Дополнительная проверка на клиенте, чтобы исключить лишнюю отправку файлов на файл сервер.
-    if (!!currentApprenticeship.data) throw new TRPCClientError("У вас уже есть одна активная практика, снаала завершите ее ;)");
+    if (!!currentApprenticeship.data) throw new Error("У вас уже есть одна активная практика, снаала завершите ее ;)");
 
     const referralFormData = new FormData();
     referralFormData.append("file[]", referralFile);
@@ -121,15 +118,14 @@ export default function ApprtsForm(props: {
       console.log("Accepted referral", referralResponseData);
 
       if (referralResponseData.length<1 )
-        throw new TRPCClientError("Failed to save file");
+        throw new Error("Failed to save file");
 
       apprts.mutate({ 
         ...data, 
         referral: `http://127.0.0.11:8000/api/files/${referralResponseData[0].id}`, 
-        report: `http://127.0.0.11:8000/api/files/${referralResponseData[0].id}`,
       });
     }
-    else throw new TRPCClientError("Failed to fetch file");
+    else throw new Error("Failed to fetch file");
   }
   catch (e: any) {
     toast({
