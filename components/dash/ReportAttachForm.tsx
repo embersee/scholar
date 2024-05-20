@@ -69,7 +69,7 @@ export const ReportForm = ({ onCreate, data }: { onCreate: Function, data: Appre
             reportFormData.append("path", "");
             reportFormData.append("name", "report");
         
-            const reportResponse = await fetch(`http://127.0.0.11:8000/api/upload`, {
+            const reportResponse = await fetch('http://127.0.0.11:8000/api/files', {
               method: "POST",
               mode: "cors",
               body: reportFormData,

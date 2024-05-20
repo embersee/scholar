@@ -107,7 +107,7 @@ export default function ApprtsForm(props: {
     referralFormData.append("path", "");
     referralFormData.append("name", "referral");
 
-    const referralResponse = await fetch(`http://127.0.0.11:8000/api/upload`, {
+    const referralResponse = await fetch('http://127.0.0.11:8000/api/files', {
       method: "POST",
       mode: "cors",
       body: referralFormData,
