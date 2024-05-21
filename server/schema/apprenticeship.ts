@@ -74,6 +74,7 @@ export const updateApprenticeshipParams = apprenticeshipSchema.extend({});
 
 export type Apprenticeship = z.infer<typeof apprenticeshipSchema>;
 export type ApprenticeshipForm = z.infer<typeof apprenticeshipFormSchema>;
+export type UpdateApprenticeshipForm = z.infer<typeof updateApprenticeshipFormSchema>;
 export type ApprenticeshipTypes = z.infer<typeof apprenticeshipTypes>;
 export type GetApprenticeship = NonNullableFields<
   RouterOutputs["apprts"]["getApprenticeships"]

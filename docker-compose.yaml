@@ -60,3 +60,4 @@ volumes:
 networks:
   net:
     driver: bridge
+    name: scholar_network

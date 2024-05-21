@@ -14,16 +14,16 @@ export default async function Profile() {
     <>
       <Heading
         title="Профиль"
-        description="Создайте или выберите здесь бота для управления."
+        description=""
       ></Heading>
-      <div className="grid grid-flow-row md:grid-flow-col gap-4">
+      {/*<div className="grid grid-flow-row md:grid-flow-col gap-4">*/}
         <ProfileInfo user={user} />
-        <div className="flex flex-col gap-4 md:gap-6">
+        {/*<div className="flex flex-col gap-4 md:gap-6">
           <Container className="justify-center">
             <ApprtsList apprts={apprts} />
           </Container>
         </div>
-      </div>
+  </div>*/}
     </>
   );
 }

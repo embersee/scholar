@@ -52,14 +52,16 @@ const ApprenticeShip = async ({ user, apprt }: { user: GetUser, apprt: apprt }) 
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="ghost" className="flex justify-between w-[100%] px-10 h-[64px] items-center">
-          <div className="flex flex-col items-start">
-            <div>{`@${user?.username}`}</div>
-            <div className="hidden md:block">{user?.FIO}</div>
+        <Button variant="ghost" className="flex justify-between w-[100%] px-10 h-[64px] items-center parrent-container bg-card">
+          <div className="outer-point">
+            <div className="flex flex-col items-start">
+              <div>{`@${user?.username}`}</div>
+              <div className="hidden child-container">{user?.FIO}</div>
+            </div>
+            {apprtsTypes.data && <div className="w-max text-sm font-normal">
+              {apprtsTypes.data.find((apprt_type) => apprt_type.id === apprt.apprenticeshipTypeId)?.name}
+            </div>}
           </div>
-          {apprtsTypes.data && <div>
-            {apprtsTypes.data.find((apprt_type) => apprt_type.id === apprt.apprenticeshipTypeId)?.name}
-          </div>}
           <div>{`${apprt.signed}`}</div>
         </Button>
       </DrawerTrigger>

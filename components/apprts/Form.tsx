@@ -5,7 +5,6 @@ import {
   ApprenticeshipForm,
   apprenticeshipFormSchema,
   ApprenticeshipTypes,
-  GetApprenticeship,
 } from "@/server/schema/apprenticeship";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import autoAnimate from "@formkit/auto-animate";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -35,13 +34,15 @@ import { Combobox } from "@/components/ui/combobox";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
-import { InputFile } from "../ui/input-file";
 
 export default function ApprtsForm(props: {
   apprenticeshipTypes: ApprenticeshipTypes[];
 }) {
   const router = useRouter()
   const parent = useRef(null);
+
+  const [referralFile, setReferralFile] = useState<File|null>(null);
+  const currentApprenticeship = api.apprts.getCurrentApprenticeship.useQuery();
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current);
@@ -86,13 +87,53 @@ export default function ApprtsForm(props: {
         title: '✅ Успех',
         description: 'Тип практики успешно создан'
       })
+      form.reset();
       router.push("/dash/apprts")
     },
   });
 
   async function handleSubmit(data: ApprenticeshipForm) {
     console.log(data);
-    apprts.mutate({ ...data });
+
+    try {
+    if (!referralFile) throw new Error("Прикрепите файл направления"); 
+
+    // Дополнительная проверка на клиенте, чтобы исключить лишнюю отправку файлов на файл сервер.
+    if (!!currentApprenticeship.data) throw new Error("У вас уже есть одна активная практика, снаала завершите ее ;)");
+
+    const referralFormData = new FormData();
+    referralFormData.append("file[]", referralFile);
+    referralFormData.append("system", "scholar");
+    referralFormData.append("path", "");
+    referralFormData.append("name", "referral");
+
+    const referralResponse = await fetch('http://127.0.0.11:8000/api/files', {
+      method: "POST",
+      mode: "cors",
+      body: referralFormData,
+    })
+
+    if (referralResponse.ok){
+      const referralResponseData = await referralResponse.json();
+      console.log("Accepted referral", referralResponseData);
+
+      if (referralResponseData.length<1 )
+        throw new Error("Failed to save file");
+
+      apprts.mutate({ 
+        ...data, 
+        referral: `http://127.0.0.11:8000/api/files/${referralResponseData[0].id}`, 
+      });
+    }
+    else throw new Error("Failed to fetch file");
+  }
+  catch (e: any) {
+    toast({
+      title: '🚫 Ошибка',
+      description: e?.message
+    })
+  }
+
   }
 
   return (
@@ -134,22 +175,9 @@ export default function ApprtsForm(props: {
               <FormItem className="w-72">
                 <FormLabel>Место ссылки направления</FormLabel>
                 <FormControl>
-                  <InputFile />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="report"
-            render={({ field }) => (
-              <FormItem className="w-72">
-                <FormLabel>Место ссылки отчета</FormLabel>
-                <FormControl>
-                  <InputFile />
+                  <Input type="file"
+                    accept=".jpg, .jpeg, .png, .svg, .gif, .mp4"
+                    onChange={e => e.target.files? setReferralFile(e.target.files[0]): null} />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
@@ -234,7 +262,7 @@ export default function ApprtsForm(props: {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[300px]">{apprts.isLoading ? "Loading..." : "Submit"}</Button>
+          <Button disabled={apprts.isLoading} type="submit" className="w-[300px]">{apprts.isLoading ? "Loading..." : "Submit"}</Button>
         </form>
       </Form>
     </>

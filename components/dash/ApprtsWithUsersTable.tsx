@@ -301,7 +301,7 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
             },
         },
         {
-            id: "actions",
+            id: "attendance_bttn",
             cell: ({ row }) => {
                 const data = row.original;
                 const { mutate } = api.apprts.attendance.useMutation({
@@ -331,7 +331,7 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
             },
         },
         {
-            id: "actions",
+            id: "signed_bttn",
             cell: ({ row }) => {
                 const data = row.original;
                 const { mutate } = api.apprts.signed.useMutation({
@@ -361,7 +361,7 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
             },
         },
         {
-            id: "actions",
+            id: "report_signed_bttn",
             cell: ({ row }) => {
                 const data = row.original;
                 const { mutate } = api.apprts.reportSigned.useMutation({
@@ -391,7 +391,7 @@ const ApprtsTable = ({ apprts }: { apprts: GetApprenticeship }) => {
             },
         },
         {
-            id: "actions",
+            id: "referal_signed_bttn",
             cell: ({ row }) => {
                 const data = row.original;
                 const { mutate } = api.apprts.referralSigned.useMutation({

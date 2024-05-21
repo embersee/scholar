@@ -16,6 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
 import { Role } from "@prisma/client";
+import { DownloadIcon, Link } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
     additionalFilters?: React.ReactNode;
@@ -123,6 +124,14 @@ export function DataTable<TData, TValue>({
                                                     hour12: false,
                                                     timeZone: 'UTC',
                                                 }).format(cell.getValue() as Date)
+                                                : (
+                                                    (cell.column.id === 'referral' 
+                                                    || cell.column.id === 'report')
+                                                    && cell.getValue() !== ''
+                                                )? 
+                                                    <a  href={cell.getValue()} className="w-max p-2 h-10 flex gap-2 justify-center bg-secondary hover:bg-accent text-accent-foreground items-center rounded-sm mx-auto">
+                                                        <DownloadIcon className="w-5 h-5"/>Скачать
+                                                    </a> 
                                                 : flexRender(
                                                     cell.column.columnDef.cell,
                                                     cell.getContext()
